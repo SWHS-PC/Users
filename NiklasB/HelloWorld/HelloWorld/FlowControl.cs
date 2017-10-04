@@ -77,8 +77,8 @@ namespace HelloWorld
 
             // A do..while loop is similar to a while loop except that the test
             // expression is written at the end, and is not evaluated before the
-            // first iteration of the loop. As a result, the body of a while loop
-            // is always executed at least once.
+            // first iteration of the loop. As a result, the body of a do..while
+            // loop is always executed at least once.
             int i = 0;
             do
             {
@@ -152,7 +152,7 @@ namespace HelloWorld
         {
             Console.WriteLine("Foreach loop with break:");
 
-            // This method demonstrates the break statement, which can be used with the
+            // This method demonstrates the break statement, which can be used within the
             // body of any kind of loop to immediately exit the loop.
 
             // We will use a foreach loop to scan the following sentence for repeated words.
@@ -164,13 +164,13 @@ namespace HelloWorld
             // Split the sentence into an array of words, and loop over that.
             foreach (var word in sentence.Split())
             {
-                // Does the current word match the previous word?
+                // Does the current word differ from the previous word?
                 if (word != previousWord)
                 {
                     // Output the non-repeated word.
                     Console.WriteLine("{0}", word);
 
-                    // This will be the previous word for the next iteration.
+                    // The current word will be the previous word for the next iteration.
                     previousWord = word;
                 }
                 else
