@@ -6,14 +6,14 @@
 // This results in a hierarchy of classes, with derived classes representing more
 // specific concepts and their base classes more general concepts.
 //
-// Conceptually, a derived class usually as an "is a" relationship with its base
+// Conceptually, a derived class usually has an "is a" relationship with its base
 // class. For example, if Cat derives from Mammal then an object of type Cat "is a"
 // Mammal as well. Because of this relationship, you can assign an object of type
 // Cat to a variable of type Mammal. Conversely, a variable of type Mammal might
 // refer to an object of type Cat, or Dog, or anything else that derives from Mammal.
-// We can refer to the type of the variable as the "static type" because it's known
-// at compile time from the text of the program; and the actual type of the object
-// it refers to is the "dynamic type" because it's known only at run time.
+// In this case, we say the "static type" of the variable is Mammal, but the
+// "dynamic type" of the object it refers to may be some other class derived from
+// Mammal.
 //
 // A derived class inherits all the members of its base class. For example, a Cat
 // inherits all of the methods and properties of a Mammal, and may then define some
