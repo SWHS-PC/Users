@@ -22,11 +22,42 @@
 // of the method than the base class. When you call a virtual method, the call is
 // dispatched to the method belonging to the *dynamic* type of the object.
 //
+// Instead of virtual, a base class method can be declared "abstract". This means
+// the method is not actually implemented by the base class, only declared. An
+// abstract method must be implemented by a derived class.
+//
 // C# also has the concept of interface. An interface is like a base class in which
 // all members are implicitly abstract. An interface doesn't implement anything. It
 // only declares members that derived classes must override. A class that derives
 // from an interface is said to "implement" the interface. In C#, a class can only
 // derive from one base class, but it can implement multiple interfaces.
+//
+// ---------------------
+//
+// This example defines several classes to represent different kinds of mathematical
+// expressions. For example, consider the expression 
+//
+//      5 + (10^2 / 4)
+//
+// We can diagram the above expression, taking into account the order of operations.
+// The major operator is addition, which has two operands: the constand 5, and a sub-
+// expression with division as the major operator. If we diagram the whole thing, we
+// end up with the following "abstract syntax tree":
+//
+//            add
+//            / \
+//           5  div
+//              / \
+//            pow  4
+//            / \
+//          10   2
+// 
+// Each node in the tree is an expression in its own right, with more complicated
+// expressions built out of simpler ones. We can represent each node as an object,
+// with different classes for different kinds of expressions. For example, we will
+// define AddExpression, NumberExpression, and DivideExpression classes. All of these
+// classes represent different kinds of expressions, so they all will implement the
+// IExpression interface.
 //
 
 using System;
@@ -40,10 +71,14 @@ namespace HelloWorld
     /// </summary>
     interface IExpression
     {
-        // Evaluate the expression, returning its value.
+        /// <summary>
+        /// Compute the value of the expression.
+        /// </summary>
         double Evaluate();
 
-        // Write the expression as text.
+        /// <summary>
+        /// Write the expression text to a TextWriter, such as Console.Out.
+        /// </summary>
         void Write(TextWriter output);
     }
 
@@ -64,6 +99,30 @@ namespace HelloWorld
         public void Write(TextWriter output)
         {
             output.Write(Value);
+        }
+    }
+
+    /// <summary>
+    /// VariableExpression is a mathematical expression comprising a variable.
+    /// It is like a NumberExpression except that has a name as well as a value.
+    /// </summary>
+    class VariableExpression : IExpression
+    {
+        // Name of the variable.
+        public string Name { get; set; }
+
+        // Current value of the variable.
+        public double Value { get; set; }
+
+        // IExpression implementation for NumberExpression.
+        public double Evaluate()
+        {
+            return Value;
+        }
+
+        public void Write(TextWriter output)
+        {
+            output.Write(Name);
         }
     }
 
@@ -237,22 +296,81 @@ namespace HelloWorld
     {
         public static void Run()
         {
-            // Construct a somewhat complex expression.
-            var expr = new DivideExpression
+            EvaluateConstantExpression();
+            EvaluateFormula();
+        }
+
+        static void EvaluateConstantExpression()
+        {
+            Console.WriteLine("Evaluate constant expression:");
+            Console.WriteLine();
+
+            // Construct an abstract syntax tree corresponding to 5 + (2^10 / 4).
+            var expr = new AddExpression
             {
-                LeftOperand = new PowerExpression
+                LeftOperand = new NumberExpression { Value = 5 },
+                RightOperand = new DivideExpression
                 {
-                    LeftOperand = new NumberExpression { Value = 10 },
-                    RightOperand = new NumberExpression { Value = 2 }
-                },
-                RightOperand = new NumberExpression {  Value = 4 }
+                    LeftOperand = new PowerExpression
+                    {
+                        LeftOperand = new NumberExpression { Value = 10 },
+                        RightOperand = new NumberExpression { Value = 2 }
+                    },
+                    RightOperand = new NumberExpression { Value = 4 }
+                }
             };
 
             // Call the virtual Write method to write the text of the expression.
+            Console.Write("    ");
             expr.Write(Console.Out);
 
             // Call the virtual Evaluate method, and write the value of the expression.
             Console.WriteLine(" = {0}", expr.Evaluate());
+            Console.WriteLine();
+        }
+
+        static void EvaluateFormula()
+        {
+            Console.WriteLine("Evaluate formula:");
+            Console.WriteLine();
+
+            // Create an expression representing the independent variable 'x'.
+            var x = new VariableExpression { Name = "x" };
+
+            // Construct an abstract syntax tree corresponding to x^2 + 1.5x + 1.
+            var expr = new AddExpression
+            {
+                LeftOperand = new AddExpression
+                {
+                    LeftOperand = new PowerExpression
+                    {
+                        LeftOperand = x,
+                        RightOperand = new NumberExpression { Value = 2 }
+                    },
+                    RightOperand = new MultiplyExpression
+                    {
+                        LeftOperand = new NumberExpression { Value = 1.5 },
+                        RightOperand = x
+                    }
+                },
+                RightOperand = new NumberExpression { Value = 1 }
+            };
+
+            // Write the table column headers.
+            Console.Write("{0,5}    ", x.Name);
+            expr.Write(Console.Out);
+            Console.WriteLine();
+            Console.WriteLine();
+
+            // Write table rows with different values of x.
+            for (int i = 0; i < 10; ++i)
+            {
+                x.Value = i;
+
+                Console.WriteLine("{0,5}    {1}", x.Value, expr.Evaluate());
+            }
+
+            Console.WriteLine();
         }
     }
 }
