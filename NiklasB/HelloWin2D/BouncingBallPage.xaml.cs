@@ -168,7 +168,7 @@ namespace HelloWin2D
 
         void AddBall()
         {
-            var radius = (float)m_random.Next(5, 20);
+            var radius = (float)m_random.Next(8, 32);
             float altitude = (float)m_random.Next(400, 600);
             float velocityX = (float)m_random.Next(100, 300);
 

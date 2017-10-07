@@ -8,9 +8,18 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel>
-            <Button Content="Graph" Click="Graph_Click"/>
-            <Button Content="Bouncing Ball" Click="BouncingBall_Click"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Button Grid.Row="1" Grid.Column="1" Width="400" Height="60" Content="Equation Graph" Click="Graph_Click"/>
+        <Button Grid.Row="3" Grid.Column="1" Width="400" Height="60" Content="Bouncing Balls" Click="BouncingBall_Click"/>
     </Grid>
 </Page>
