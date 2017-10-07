@@ -1,17 +1,31 @@
-﻿using Windows.UI;
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System.Numerics;
+using Microsoft.Graphics.Canvas;
 
 namespace HelloWin2D
 {
     public sealed partial class BouncingBallPage : Page
     {
-        Vector2 m_canvasSize = new Vector2(500.0f, 500.0f);
-        Vector2 m_ballCenter = new Vector2(50, 50);
-        Vector2 m_ballVelocity = new Vector2(80.0f, 0);
-        float m_ballRadius = 10;
-        float m_gravity = 500.0f;
+        class Ball
+        {
+            public Vector2 position;
+            public Vector2 velocity;
+            public float radius;
+            public Color color;
+        }
+
+        const float m_gravity = 500.0f;
+        const float m_newBallInterval = 1;
+
+        float m_newBallTimer = 0;
+        List<Ball> m_balls = new List<Ball>();
+        Vector2 m_canvasSize;
+        Matrix3x2 m_matrix = Matrix3x2.Identity;
+        Random m_random = new Random();
 
         public BouncingBallPage()
         {
@@ -37,10 +51,17 @@ namespace HelloWin2D
 
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            // Save the canvas size.
             m_canvasSize = new Vector2(
                 (float)m_canvas.ActualWidth,
                 (float)m_canvas.ActualHeight
                 );
+
+            // Compute a transformation matrix such that positive Y is up.
+            m_matrix = Matrix3x2.CreateScale(1, -1);
+
+            // Add a displacement so the bottom of the canvas is at Y = 0.
+            m_matrix.M32 = m_canvasSize.Y;
         }
 
         static void Bounce(ref float position, ref float velocity, float minPosition, float maxPosition)
@@ -70,14 +91,106 @@ namespace HelloWin2D
 
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
         {
-            float seconds = (float)args.Timing.ElapsedTime.TotalSeconds;
-            m_ballVelocity.Y += seconds * m_gravity;
-            m_ballCenter += m_ballVelocity * seconds;
+            Update((float)args.Timing.ElapsedTime.TotalSeconds);
 
-            Bounce(ref m_ballCenter.X, ref m_ballVelocity.X, m_ballRadius, m_canvasSize.X - m_ballRadius);
-            Bounce(ref m_ballCenter.Y, ref m_ballVelocity.Y, m_ballRadius, m_canvasSize.Y - m_ballRadius);
+            var drawingSession = args.DrawingSession;
+            drawingSession.Transform = m_matrix;
 
-            args.DrawingSession.FillCircle(m_ballCenter, m_ballRadius, Colors.DarkRed);
+            foreach (var ball in m_balls)
+            {
+                drawingSession.FillCircle(ball.position, ball.radius, ball.color);
+            }
+
+            drawingSession.Transform = Matrix3x2.Identity;
+        }
+
+        void Update(float seconds)
+        {
+            foreach (var ball in m_balls)
+            {
+                MoveBall(ball, seconds);
+            }
+
+            if (m_newBallTimer > seconds)
+            {
+                m_newBallTimer -= seconds;
+            }
+            else
+            {
+                AddBall();
+                m_newBallTimer = m_newBallInterval;
+            }
+        }
+
+        void MoveBall(Ball ball, float seconds)
+        {
+            // Add velocity * time to the current position.
+            var position = ball.position + (ball.velocity * seconds);
+
+            // Add gravity (i.e., vertical acceleration) to the velocity.
+            var velocity = ball.velocity;
+            velocity.Y -= (m_gravity * seconds);
+
+            // Multiply the horizontal or vertical velocity by this number
+            // when the ball bounces off a surface. This reverses the direction
+            // and reduces the speed by 5%.
+            const float bounceMultiplier = -0.95f;
+
+            // Detect if the ball is bouncing off the floor.
+            float minY = ball.radius;
+            if (position.Y <= minY && velocity.Y < 0)
+            {
+                velocity.Y = velocity.Y * bounceMultiplier;
+            }
+
+            // Detect if the ball is bouncing off the left or right wall.
+            float minX = ball.radius;
+            float maxX = Math.Max(m_canvasSize.X - ball.radius, minX);
+
+            if (position.X <= minX)
+            {
+                if (velocity.X < 0)
+                {
+                    velocity.X *= bounceMultiplier;
+                }
+            }
+            else if (position.X >= maxX)
+            {
+                if (velocity.X > 0)
+                {
+                    velocity.X *= bounceMultiplier;
+                }
+            }
+
+            ball.position = position;
+            ball.velocity = velocity;
+        }
+
+        void AddBall()
+        {
+            var radius = (float)m_random.Next(5, 20);
+            float altitude = (float)m_random.Next(400, 600);
+            float velocityX = (float)m_random.Next(100, 300);
+
+            var ball = new Ball
+            {
+                position = new Vector2(-radius, altitude),
+                velocity = new Vector2(velocityX, 0),
+                radius = radius,
+                color = MakeRandomColor()
+            };
+
+            m_balls.Add(ball);
+        }
+
+        Color MakeRandomColor()
+        {
+            return Color.FromArgb(
+                byte.MaxValue,
+                (byte)m_random.Next(128),
+                (byte)m_random.Next(128),
+                (byte)m_random.Next(128)
+                );
         }
     }
 }
