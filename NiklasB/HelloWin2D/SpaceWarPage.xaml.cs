@@ -10,9 +10,6 @@ using Microsoft.Graphics.Canvas.Effects;
 
 namespace HelloWin2D
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class SpaceWarPage : Page
     {
         class Ship
@@ -215,6 +212,12 @@ namespace HelloWin2D
         {
             UpdateShip(m_ship1, seconds);
             UpdateShip(m_ship2, seconds);
+
+            if (Intersects(m_ship1, m_ship2.position, m_shipRadius, m_ship2.heading, m_ship2.geometry))
+            {
+                m_ship1.velocity = new Vector2();
+                m_ship2.velocity = new Vector2();
+            }
         }
 
         void UpdateShip(Ship ship, float seconds)
@@ -260,6 +263,23 @@ namespace HelloWin2D
                 }
             }
         }
+
+        bool Intersects(Ship ship, Vector2 otherPosition, float otherRadius, float otherHeading, CanvasGeometry otherGeometry)
+        {
+            float r = otherRadius + m_shipRadius;
+            Vector2 v = otherPosition - ship.position;
+            if ((v.X * v.X) + (v.Y * v.Y) >= (r * r))
+                return false;
+
+            var matrix = Matrix3x2.CreateRotation(otherHeading) *
+                Matrix3x2.CreateTranslation(v) *
+                Matrix3x2.CreateRotation(-ship.heading);
+
+            var relation = ship.geometry.CompareWith(otherGeometry, matrix, 2.0f);
+
+            return relation != CanvasGeometryRelation.Disjoint;
+        }
+
 
     }
 }
