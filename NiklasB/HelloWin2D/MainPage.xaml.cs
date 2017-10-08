@@ -15,14 +15,19 @@ namespace HelloWin2D
             this.InitializeComponent();
         }
 
+        private void Graph_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(GraphPage));
+        }
+
         private void BouncingBall_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(BouncingBallPage));
         }
 
-        private void Graph_Click(object sender, RoutedEventArgs e)
+        private void SpaceWar_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(GraphPage));
+            this.Frame.Navigate(typeof(SpaceWarPage));
         }
     }
 }

@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -21,5 +23,6 @@
         
         <Button Grid.Row="1" Grid.Column="1" Width="400" Height="60" Content="Equation Graph" Click="Graph_Click"/>
         <Button Grid.Row="3" Grid.Column="1" Width="400" Height="60" Content="Bouncing Balls" Click="BouncingBall_Click"/>
+        <Button Grid.Row="5" Grid.Column="1" Width="400" Height="60" Content="Space War" Click="SpaceWar_Click"/>
     </Grid>
 </Page>
