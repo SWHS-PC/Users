@@ -13,5 +13,9 @@
         <Button Click="BackButton_Click" VerticalAlignment="Top">
             <SymbolIcon Symbol="Back" Foreground="White"/>
         </Button>
+        <TextBlock 
+            HorizontalAlignment="Center" VerticalAlignment="Center" 
+            Foreground="White" FontSize="96" Text="Game Over!"
+            Visibility="Collapsed" x:Name="m_gameOverTextBlock"/>
     </Grid>
 </Page>
