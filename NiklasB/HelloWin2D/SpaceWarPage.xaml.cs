@@ -8,6 +8,7 @@ using Windows.System;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Graphics.Canvas.Brushes;
 
 namespace HelloWin2D
 {
@@ -39,23 +40,26 @@ namespace HelloWin2D
         }
 
         Vector2 m_canvasSize;
+        SpaceObject m_sun = new SpaceObject { Radius = m_sunRadius };
         SpaceShip m_ship1 = new SpaceShip { Radius = m_shipRadius };
         SpaceShip m_ship2 = new SpaceShip { Radius = m_shipRadius };
         List<Missile> m_missiles = new List<Missile>();
-        public CanvasGeometry m_flameGeometry;
-        public ICanvasImage m_flameImage;
+        public DirectionalBlurEffect m_flameImage;
         public CanvasGeometry m_missileGeometry;
         public ICanvasImage m_missileImage;
         bool m_isInitialized = false;
         bool m_isGameOver = false;
+        bool m_showSun = true;
 
         const float m_rotationRate = 3.14f; // radians per second
-        const float m_thrust = 500.0f;      // pixels per second per second
+        const float m_thrust = 150.0f;      // pixels per second per second
         const float m_shipRadius = 20;
         const float m_missileRadius = 7;
         const float m_missileMaxAge = 2;
-        const float m_missileSpeed = 400;
+        const float m_missileSpeed = 100;
         const float m_explosionDuration = 1;
+        const float m_sunRadius = 50;
+        const float m_gravity = 2000000;
 
         public SpaceWarPage()
         {
@@ -154,14 +158,25 @@ namespace HelloWin2D
                 (float)m_canvas.ActualHeight
                 );
 
+            m_sun.Position = m_canvasSize * new Vector2(0.5f, 0.5f);
+
             // Initialize the ship positions and headings on the first call.
             if (!m_isInitialized)
             {
-                m_ship1.Position = m_canvasSize * new Vector2(0.1f, 0.5f);
-                m_ship1.Heading = (float)(Math.PI * 0.5);
+                const float shipDistance = m_sunRadius * 5;
+                const float shipSpeed = 100;
 
-                m_ship2.Position = m_canvasSize * new Vector2(0.9f, 0.5f);
-                m_ship2.Heading = (float)(Math.PI * -0.5);
+                m_ship1.Position = m_sun.Position + new Vector2(-shipDistance, 0);
+                m_ship1.Heading = 0;
+
+                m_ship2.Position = m_sun.Position + new Vector2(shipDistance, 0);
+                m_ship2.Heading = (float)Math.PI;
+
+                if (m_showSun)
+                {
+                    m_ship1.Velocity = new Vector2(0, -shipSpeed);
+                    m_ship2.Velocity = new Vector2(0, shipSpeed);
+                }
 
                 m_isInitialized = true;
             }
@@ -174,16 +189,22 @@ namespace HelloWin2D
 
         private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            var geometry = MakeShipGeometry();
+            m_sun.Geometry = MakeSunGeometry();
+            m_sun.Image = MakeSunImage(m_sun.Geometry);
 
-            m_ship1.Geometry = geometry;
-            m_ship1.Image = MakeBlurImage(geometry, Colors.PaleGreen, 1.0f);
+            var shipGeometry = MakeShipGeometry();
 
-            m_ship2.Geometry = geometry;
-            m_ship2.Image = MakeBlurImage(geometry, Colors.Yellow, 1.0f);
+            m_ship1.Geometry = shipGeometry;
+            m_ship1.Image = MakeBlurImage(shipGeometry, Colors.PaleGreen, 1.0f);
 
-            m_flameGeometry = MakeFlameGeometry();
-            m_flameImage = MakeBlurImage(m_flameGeometry, Colors.White, 2.0f);
+            m_ship2.Geometry = shipGeometry;
+            m_ship2.Image = MakeBlurImage(shipGeometry, Colors.Yellow, 1.0f);
+
+            m_flameImage = new DirectionalBlurEffect
+            {
+                Source = MakeBlurImage(MakeFlameGeometry(), Color.FromArgb(255, 140, 180, 255), 1.0f),
+                Angle = -0.5f * 3.14159f
+            };
 
             m_missileGeometry = MakeMissileGeometry();
             m_missileImage = MakeBlurImage(m_missileGeometry, Colors.White, 2.0f);
@@ -222,9 +243,9 @@ namespace HelloWin2D
         {
             var points = new Vector2[]
             {
-                new Vector2(4, 13),
+                new Vector2(4.5f, 13),
                 new Vector2(0, 28),
-                new Vector2(-4, 13)
+                new Vector2(-4.5f, 13)
             };
 
             return CanvasGeometry.CreatePolygon(m_canvas, points);
@@ -243,17 +264,51 @@ namespace HelloWin2D
             return CanvasGeometry.CreatePolygon(m_canvas, points);
         }
 
-        ICanvasImage MakeBlurImage(CanvasGeometry geometry, Color color, float blur)
+        CanvasGeometry MakeSunGeometry()
+        {
+            return CanvasGeometry.CreateCircle(m_canvas, new Vector2(), m_sunRadius);
+        }
+
+        ICanvasImage MakeSunImage(CanvasGeometry geometry)
+        {
+            var stops = new CanvasGradientStop[]
+            {
+                new CanvasGradientStop { Color = Color.FromArgb(255, 255, 192, 121), Position = 0 },
+                new CanvasGradientStop { Color = Color.FromArgb(255, 255, 173, 87), Position = 0.3f },
+                new CanvasGradientStop { Color = Color.FromArgb(255, 244, 94, 0), Position = 0.9f },
+                new CanvasGradientStop { Color = Color.FromArgb(255, 187, 13, 4), Position = 1.0f }
+            };
+
+            using (var brush = new CanvasRadialGradientBrush(m_canvas, stops))
+            {
+                brush.RadiusX = m_sunRadius;
+                brush.RadiusY = m_sunRadius;
+
+                var commandList = new CanvasCommandList(m_canvas);
+                using (var g = commandList.CreateDrawingSession())
+                {
+                    g.FillGeometry(geometry, brush);
+                }
+
+                return commandList;
+            }
+        }
+
+        CanvasCommandList CommandListFromGeometry(CanvasGeometry geometry, Color color)
         {
             var commandList = new CanvasCommandList(m_canvas);
             using (var g = commandList.CreateDrawingSession())
             {
                 g.FillGeometry(geometry, color);
             }
+            return commandList;
+        }
 
+        GaussianBlurEffect MakeBlurImage(CanvasGeometry geometry, Color color, float blur)
+        {
             return new GaussianBlurEffect
             {
-                Source = commandList,
+                Source = CommandListFromGeometry(geometry, color),
                 BlurAmount = blur
             };
         }
@@ -261,6 +316,15 @@ namespace HelloWin2D
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
         {
             var drawingSession = args.DrawingSession;
+
+            if (m_showSun)
+            {
+                drawingSession.Transform = ComputeObjectTransform(m_sun);
+                drawingSession.DrawImage(m_sun.Image);
+            }
+
+            m_flameImage.BlurAmount = 4.0f +
+                3.5f * (float)Math.Sin(args.Timing.TotalTime.TotalSeconds * 20);
 
             DrawShip(drawingSession, m_ship1);
             DrawShip(drawingSession, m_ship2);
@@ -321,7 +385,11 @@ namespace HelloWin2D
                 {
                     MoveObject(missile, seconds);
 
-                    if (!m_isGameOver)
+                    if (m_showSun && Intersects(missile, m_sun))
+                    {
+                        isExpired = true;
+                    }
+                    else if (!m_isGameOver)
                     {
                         if (Intersects(missile, m_ship1))
                         {
@@ -343,10 +411,26 @@ namespace HelloWin2D
                 }
             }
 
-            if (!m_isGameOver && Intersects(m_ship1, m_ship2))
+            if (!m_isGameOver)
             {
-                m_ship1.IsExploding = true;
-                m_ship2.IsExploding = true;
+                if (Intersects(m_ship1, m_ship2))
+                {
+                    m_ship1.IsExploding = true;
+                    m_ship2.IsExploding = true;
+                }
+
+                if (m_showSun)
+                {
+                    if (Intersects(m_ship1, m_sun))
+                    {
+                        m_ship1.IsExploding = true;
+                    }
+
+                    if (Intersects(m_ship2, m_sun))
+                    {
+                        m_ship2.IsExploding = true;
+                    }
+                }
             }
         }
 
@@ -416,8 +500,29 @@ namespace HelloWin2D
             }
         }
 
+        void AddGravity(SpaceObject obj, float seconds)
+        {
+            Vector2 vecToSun = m_sun.Position - obj.Position;
+            float d2 = vecToSun.LengthSquared();
+            float d = (float)Math.Sqrt(d2);
+            if (d > m_sunRadius)
+            {
+                Vector2 deltaV = vecToSun * (seconds * (m_gravity / d2) / d);
+                obj.Velocity += deltaV;
+            }
+            else
+            {
+                obj.Velocity = new Vector2();
+            }
+        }
+
         void MoveObject(SpaceObject obj, float seconds)
         {
+            if (m_showSun)
+            {
+                AddGravity(obj, seconds);
+            }
+
             obj.Position += obj.Velocity * seconds;
 
             WrapPosition(ref obj.Position.X, obj.Velocity.X, m_canvasSize.X);
@@ -446,7 +551,7 @@ namespace HelloWin2D
         {
             float r = obj1.Radius + obj2.Radius;
             Vector2 v = obj2.Position - obj1.Position;
-            if ((v.X * v.X) + (v.Y * v.Y) >= (r * r))
+            if (v.LengthSquared() >= r * r)
                 return false;
 
             var matrix = Matrix3x2.CreateRotation(obj2.Heading) *
