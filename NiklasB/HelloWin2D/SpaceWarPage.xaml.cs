@@ -17,12 +17,12 @@ namespace HelloWin2D
         // Base class for objects on the canvas, such as ships and missiles.
         class SpaceObject
         {
-            public CanvasGeometry Geometry;
-            public ICanvasImage Image;
-            public Vector2 Position;
-            public Vector2 Velocity;
-            public float Heading;
-            public float Radius;
+            public CanvasGeometry Geometry { get; set; }
+            public ICanvasImage Image { get; set; }
+            public Vector2 Position { get; set; }
+            public Vector2 Velocity { get; set; }
+            public float Heading { get; set; }
+            public float Radius { get; set; }
 
             public Matrix3x2 Transform
             {
@@ -32,31 +32,39 @@ namespace HelloWin2D
 
         class SpaceShip : SpaceObject
         {
-            public bool IsThrusting;
-            public bool IsRotatingLeft;
-            public bool IsRotatingRight;
-            public bool IsFiring;
-            public bool IsExploding;
-            public float ExplosionAge;
+            public bool IsThrusting { get; set; }
+            public bool IsRotatingLeft { get; set; }
+            public bool IsRotatingRight { get; set; }
+            public bool IsFiring { get; set; }
+            public bool IsExploding { get; set; }
+            public float ExplosionAge { get; set; }
         }
 
         class Missile : SpaceObject
         {
-            public float Age;
+            public float Age { get; set; }
         }
 
+        // Size of the canvas, initialized by the Canvas_SizeChanged event handler.
         Vector2 m_canvasSize;
+
+        // Objects on the canvas.
         SpaceObject m_sun = new SpaceObject { Radius = m_sunRadius };
         SpaceShip m_ship1 = new SpaceShip { Radius = m_shipRadius };
         SpaceShip m_ship2 = new SpaceShip { Radius = m_shipRadius };
         List<Missile> m_missiles = new List<Missile>();
+
+        // Graphics resources not associatd with specific objects.
         public DirectionalBlurEffect m_flameImage;
         public CanvasGeometry m_missileGeometry;
         public ICanvasImage m_missileImage;
+
+        // General game state.
         bool m_isInitialized = false;
         bool m_isGameOver = false;
         bool m_showSun = true;
 
+        // Constants.
         const float m_rotationRate = 3.14f; // radians per second
         const float m_thrust = 150.0f;      // pixels per second per second
         const float m_shipRadius = 20;
@@ -436,9 +444,11 @@ namespace HelloWin2D
                     }
                     else
                     {
-                        MoveObject(missile, seconds);
-
-                        if (m_showSun && Intersects(missile, m_sun))
+                        if (!MoveObject(missile, seconds))
+                        {
+                            isExpired = true;
+                        }
+                        else if (m_showSun && Intersects(missile, m_sun))
                         {
                             isExpired = true;
                         }
@@ -529,7 +539,10 @@ namespace HelloWin2D
                         );
                 }
 
-                MoveObject(ship, seconds);
+                if (!MoveObject(ship, seconds))
+                {
+                    ship.IsExploding = true;
+                }
 
                 if (ship.IsFiring)
                 {
@@ -570,50 +583,47 @@ namespace HelloWin2D
             }
         }
 
-        void MoveObject(SpaceObject obj, float seconds)
+        bool MoveObject(SpaceObject obj, float seconds)
         {
+            // Adjust the velocity based on the Sun's gravity, if enabled.
             if (m_showSun)
             {
                 AddGravity(obj, seconds);
             }
 
-            obj.Position += obj.Velocity * seconds;
+            // Add the velocity to the object's position.
+            Vector2 newPosition = obj.Position + (obj.Velocity * seconds);
+            obj.Position = newPosition;
 
-            WrapPosition(ref obj.Position.X, obj.Velocity.X, m_canvasSize.X);
-            WrapPosition(ref obj.Position.Y, obj.Velocity.Y, m_canvasSize.Y);
+            // Return true if and only if the object is in bounds.
+            float r = obj.Radius;
+            return newPosition.X >= r && newPosition.X <= m_canvasSize.X - r &&
+                newPosition.Y >= r && newPosition.Y <= m_canvasSize.Y - r;
         }
 
-        void WrapPosition(ref float position, float velocity, float canvasSize)
-        {
-            if (velocity < 0)
-            {
-                if (position <= -m_shipRadius)
-                {
-                    position = canvasSize + m_shipRadius;
-                }
-            }
-            else
-            {
-                if (position >= canvasSize + m_shipRadius)
-                {
-                    position = -m_shipRadius;
-                }
-            }
-        }
-
+        /// <summary>
+        /// Determine whether two space objects intersect, for collision detection.
+        /// </summary>
         bool Intersects(SpaceObject obj1, SpaceObject obj2)
         {
+            // As an optimization, we can quickly return false if the distance squared
+            // between the objects exceeds the sum of their radii squared.
             float r = obj1.Radius + obj2.Radius;
             Vector2 v = obj2.Position - obj1.Position;
             if (v.LengthSquared() >= r * r)
                 return false;
 
+            // The objects potentially intersect. Compute a matrix that transforms the 
+            // second object to the model space of the first object.
             var matrix = Matrix3x2.CreateRotation(obj2.Heading) *
                 Matrix3x2.CreateTranslation(v) *
                 Matrix3x2.CreateRotation(-obj1.Heading);
 
+            // Determine the relation between the two geometries, after applyin the
+            // transformation to the second object's geometry.
             var relation = obj1.Geometry.CompareWith(obj2.Geometry, matrix, 2.0f);
 
+            // Return true if the geometries are not disjoint.
             return relation != CanvasGeometryRelation.Disjoint;
         }
     }
