@@ -55,7 +55,7 @@ namespace HelloWin2D
         const float m_thrust = 150.0f;      // pixels per second per second
         const float m_shipRadius = 20;
         const float m_missileRadius = 7;
-        const float m_missileMaxAge = 2;
+        const float m_missileMaxAge = 3;
         const float m_missileSpeed = 100;
         const float m_explosionDuration = 1;
         const float m_sunRadius = 50;
@@ -150,36 +150,73 @@ namespace HelloWin2D
             return false;
         }
 
+        private void PlayAgain_Click(object sender, RoutedEventArgs e)
+        {
+            lock (this)
+            {
+                InitializeGame();
+
+                m_isGameOver = false;
+
+                m_gameOverBox.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // Save the canvas size.
-            m_canvasSize = new Vector2(
-                (float)m_canvas.ActualWidth,
-                (float)m_canvas.ActualHeight
-                );
-
-            m_sun.Position = m_canvasSize * new Vector2(0.5f, 0.5f);
-
-            // Initialize the ship positions and headings on the first call.
-            if (!m_isInitialized)
+            lock (this)
             {
-                const float shipDistance = m_sunRadius * 5;
-                const float shipSpeed = 100;
+                // Save the canvas size.
+                var newSize = new Vector2(
+                    (float)m_canvas.ActualWidth,
+                    (float)m_canvas.ActualHeight
+                    );
 
-                m_ship1.Position = m_sun.Position + new Vector2(-shipDistance, 0);
-                m_ship1.Heading = 0;
+                var oldSize = m_canvasSize;
+                m_canvasSize = newSize;
 
-                m_ship2.Position = m_sun.Position + new Vector2(shipDistance, 0);
-                m_ship2.Heading = (float)Math.PI;
+                // Center the sun.
+                m_sun.Position = newSize * new Vector2(0.5f, 0.5f);
 
-                if (m_showSun)
+                if (m_isInitialized)
                 {
-                    m_ship1.Velocity = new Vector2(0, -shipSpeed);
-                    m_ship2.Velocity = new Vector2(0, shipSpeed);
-                }
+                    var scale = newSize / oldSize;
 
-                m_isInitialized = true;
+                    m_ship1.Position *= scale;
+                    m_ship2.Position *= scale;
+
+                    foreach (var missile in m_missiles)
+                    {
+                        missile.Position *= scale;
+                    }
+                }
+                else
+                {
+                    // Set all the object positions to their initial values.
+                    InitializeGame();
+                    m_isInitialized = true;
+                }
             }
+        }
+
+        void InitializeGame()
+        {
+            const float shipDistance = m_sunRadius * 5;
+            float shipSpeed = m_showSun ? 100.0f : 0.0f;
+
+            m_ship1.Position = m_sun.Position + new Vector2(-shipDistance, 0);
+            m_ship1.Velocity = new Vector2(0, -shipSpeed);
+            m_ship1.Heading = 0;
+            m_ship1.IsExploding = false;
+            m_ship1.ExplosionAge = 0;
+
+            m_ship2.Position = m_sun.Position + new Vector2(shipDistance, 0);
+            m_ship2.Velocity = new Vector2(0, shipSpeed);
+            m_ship2.Heading = (float)Math.PI;
+            m_ship2.IsExploding = false;
+            m_ship2.ExplosionAge = 0;
+
+            m_missiles.Clear();
         }
 
         Matrix3x2 ComputeObjectTransform(SpaceObject obj)
@@ -315,24 +352,27 @@ namespace HelloWin2D
 
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
         {
-            var drawingSession = args.DrawingSession;
-
-            if (m_showSun)
+            lock (this)
             {
-                drawingSession.Transform = ComputeObjectTransform(m_sun);
-                drawingSession.DrawImage(m_sun.Image);
-            }
+                var drawingSession = args.DrawingSession;
 
-            m_flameImage.BlurAmount = 4.0f +
-                3.5f * (float)Math.Sin(args.Timing.TotalTime.TotalSeconds * 20);
+                if (m_showSun)
+                {
+                    drawingSession.Transform = ComputeObjectTransform(m_sun);
+                    drawingSession.DrawImage(m_sun.Image);
+                }
 
-            DrawShip(drawingSession, m_ship1);
-            DrawShip(drawingSession, m_ship2);
+                m_flameImage.BlurAmount = 4.0f +
+                    3.5f * (float)Math.Sin(args.Timing.TotalTime.TotalSeconds * 20);
 
-            foreach (var missile in m_missiles)
-            {
-                drawingSession.Transform = ComputeObjectTransform(missile);
-                drawingSession.DrawImage(missile.Image);
+                DrawShip(drawingSession, m_ship1);
+                DrawShip(drawingSession, m_ship2);
+
+                foreach (var missile in m_missiles)
+                {
+                    drawingSession.Transform = ComputeObjectTransform(missile);
+                    drawingSession.DrawImage(missile.Image);
+                }
             }
         }
 
@@ -366,69 +406,72 @@ namespace HelloWin2D
 
         private void Canvas_Update(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedUpdateEventArgs args)
         {
-            float seconds = (float)args.Timing.ElapsedTime.TotalSeconds;
-
-            UpdateShip(m_ship1, seconds);
-            UpdateShip(m_ship2, seconds);
-
-            for (int i = m_missiles.Count - 1; i >= 0; --i)
+            lock (this)
             {
-                var missile = m_missiles[i];
+                float seconds = (float)args.Timing.ElapsedTime.TotalSeconds;
 
-                bool isExpired = false;
+                UpdateShip(m_ship1, seconds);
+                UpdateShip(m_ship2, seconds);
 
-                if ((missile.Age += seconds) > m_missileMaxAge)
+                for (int i = m_missiles.Count - 1; i >= 0; --i)
                 {
-                    isExpired = true;
-                }
-                else
-                {
-                    MoveObject(missile, seconds);
+                    var missile = m_missiles[i];
 
-                    if (m_showSun && Intersects(missile, m_sun))
+                    bool isExpired = false;
+
+                    if ((missile.Age += seconds) > m_missileMaxAge)
                     {
                         isExpired = true;
                     }
-                    else if (!m_isGameOver)
+                    else
                     {
-                        if (Intersects(missile, m_ship1))
-                        {
-                            m_ship1.IsExploding = true;
-                            isExpired = true;
-                        }
+                        MoveObject(missile, seconds);
 
-                        if (Intersects(missile, m_ship2))
+                        if (m_showSun && Intersects(missile, m_sun))
                         {
-                            m_ship2.IsExploding = true;
                             isExpired = true;
                         }
+                        else if (!m_isGameOver)
+                        {
+                            if (Intersects(missile, m_ship1))
+                            {
+                                m_ship1.IsExploding = true;
+                                isExpired = true;
+                            }
+
+                            if (Intersects(missile, m_ship2))
+                            {
+                                m_ship2.IsExploding = true;
+                                isExpired = true;
+                            }
+                        }
+                    }
+
+                    if (isExpired)
+                    {
+                        m_missiles.RemoveAt(i);
                     }
                 }
 
-                if (isExpired)
+                if (!m_isGameOver)
                 {
-                    m_missiles.RemoveAt(i);
-                }
-            }
-
-            if (!m_isGameOver)
-            {
-                if (Intersects(m_ship1, m_ship2))
-                {
-                    m_ship1.IsExploding = true;
-                    m_ship2.IsExploding = true;
-                }
-
-                if (m_showSun)
-                {
-                    if (Intersects(m_ship1, m_sun))
+                    if (Intersects(m_ship1, m_ship2))
                     {
                         m_ship1.IsExploding = true;
+                        m_ship2.IsExploding = true;
                     }
 
-                    if (Intersects(m_ship2, m_sun))
+                    if (m_showSun)
                     {
-                        m_ship2.IsExploding = true;
+                        if (Intersects(m_ship1, m_sun))
+                        {
+                            m_ship1.IsExploding = true;
+                        }
+
+                        if (Intersects(m_ship2, m_sun))
+                        {
+                            m_ship2.IsExploding = true;
+                        }
                     }
                 }
             }
@@ -450,7 +493,7 @@ namespace HelloWin2D
 
                         var ignored = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                         {
-                            m_gameOverTextBlock.Visibility = Visibility.Visible;
+                            m_gameOverBox.Visibility = Visibility.Visible;
                         });
                     }
                 }

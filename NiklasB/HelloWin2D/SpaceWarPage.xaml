@@ -13,9 +13,12 @@
         <Button Click="BackButton_Click" VerticalAlignment="Top">
             <SymbolIcon Symbol="Back" Foreground="White"/>
         </Button>
-        <TextBlock 
-            HorizontalAlignment="Center" VerticalAlignment="Center" 
-            Foreground="White" FontSize="96" Text="Game Over!"
-            Visibility="Collapsed" x:Name="m_gameOverTextBlock"/>
+        <Border x:Name="m_gameOverBox" Visibility="Collapsed"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel>
+                <TextBlock Foreground="White" FontSize="96" Text="Game Over!"/>
+                <Button Content="Play Again" Foreground="White" HorizontalAlignment="Center" Click="PlayAgain_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>
