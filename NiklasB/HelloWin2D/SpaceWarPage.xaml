@@ -9,15 +9,22 @@
     mc:Ignorable="d">
 
     <Grid Background="Black">
-        <canvas:CanvasAnimatedControl x:Name="m_canvas" IsTabStop="True" Background="Black"/>
+        <canvas:CanvasAnimatedControl x:Name="m_canvas" IsTabStop="True" Background="Black" Paused="True"/>
+        
         <Button Click="BackButton_Click" VerticalAlignment="Top">
             <SymbolIcon Symbol="Back" Foreground="White"/>
         </Button>
-        <Border x:Name="m_gameOverBox" Visibility="Collapsed"
-                HorizontalAlignment="Center" VerticalAlignment="Center">
+        
+        <Border x:Name="m_gameStatusBox"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                BorderBrush="White" BorderThickness="2" Padding="20" Background="#80ffffff">
             <StackPanel>
-                <TextBlock Foreground="White" FontSize="96" Text="Game Over!"/>
-                <Button Content="Play Again" Foreground="White" HorizontalAlignment="Center" Click="PlayAgain_Click"/>
+                <TextBlock x:Name="m_statusText" Foreground="White" FontSize="96" Text="Space War"/>
+
+                <CheckBox x:Name="m_showSunCheckBox" Content="Show Sun" IsChecked="True"/>
+                <CheckBox x:Name="m_longRangMissileCheckBox" Content="Long Range Missiles" IsChecked="True"/>
+
+                <Button Content="Play" FontSize="80" HorizontalAlignment="Center" Click="Play_Click"/>
             </StackPanel>
         </Border>
     </Grid>

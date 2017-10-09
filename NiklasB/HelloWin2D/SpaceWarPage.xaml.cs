@@ -59,17 +59,18 @@ namespace HelloWin2D
         public CanvasGeometry m_missileGeometry;
         public ICanvasImage m_missileImage;
 
-        // General game state.
+        // Game state and options.
         bool m_isInitialized = false;
         bool m_isGameOver = false;
-        bool m_showSun = true;
+        bool m_showSun = false;
+        bool m_longRangeMissiles = false;
+        float MaxMissileAge => m_longRangeMissiles ? 20.0f : 2.0f;
 
         // Constants.
         const float m_rotationRate = 3.14f; // radians per second
         const float m_thrust = 150.0f;      // pixels per second per second
         const float m_shipRadius = 20;
         const float m_missileRadius = 7;
-        const float m_missileMaxAge = 3;
         const float m_missileSpeed = 100;
         const float m_explosionDuration = 1;
         const float m_sunRadius = 50;
@@ -148,10 +149,16 @@ namespace HelloWin2D
 
         bool OnKeyPress(VirtualKey key, uint scanCode)
         {
-            if (key == VirtualKey.F)
+            switch (key)
             {
-                m_ship1.IsFiring = true;
-                return true;
+                case VirtualKey.F:
+                case VirtualKey.Q:
+                    m_ship1.IsFiring = true;
+                    return true;
+
+                case VirtualKey.Space:
+                    m_ship2.IsFiring = true;
+                    return true;
             }
 
             switch (scanCode)
@@ -164,15 +171,30 @@ namespace HelloWin2D
             return false;
         }
 
-        private void PlayAgain_Click(object sender, RoutedEventArgs e)
+        void ShowStatus()
+        {
+            if (m_isGameOver)
+            {
+                m_statusText.Text = "Game Over!";
+            }
+
+            m_gameStatusBox.Visibility = Visibility.Visible;
+            m_canvas.Paused = true;
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
         {
             lock (this)
             {
+                m_isGameOver = false;
+                m_showSun = (bool)m_showSunCheckBox.IsChecked;
+                m_longRangeMissiles = (bool)m_longRangMissileCheckBox.IsChecked;
+
                 InitializeGame();
 
-                m_isGameOver = false;
+                m_gameStatusBox.Visibility = Visibility.Collapsed;
 
-                m_gameOverBox.Visibility = Visibility.Collapsed;
+                m_canvas.Paused = false;
             }
         }
 
@@ -432,13 +454,15 @@ namespace HelloWin2D
                 UpdateShip(m_ship1, seconds);
                 UpdateShip(m_ship2, seconds);
 
+                float maxMissileAge = MaxMissileAge;
+
                 for (int i = m_missiles.Count - 1; i >= 0; --i)
                 {
                     var missile = m_missiles[i];
 
                     bool isExpired = false;
 
-                    if ((missile.Age += seconds) > m_missileMaxAge)
+                    if ((missile.Age += seconds) > maxMissileAge)
                     {
                         isExpired = true;
                     }
@@ -514,7 +538,7 @@ namespace HelloWin2D
 
                         var ignored = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                         {
-                            m_gameOverBox.Visibility = Visibility.Visible;
+                            ShowStatus();
                         });
                     }
                 }
