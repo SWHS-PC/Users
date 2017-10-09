@@ -9,6 +9,7 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Graphics.Canvas.Brushes;
+using Windows.UI.Xaml.Navigation;
 
 namespace HelloWin2D
 {
@@ -80,14 +81,27 @@ namespace HelloWin2D
         {
             this.InitializeComponent();
 
-            m_canvas.KeyDown += Canvas_KeyDown;
-            m_canvas.KeyUp += Canvas_KeyUp;
-
             m_canvas.SizeChanged += Canvas_SizeChanged;
             m_canvas.CreateResources += Canvas_CreateResources;
 
             m_canvas.Update += Canvas_Update;
             m_canvas.Draw += Canvas_Draw;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
+            base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
+
+            base.OnNavigatedFrom(e);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -101,22 +115,22 @@ namespace HelloWin2D
             m_canvas = null;
         }
 
-        private void Canvas_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
         {
-            if (!e.KeyStatus.WasKeyDown)
+            if (!args.KeyStatus.WasKeyDown)
             {
-                if (OnKeyChange(e.Key, true) || OnKeyPress(e.Key, e.KeyStatus.ScanCode))
+                if (OnKeyChange(args.VirtualKey, true) || OnKeyPress(args.VirtualKey, args.KeyStatus.ScanCode))
                 {
-                    e.Handled = true;
+                    args.Handled = true;
                 }
             }
         }
 
-        private void Canvas_KeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        private void CoreWindow_KeyUp(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
         {
-            if (OnKeyChange(e.Key, false))
+            if (OnKeyChange(args.VirtualKey, false))
             {
-                e.Handled = true;
+                args.Handled = true;
             }
         }
 

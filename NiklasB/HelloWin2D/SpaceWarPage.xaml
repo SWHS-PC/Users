@@ -9,7 +9,10 @@
     mc:Ignorable="d">
 
     <Grid Background="Black">
-        <canvas:CanvasAnimatedControl x:Name="m_canvas" IsTabStop="True" Background="Black" Paused="True"/>
+
+        <TextBlock VerticalAlignment="Bottom" Foreground="Yellow" Text="Background"/>
+
+        <canvas:CanvasAnimatedControl x:Name="m_canvas" ClearColor="Black" Paused="True"/>
         
         <Button Click="BackButton_Click" VerticalAlignment="Top">
             <SymbolIcon Symbol="Back" Foreground="White"/>
