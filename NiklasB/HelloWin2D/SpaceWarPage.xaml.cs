@@ -14,6 +14,7 @@ namespace HelloWin2D
 {
     public sealed partial class SpaceWarPage : Page
     {
+        // Base class for objects on the canvas, such as ships and missiles.
         class SpaceObject
         {
             public CanvasGeometry Geometry;
@@ -22,6 +23,11 @@ namespace HelloWin2D
             public Vector2 Velocity;
             public float Heading;
             public float Radius;
+
+            public Matrix3x2 Transform
+            {
+                get { return Matrix3x2.CreateRotation(Heading) * Matrix3x2.CreateTranslation(Position); }
+            }
         }
 
         class SpaceShip : SpaceObject
@@ -180,11 +186,16 @@ namespace HelloWin2D
 
                 if (m_isInitialized)
                 {
-                    var scale = newSize / oldSize;
+                    // The canvas is being resized after the game is already initialized.
+                    // Compute the proportional change in size (i.e., the scale).
+                    Vector2 scale = newSize / oldSize;
 
+                    // Multiply each ship's position by the scale, so it stays in the same
+                    // relative position on the canvas.
                     m_ship1.Position *= scale;
                     m_ship2.Position *= scale;
 
+                    // Do likewise for any missiles.
                     foreach (var missile in m_missiles)
                     {
                         missile.Position *= scale;
@@ -192,7 +203,7 @@ namespace HelloWin2D
                 }
                 else
                 {
-                    // Set all the object positions to their initial values.
+                    // This is the first size event; initialize object positions.
                     InitializeGame();
                     m_isInitialized = true;
                 }
@@ -204,24 +215,24 @@ namespace HelloWin2D
             const float shipDistance = m_sunRadius * 5;
             float shipSpeed = m_showSun ? 100.0f : 0.0f;
 
+            // Position ship1 to the left of the Sun facing up.
             m_ship1.Position = m_sun.Position + new Vector2(-shipDistance, 0);
             m_ship1.Velocity = new Vector2(0, -shipSpeed);
             m_ship1.Heading = 0;
+            m_ship1.IsFiring = false;
             m_ship1.IsExploding = false;
             m_ship1.ExplosionAge = 0;
 
+            // Position ship2 to the right of teh sun facing down.
             m_ship2.Position = m_sun.Position + new Vector2(shipDistance, 0);
             m_ship2.Velocity = new Vector2(0, shipSpeed);
             m_ship2.Heading = (float)Math.PI;
+            m_ship2.IsFiring = false;
             m_ship2.IsExploding = false;
             m_ship2.ExplosionAge = 0;
 
+            // Clear any missiles.
             m_missiles.Clear();
-        }
-
-        Matrix3x2 ComputeObjectTransform(SpaceObject obj)
-        {
-            return Matrix3x2.CreateRotation(obj.Heading) * Matrix3x2.CreateTranslation(obj.Position);
         }
 
         private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
@@ -358,7 +369,7 @@ namespace HelloWin2D
 
                 if (m_showSun)
                 {
-                    drawingSession.Transform = ComputeObjectTransform(m_sun);
+                    drawingSession.Transform = m_sun.Transform;
                     drawingSession.DrawImage(m_sun.Image);
                 }
 
@@ -370,7 +381,7 @@ namespace HelloWin2D
 
                 foreach (var missile in m_missiles)
                 {
-                    drawingSession.Transform = ComputeObjectTransform(missile);
+                    drawingSession.Transform = missile.Transform;
                     drawingSession.DrawImage(missile.Image);
                 }
             }
@@ -378,7 +389,7 @@ namespace HelloWin2D
 
         void DrawShip(CanvasDrawingSession drawingSession, SpaceShip ship)
         {
-            drawingSession.Transform = ComputeObjectTransform(ship);
+            drawingSession.Transform = ship.Transform;
 
             if (ship.IsExploding)
             {
