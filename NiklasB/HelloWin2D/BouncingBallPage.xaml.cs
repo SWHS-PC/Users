@@ -4,7 +4,6 @@ using System.Numerics;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Graphics.Canvas;
 
 namespace HelloWin2D
 {
@@ -62,27 +61,6 @@ namespace HelloWin2D
 
             // Add a displacement so the bottom of the canvas is at Y = 0.
             m_matrix.M32 = m_canvasSize.Y;
-        }
-
-        static void Bounce(ref float position, ref float velocity, float minPosition, float maxPosition)
-        {
-            if (minPosition >= maxPosition)
-            {
-                position = minPosition;
-                velocity = 0;
-            }
-            else if (position <= minPosition)
-            {
-                position = minPosition;
-                if (velocity < 0)
-                    velocity = -velocity;
-            }
-            else if (position >= maxPosition)
-            {
-                position = maxPosition;
-                if (velocity > 0)
-                    velocity = -velocity;
-            }
         }
 
         private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
