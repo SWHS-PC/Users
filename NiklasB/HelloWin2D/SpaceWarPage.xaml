@@ -10,14 +10,8 @@
 
     <Grid Background="Black">
 
-        <TextBlock VerticalAlignment="Bottom" Foreground="Yellow" Text="Background"/>
-
         <canvas:CanvasAnimatedControl x:Name="m_canvas" ClearColor="Black" Paused="True"/>
-        
-        <Button Click="BackButton_Click" VerticalAlignment="Top">
-            <SymbolIcon Symbol="Back" Foreground="White"/>
-        </Button>
-        
+
         <Border x:Name="m_gameStatusBox"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 BorderBrush="White" BorderThickness="2" Padding="20" Background="#80ffffff">
@@ -26,9 +20,14 @@
 
                 <CheckBox x:Name="m_showSunCheckBox" Content="Show Sun" IsChecked="True"/>
                 <CheckBox x:Name="m_longRangMissileCheckBox" Content="Long Range Missiles" IsChecked="True"/>
+                <CheckBox x:Name="m_infiniteFuelCheckBox" Content="Infinite Fuel" IsChecked="True"/>
 
                 <Button Content="Play" FontSize="80" HorizontalAlignment="Center" Click="Play_Click"/>
             </StackPanel>
         </Border>
+
+        <Button Click="BackButton_Click" VerticalAlignment="Top">
+            <SymbolIcon Symbol="Back" Foreground="White"/>
+        </Button>
     </Grid>
 </Page>

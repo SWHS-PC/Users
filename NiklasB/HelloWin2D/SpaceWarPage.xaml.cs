@@ -39,6 +39,18 @@ namespace HelloWin2D
             public bool IsFiring { get; set; }
             public bool IsExploding { get; set; }
             public float ExplosionAge { get; set; }
+            public float Fuel { get; set; }
+
+            public void Reset()
+            {
+                Position = new Vector2();
+                Velocity = new Vector2();
+                Heading = 0;
+                IsFiring = false;
+                IsExploding = false;
+                ExplosionAge = 0;
+                Fuel = m_maxFuel;
+            }
         }
 
         class Missile : SpaceObject
@@ -66,10 +78,15 @@ namespace HelloWin2D
         bool m_showSun = false;
         bool m_longRangeMissiles = false;
         float MaxMissileAge => m_longRangeMissiles ? 20.0f : 2.0f;
+        bool m_infiniteFuel = false;
 
         // Constants.
+        const float m_guageWidth = 120.0f;
+        const float m_guageHeight = 4.0f;
+        const float m_guageMargin = 20.0f;
         const float m_rotationRate = 3.14f; // radians per second
         const float m_thrust = 150.0f;      // pixels per second per second
+        const float m_maxFuel = 5.0f;       // seconds of thrust
         const float m_shipRadius = 20;
         const float m_missileRadius = 7;
         const float m_missileSpeed = 100;
@@ -203,6 +220,7 @@ namespace HelloWin2D
                 m_isGameOver = false;
                 m_showSun = (bool)m_showSunCheckBox.IsChecked;
                 m_longRangeMissiles = (bool)m_longRangMissileCheckBox.IsChecked;
+                m_infiniteFuel = (bool)m_infiniteFuelCheckBox.IsChecked;
 
                 InitializeGame();
 
@@ -260,20 +278,16 @@ namespace HelloWin2D
             float shipSpeed = m_showSun ? 100.0f : 0.0f;
 
             // Position ship1 to the left of the Sun facing up.
+            m_ship1.Reset();
             m_ship1.Position = m_sun.Position + new Vector2(-shipDistance, 0);
             m_ship1.Velocity = new Vector2(0, -shipSpeed);
             m_ship1.Heading = 0;
-            m_ship1.IsFiring = false;
-            m_ship1.IsExploding = false;
-            m_ship1.ExplosionAge = 0;
 
             // Position ship2 to the right of teh sun facing down.
+            m_ship2.Reset();
             m_ship2.Position = m_sun.Position + new Vector2(shipDistance, 0);
             m_ship2.Velocity = new Vector2(0, shipSpeed);
             m_ship2.Heading = (float)Math.PI;
-            m_ship2.IsFiring = false;
-            m_ship2.IsExploding = false;
-            m_ship2.ExplosionAge = 0;
 
             // Clear any missiles.
             m_missiles.Clear();
@@ -417,6 +431,11 @@ namespace HelloWin2D
                     drawingSession.DrawImage(m_sun.Image);
                 }
 
+                if (!m_infiniteFuel)
+                {
+                    DrawFuelGuages(drawingSession);
+                }
+
                 m_flameImage.BlurAmount = 4.0f +
                     3.5f * (float)Math.Sin(args.Timing.TotalTime.TotalSeconds * 20);
 
@@ -428,6 +447,48 @@ namespace HelloWin2D
                     drawingSession.Transform = missile.Transform;
                     drawingSession.DrawImage(missile.Image);
                 }
+            }
+        }
+
+        void DrawFuelGuages(CanvasDrawingSession drawingSession)
+        {
+            float y = m_canvasSize.Y - (m_guageMargin + m_guageHeight);
+
+            drawingSession.Transform = Matrix3x2.CreateTranslation(
+                m_guageMargin,
+                y
+                );
+
+            DrawGuage(drawingSession, m_ship1.Fuel / m_maxFuel, Colors.Green);
+
+            drawingSession.Transform = Matrix3x2.CreateTranslation(
+                m_canvasSize.X - (m_guageMargin + m_guageWidth),
+                y
+                );
+
+            DrawGuage(drawingSession, m_ship2.Fuel / m_maxFuel, Colors.Gold);
+        }
+
+        void DrawGuage(CanvasDrawingSession drawingSession, float level, Color color)
+        {
+            float fillWidth = m_guageWidth * level;
+
+            if (fillWidth < m_guageWidth)
+            {
+                drawingSession.FillRectangle(
+                    fillWidth, 0,
+                    m_guageWidth - fillWidth, m_guageHeight,
+                    Color.FromArgb(64, color.R, color.G, color.B)
+                    );
+            }
+
+            if (fillWidth > 0)
+            {
+                drawingSession.FillRectangle(
+                    0, 0,
+                    fillWidth, m_guageHeight,
+                    color
+                    );
             }
         }
 
@@ -452,7 +513,7 @@ namespace HelloWin2D
             {
                 drawingSession.DrawImage(ship.Image);
 
-                if (ship.IsThrusting && !m_isGameOver)
+                if (ship.IsThrusting && ship.Fuel > 0 && !m_isGameOver)
                 {
                     drawingSession.DrawImage(m_flameImage);
                 }
@@ -571,10 +632,20 @@ namespace HelloWin2D
 
                 if (ship.IsThrusting)
                 {
-                    ship.Velocity += Vector2.Transform(
-                        new Vector2(0, -m_thrust * seconds),
-                        Matrix3x2.CreateRotation(ship.Heading)
-                        );
+                    float thrustSeconds = seconds;
+                    if (!m_infiniteFuel)
+                    {
+                        thrustSeconds = Math.Min(seconds, ship.Fuel);
+                        ship.Fuel -= thrustSeconds;
+                    }
+
+                    if (thrustSeconds != 0)
+                    {
+                        ship.Velocity += Vector2.Transform(
+                            new Vector2(0, -m_thrust * thrustSeconds),
+                            Matrix3x2.CreateRotation(ship.Heading)
+                            );
+                    }
                 }
 
                 if (!MoveObject(ship, seconds))
