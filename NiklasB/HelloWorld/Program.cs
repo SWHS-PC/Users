@@ -8,9 +8,9 @@ namespace HelloWorld
         {
             // Uncomment one of the following lines.
 
-            FlowControl.Run();
+            // FlowControl.Run();
 
-            // GuessingGame.Run();
+            GuessingGame.Run();
 
             // BinarySearch.Run();
 
