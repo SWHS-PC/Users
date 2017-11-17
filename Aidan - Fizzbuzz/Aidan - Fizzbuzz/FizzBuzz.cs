@@ -24,7 +24,11 @@ namespace Aidan___Fizzbuzz
                 else
                     Console.WriteLine(i);
             }
-
+            Console.WriteLine("\r\nPress Enter to Close");
+            if (Console.ReadKey().KeyChar == (char)13)
+            {
+                return;
+            }
         }
     }
 }
