@@ -10,6 +10,7 @@ namespace Aidan___Fizzbuzz
     {
         static void Main(string[] args)
         {
+            FizzBuzz.Run();
         }
     }
 }
