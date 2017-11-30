@@ -32,14 +32,14 @@ namespace IRCBot
             var recon = false;
             var reconAmount = 0;
 
-            Console.Write("Server: ");
-            string aserver = Console.ReadLine();
-            Console.Write("Port: ");
-            int aport = Convert.ToInt32(Console.ReadLine());
-            Console.Write("Channel<#chan>: ");
-            string achan = Console.ReadLine();
-            Console.Write("Nick: ");
-            string anick = Console.ReadLine();
+           // Console.Write("Server: ");
+           // string aserver = Console.ReadLine();
+            //Console.Write("Port: ");
+            //int aport = Convert.ToInt32(Console.ReadLine());
+            //Console.Write("Channel<#chan>: ");
+           // string achan = Console.ReadLine();
+            //Console.Write("Nick: ");
+            //string anick = Console.ReadLine();
 
             try
             {
@@ -64,17 +64,13 @@ namespace IRCBot
                             if (splitInput[0] == "PING")
                             {
                                 string reply = splitInput[1];
-                                send.WriteLine("PONG" + reply);
+                                send.WriteLine("PONG " + reply);
                                 send.Flush();
                             }
-                            switch (splitInput[1])
+                            else if (splitInput[1] == "376" || splitInput[1] == "422")
                             {
-                                case "1":
-                                    send.WriteLine("JOIN " + achan);
-                                    break;
-                                default:
-                                    break;
-                            }
+                                send.WriteLine("JOIN " + achan);
+                            } 
                         }
                     }
                 }
