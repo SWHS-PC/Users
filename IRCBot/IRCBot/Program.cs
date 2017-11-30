@@ -11,7 +11,7 @@ namespace IRCBot
     {
         static void Main(string[] args)
         {
-            var ircBot = new IRC(server: "4bit.pw", port: 6667, nick: "abot", user: "USER abot 0 * :abot", chan: "#GRP");
+            var ircBot = new IRC();
 
             ircBot.Run();
         }

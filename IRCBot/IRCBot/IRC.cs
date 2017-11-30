@@ -10,23 +10,14 @@ namespace IRCBot
     public class IRC
     {
 
-        private readonly string aserver;
-        private readonly int aport;
-        private readonly string anick;
-        private readonly string achan;
+        string server = "4bit.pw";
+        int port = 6667;
+        string nick = "abot";
+        string chan = "#GRP";
+        string user = "USER abot 0 * :abot";
+        int maxRetries;
 
-        private readonly string auser;
-        private readonly int amaxRetries;
-
-        public IRC(string server, int port, string user, string nick, string chan, int maxRetries = 3)
-        {
-            aserver = server;
-            aport = port;
-            anick = nick;
-            achan = chan;
-            auser = user;
-            amaxRetries = maxRetries;
-        }
+        
         public void Run()
         {
             var recon = false;
@@ -43,13 +34,13 @@ namespace IRCBot
 
             try
             {
-                using (var irc = new TcpClient(aserver, aport))
+                using (var irc = new TcpClient(server, port))
                 using (var stream = irc.GetStream())
                 using (var recieve = new StreamReader(stream))
                 using (var send = new StreamWriter(stream))
                 {
-                    send.WriteLine("NICK " + anick);
-                    send.WriteLine(auser);
+                    send.WriteLine("NICK " + nick);
+                    send.WriteLine(user);
                     send.Flush();
 
                     while (true)
@@ -57,7 +48,7 @@ namespace IRCBot
                         string input;
                         while ((input = recieve.ReadLine()) != null)
                         {
-                            Console.WriteLine("<- " + input);
+                            Console.WriteLine("< " + input);
 
                             string[] splitInput = input.Split(' ');
 
@@ -69,8 +60,12 @@ namespace IRCBot
                             }
                             else if (splitInput[1] == "376" || splitInput[1] == "422")
                             {
-                                send.WriteLine("JOIN " + achan);
+                                send.WriteLine("JOIN " + chan);
                             } 
+                            if (splitInput[3] == ":a")
+                            {
+                                send.WriteLine("PRIVMSG " + "a");
+                            }
                         }
                     }
                 }
@@ -82,7 +77,7 @@ namespace IRCBot
 
                     Console.WriteLine(e.ToString());
                     Thread.Sleep(5000);
-                    recon = ++reconAmount <= amaxRetries;
+                    recon = ++reconAmount <= maxRetries;
                 }
         }
     }
