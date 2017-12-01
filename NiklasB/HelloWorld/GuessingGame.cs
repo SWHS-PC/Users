@@ -26,35 +26,40 @@ namespace HelloWorld
 
             int minValue = 1;
             int maxValue = 100;
-
+            
             while (minValue < maxValue)
             {
                 int guess = (minValue + maxValue) / 2;
 
                 Console.Write("\n{0}? ", guess);
 
-                var keyChar = Console.ReadKey().KeyChar;
-
-                if (keyChar == 'g')
+                
+                if (Console.ReadKey().KeyChar == 'g')
                 {
                     minValue = guess + 1;
                 }
-                else if (keyChar == 'l')
+                else if (Console.ReadKey().KeyChar == 'l')
                 {
                     maxValue = guess - 1;
                 }
-                else if (keyChar == 'e')
+                else if (Console.ReadKey().KeyChar == 'e')
                 {
                     minValue = guess;
                     maxValue = guess;
                 }
-                else if (keyChar == 'q' || keyChar == 'x')
+                else if (Console.ReadKey().KeyChar == 'q' || Console.ReadKey().KeyChar == 'x')
                 {
                     return;
                 }
             }
 
-            Console.WriteLine("\n\nThe answer is {0}!", minValue);
+                Console.WriteLine("\n\nThe answer is {0}!", minValue);
+                Console.WriteLine("\n\nPress Enter to Close");
+            if (Console.ReadKey().KeyChar == (char)13)
+            {
+                return;
+            }
+            
         }
     }
 }
