@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aidan___Fizzbuzz
 {
@@ -19,25 +15,25 @@ namespace Aidan___Fizzbuzz
                 bool boom = i % 7 == 0;
 
                 //if statements where it writes Fizz, Buzz and Boom for the divisions of the i var
-                if (fizz)
+                //105 is the only instance of FizzBuzzBoom
+                if (fizz && buzz && boom)
+                    Console.WriteLine("FizzBuzzBoom");
+                else if (fizz && boom)
+                    Console.WriteLine("Fizz...Boom");
+                else if (fizz && buzz)
+                    Console.WriteLine("FizzBuzz");
+                //for where i equals only one of the boolean variables
+                else if (fizz)
                     Console.WriteLine("Fizz");
                 else if (buzz)
                     Console.WriteLine("Buzz");
                 else if (boom)
                     Console.WriteLine("Boom");
-                //for where i equals more than one of the boolean variables
-                else if (fizz && buzz)
-                    Console.WriteLine("FizzBuzz");
-                else if (fizz && boom)
-                    Console.WriteLine("Fizz...Boom");
-                else if (fizz && buzz && boom)
-                    Console.WriteLine("FizzBuzzBoom");
-                //105 is the only instance of FizzBuzzBoom
                 //writes the i variable if the remainder isnt equal to the booleans
                 else
                     Console.WriteLine(i);
             }
-            //allowing user to close program upon pressing enter
+            
             Console.WriteLine("\r\nPress Enter to Close");
             //(char)13 is the enter key
             if (Console.ReadKey().KeyChar == (char)13)
