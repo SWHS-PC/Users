@@ -8,7 +8,7 @@ namespace Aidan___Fizzbuzz
 {
     class FizzBuzz
     {
-    
+
         [Flags]
         enum FizzFlags
         {
@@ -27,12 +27,13 @@ namespace Aidan___Fizzbuzz
             FizzBuzzBoom = Fizz | Buzz | Boom
         }
 
-        static void Main(string[] args)
+        //method using flags
+        public static void RunWithFlags()
         {
             for (int i = 1; i <= 105; i++)
             {
                 FizzFlags flags = 0;
- 
+
                 // Use the bitwise OR operator to set the individual bits of the flags
                 // variable based on the value of i.
                 if (i % 3 == 0)
@@ -54,14 +55,14 @@ namespace Aidan___Fizzbuzz
                 switch (flags)
                 {
                     case FizzFlags.None:
-                    //I would write none here except i want it to print the number if its not divisible by those numbers
+                        //I would write none here except i want it to print the number if its not divisible by those numbers
                         Console.WriteLine(i);
                         break;
 
                     case FizzFlags.Fizz:
                         Console.WriteLine("Fizz");
                         break;
- 
+
                     case FizzFlags.Buzz:
                         Console.WriteLine("Buzz");
                         break;
@@ -83,42 +84,57 @@ namespace Aidan___Fizzbuzz
                         break;
                 }
             }
-        // public static void Run()
-        // {
-        //     //uses a for loop to loop i from 1 to 105
-        //     for (int i = 1; i <= 105; i++)
-        //     {
-        //         //boolean variables for i % 3, 5, and 7, % meaning remainder of i divided by 3 equalling 0
-        //         bool fizz = i % 3 == 0;
-        //         bool buzz = i % 5 == 0;
-        //         bool boom = i % 7 == 0;
+            //allowing user to close program upon pressing enter
+            Console.WriteLine("\r\nPress Enter to Close");
 
-        //         //if statements where it writes Fizz, Buzz and Boom for the divisions of the i var
-        //         if (fizz)
-        //             Console.WriteLine("Fizz");
-        //         else if (buzz)
-        //             Console.WriteLine("Buzz");
-        //         else if (boom)
-        //             Console.WriteLine("Boom");
-        //         //for where i equals more than one of the boolean variables
-        //         else if (fizz && buzz)
-        //             Console.WriteLine("FizzBuzz");
-        //         else if (fizz && boom)
-        //             Console.WriteLine("Fizz...Boom");
-        //         else if (fizz && buzz && boom)
-        //             Console.WriteLine("FizzBuzzBoom");
-        //         //105 is the only instance of FizzBuzzBoom
-        //         //writes the i variable if the remainder isnt equal to the booleans
-        //         else
-        //             Console.WriteLine(i);
-        //     }
-        //     //allowing user to close program upon pressing enter
-        //     Console.WriteLine("\r\nPress Enter to Close");
-        //     //(char)13 is the enter key
-        //     if (Console.ReadKey().KeyChar == (char)13)
-        //     {
-        //         return;
-        //     }
-        // }
+            //(char)13 is the enter key
+            if (Console.ReadKey().KeyChar == (char)13)
+            {
+                return;
+            }
+        }
+
+        //main method
+        public static void Run()
+        {
+        //uses a for loop to loop i from 1 to 105
+            for (int i = 1; i <= 105; i++)
+            {
+                //boolean variables for i % 3, 5, and 7, % meaning remainder of i divided by 3 equalling 0
+                bool fizz = i % 3 == 0;
+                bool buzz = i % 5 == 0;
+                bool boom = i % 7 == 0;
+
+                //if statements where it writes Fizz, Buzz and Boom for the divisions of the i var
+                //105 is the only instance of FizzBuzzBoom
+                if (fizz && buzz && boom)
+                    Console.WriteLine("FizzBuzzBoom");
+                else if (fizz && boom)
+                    Console.WriteLine("Fizz...Boom");
+                else if (fizz && buzz)
+                    Console.WriteLine("FizzBuzz");
+                else if (fizz)
+                    Console.WriteLine("Fizz");
+                else if (buzz)
+                    Console.WriteLine("Buzz");
+                else if (boom)
+                    Console.WriteLine("Boom");
+                //for where i equals more than one of the boolean variables
+                
+                   
+                //writes the i variable if the remainder isnt equal to the booleans
+                else
+                    Console.WriteLine(i);
+            }
+            
+            //allowing user to close program upon pressing enter
+            Console.WriteLine("\r\nPress Enter to Close");
+            
+            //(char)13 is the enter key
+            if (Console.ReadKey().KeyChar == (char)13)
+            {
+                return;
+            }
+        }
     }
 }
