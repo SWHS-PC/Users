@@ -23,14 +23,6 @@ namespace IRCBot
             var recon = false;
             var reconAmount = 0;
 
-           // Console.Write("Server: ");
-           // string aserver = Console.ReadLine();
-            //Console.Write("Port: ");
-            //int aport = Convert.ToInt32(Console.ReadLine());
-            //Console.Write("Channel<#chan>: ");
-           // string achan = Console.ReadLine();
-            //Console.Write("Nick: ");
-            //string anick = Console.ReadLine();
 
             try
             {
@@ -61,11 +53,12 @@ namespace IRCBot
                             else if (splitInput[1] == "376" || splitInput[1] == "422")
                             {
                                 send.WriteLine("JOIN " + chan);
-                            } 
-                            if (splitInput[3] == ":a")
-                            {
-                                send.WriteLine("PRIVMSG " + "a");
                             }
+                            
+                            //if (splitInput[3] == ":a")
+                            //{
+                            //    send.WriteLine("PRIVMSG " + "a");
+                            //}
                         }
                     }
                 }
