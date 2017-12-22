@@ -16,7 +16,7 @@ namespace TimesTable
             {
                 // At least one command line argument. Assume the first
                 // argument is a file name and create a stream writer for it.
-                using (var output = new System.IO.StreamWriter(args[0]))
+                using (var output = new StreamWriter(args[0]))
                 {
                     // Write the tables to the file.
                     WriteTables(output);
