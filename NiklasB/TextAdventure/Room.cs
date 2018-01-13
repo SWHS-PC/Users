@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TextAdventure
 {
-    class Room
+    class Room : Helpers
     {
         public Room(string name)
         {
@@ -25,10 +22,8 @@ namespace TextAdventure
         List<Item> m_items = new List<Item>();
         public List<Item> Items => m_items;
 
-        public Room North { get; set; }
-        public Room South { get; set; }
-        public Room East  { get; set; }
-        public Room West  { get; set; }
+        List<Link> m_connections = new List<Link>();
+        public List<Link> Links => m_connections;
 
         public void Describe()
         {
@@ -43,21 +38,20 @@ namespace TextAdventure
                 }
             }
 
-            if (North != null)
+            foreach (var link in Links)
             {
-                Console.WriteLine($"To the North is the {North.Name}.");
-            }
-            if (South != null)
-            {
-                Console.WriteLine($"To the South is the {South.Name}.");
-            }
-            if (East != null)
-            {
-                Console.WriteLine($"To the East is the {East.Name}.");
-            }
-            if (West != null)
-            {
-                Console.WriteLine($"To the West is the {West.Name}.");
+                if (link.Door == null)
+                {
+                    Console.WriteLine($"To the {Str(link.Direction)} is the {link.To.Name}.");
+                }
+                else if (link.Door.IsOpen)
+                {
+                    Console.WriteLine($"To the {Str(link.Direction)} is an open door leading to the {link.To.Name}.");
+                }
+                else
+                {
+                    Console.WriteLine($"To the {Str(link.Direction)} is a closed door.");
+                }
             }
         }
     }
