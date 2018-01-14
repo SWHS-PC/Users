@@ -47,6 +47,8 @@ namespace TextAdventure
                 {
                     m_isGameOver = true;
                     Program.WriteParagraph("Stumbling through the ruin, along dusty hallways and up decaying stairs, you see a peculiar sight: a narrow entrance, what evidently used to be a secret passage, now fallen in to reveal a small chamber. The place is bare but for an enormous sea chest. The lock has rusted and wood rotted, so you are able to see what is inside. All the stories are true! A fabulous treasure sparkles before your eyes. Your happily ever after, adventurer.");
+                    Console.WriteLine("Press enter to exit.");
+                    Console.ReadLine();
                 }
             }
         }
