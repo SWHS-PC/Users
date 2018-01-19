@@ -1,0 +1,231 @@
+.page start
+You're walking home from school one afternoon in January. It's 
+late afternoon because you stayed after school for coding club, 
+and it's already getting dark. As usual, your route takes you 
+past that creepy abandoned house on your street.
+
+You hunch your shoulders and start to hurry past, but suddenly 
+a child's voice calls out from inside, "Help! Help!"
+.end
+
+.page back_yard
+You walk through the overgrown yard to the back of the house,
+hoping to learn something without actually going inside.
+However, all you can see of the house are pealing paint and
+darkened windows.
+
+No wiser, you continue around to the front of the house and
+face the front door.
+.end
+
+.page chicken
+Feeling guilty, you pretend not to hear anything and rush home.
+
+You make it home safe and sound, and you never hear what 
+happened in the house that night. But in moments of doubt, you 
+still hear that child's voice, and wonder if you might have 
+prevented some horrible crime.
+.end
+
+.page front_door
+The front door creaks loudly as you open it, and dust falls 
+from the ceiling. You sneeze, stirring up more dust, then 
+venture inside. The only light is from the open door behind 
+you, but fortunately you have a small flashlight in your 
+pocket. You pull it out and turn it on.
+.end
+
+.page entry
+You're in a dark paneled entry way. Behind you is the front 
+door. To your right is an opening leading to what appears 
+to be a kitchen. Ahead is a large room, which your puny 
+flashlight does not illuminate.
+.end
+
+.page kitchen
+You find yourself in an old kitchen with a large cast-iron 
+stove and many cabinets. You quickly search the cabinets, 
+hoping to find something useful -- a knife perhaps -- but 
+they're empty of everything except cobwebs.
+
+Through a partially-open door in the back of the kitchen, 
+you can see stairs leading down. Perhaps they lead to a 
+cellar.
+.end
+
+.page cellar
+Pushing your way through cobwebs, you walk down the stairs 
+into the dark cellar. At the bottom, your flashlight catches 
+something white ahead on the stone floor. As you continue 
+forward to investigate, the cobwebs around you stir with a 
+sudden breeze from behind. You hear the door at the top of 
+the stairs slam shut and a bolt slide ominously into place.
+
+Now you recognize the white object on the floor: a bone,
+part of a small human skeleton. In a panic, you rush back 
+up the stairs to try the door, but it won't budge. You call 
+out, but the darkness seems to muffle your voice. Still you 
+cry desperately for help, continuing even as your flashlight 
+dims and goes out. You cry out through endless hours of 
+darkness, growing increasingly parched until your voice 
+emerges only as a croak. At last you cry no more.
+.end
+
+.page kitty
+Mustering your courage, you call out loudly, "Hello! Does 
+anyone need any help?"
+
+After first you hear nothing, but then you hear a voice 
+nearby to your left. Aiming your flashlight there, you see 
+a small door, which you had missed before because it blends 
+into the dark panelling -- a closet perhaps.
+
+Cautiously, you open the door, then laugh as a cat emerges, 
+meowing pitiably. It was only a cat you heard all along! 
+You let the cat outside and continue home, relieved to be 
+spared any further adventure.
+.end
+
+.page main_room
+You're in what must once have been a very elegant room. 
+Ahead, a grand staircase leads upstairs. Just below the 
+stairs is a very large grandfather clock. Off to the 
+side is a grand piano.
+.end
+
+.page upstairs
+At the top of the stairs is a long hallway with doors on 
+either side. Heart pounding, you tiptoe down the hall, 
+peaking into each of the rooms. You see only rotting 
+bedroom furniture and thick dust, long undisturbed.
+
+No one can have been up here for ages, you decide. The 
+voice must have come from somewhere else, unless you 
+imagined it. You head back down the stairs to the large
+room with the grandfather clock and the piano.
+.end
+
+.page clock
+You take a closer look at the grandfather clock. It's not 
+running, of course, but you notice something strange. 
+Unlike everything else in the room, the clock is free of 
+dust. Could it be concealing some clue?
+
+You open the glass door in the front of the clock. Driven 
+by some impulse you don't understand, you start the pendulum 
+swinging. Suddenly, the mechanism springs to life! The 
+weights begin descending, and the hands start moving 
+rapidly -- backwards!
+
+A gust of wind makes the hairs on the back of your neck 
+stand on end. You look up, and a pale light draws you eyes 
+to the top of the stairs. There stands a small figure, a 
+child. This must be the child you heard from outside, for 
+now he calls out again, "Help me!" in a voice that seems to 
+come from a great distance. The hilt of a knife protrudes 
+from the child's chest, but there is no blood. Indeed the 
+child seems utterly pale and bloodless, and looking closer 
+you find you can see right through him.
+.end
+
+.page ghost_talk
+Supressing the tremour in our voice, you say to the child,
+"Are you OK? Can I help you?"
+
+The ghostly child looks at you and walks slowly down the
+stairs. You back away, trying to keep some distance. At
+the bottom of the stairs, the child turns left and walks
+towards the corner of the room to your right.
+.end
+
+.page ghost_follow
+As you approach the child, he passes right through the
+front wall of the room. Close inspection reveals a door,
+cleverly concealed in the panelling. You've heard that
+old houses sometimes have hidden side passages used by
+servants. This must be one of those.
+
+You pull open the door and walk through a narrow passage,
+emerging into the kitchen. You can see the child to your
+left through an open door. He is on his way downstairs,
+perhaps to a cellar. On your right is an opening that
+leads to the front entrance.
+.end
+
+.page ghost_cellar
+You follow the child downstairs and find him in the
+corner of the cellar looking down. At his feet is a small
+human skeleton, a child's skeleton.
+
+"It's you, isn't it?" you say, "Someone killed you and
+hid your body down here."
+
+The child looks at you and nods. You promise to find out 
+what happened and make sure he's properly buried. The 
+child smiles for the first time and fades away. The room 
+suddenly feels warmer, and you find that you are no 
+longer scared.
+
+The next day, you report what you found to the police,
+omitting any mention of ghosts. You learn that a child
+lived in that houlse with his mother and stepfather many
+years ago. Soon after the mother died, the stepfather
+reported the child missing, claiming he had run away.
+He was never heard from again.
+
+You attend a small funeral for the child a week later.
+It is a sad occasion, but you are happy to know that
+the boy's spirit has at last found peace.
+.end
+
+.page ghost_run
+In terror, you run for the front door with the child's 
+voice crying out behind you. You make it outside and run 
+across the front yard, finally looking over your shoulder 
+as you reach the sidewalk. You see the child standing in 
+the doorway with a ghostly arm outstretched. No farther 
+would he follow, it seems. Except in dreams. He still 
+haunts you in your dreams.
+.end
+
+.links start
+Ignore the voice and continue home.=chicken
+Run up to the front door and go in.=front_door
+Walk around back.=back_yard
+
+.links back_yard
+Chicken out and continue home.=chicken
+Open the front door and go in.=front_door
+
+.links front_door
+Next=entry
+
+.links entry
+Go into the kitchen.=kitchen
+Continue ahead into the large room.=main_room
+Call out.=kitty
+
+.links kitchen
+Go down the stairs.=cellar
+Return to the entry way.=entry
+
+.links main_room
+Go up the stairs.=upstairs
+Inspect the grandfather clock.=clock
+Return to the entry way.=entry
+
+.links upstairs
+Inspect the grandfather clock.=clock
+Return to the entry way.=entry
+
+.links clock
+Try to talk to the child.=ghost_talk
+Run away.=ghost_run
+
+.links ghost_talk
+Follow the child.=ghost_follow
+Run away.=ghost_run
+
+.links ghost_follow
+Follow the child downstairs.=ghost_cellar
+Run away.=ghost_run
