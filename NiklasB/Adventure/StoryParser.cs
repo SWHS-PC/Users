@@ -129,6 +129,9 @@ namespace Adventure
 
         void WriteElementWithText(string tag, string text, XmlWriter writer)
         {
+            // Replace double hyphens with the Unicode em dash character.
+            text = text.Replace("--", "\u2014");
+
             writer.WriteStartElement(tag);
             writer.WriteString(text);
             writer.WriteEndElement();

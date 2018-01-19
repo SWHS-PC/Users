@@ -1,4 +1,4 @@
-.title The Haunted House
+﻿.title The Haunted House
 
 .page start
 You're walking home from school one afternoon in January. It's 
@@ -7,7 +7,7 @@ and it's already getting dark. As usual, your route takes you
 past that creepy abandoned house on your street.
 
 You hunch your shoulders and start to hurry past, but suddenly 
-a child's voice calls out from inside, "Help! Help!"
+a child's voice calls out from inside, “Help! Help!”
 .end
 
 .page back_yard
@@ -74,13 +74,13 @@ emerges only as a croak. At last you cry no more.
 .end
 
 .page kitty
-Mustering your courage, you call out loudly, "Hello! Does 
-anyone need any help?"
+Mustering your courage, you call out loudly, “Hello! Does 
+someone need help?”
 
-After first you hear nothing, but then you hear a voice 
-nearby to your left. Aiming your flashlight there, you see 
-a small door, which you had missed before because it blends 
-into the dark panelling -- a closet perhaps.
+There is no response at first, but then you hear a high,
+wordless voice somewhere on your left. Aiming your flashlight 
+there, you see a small door, which you had overlooked before 
+because it blends into the dark panelling -- a closet perhaps.
 
 Cautiously, you open the door, then laugh as a cat emerges, 
 meowing pitiably. It was only a cat you heard all along! 
@@ -123,7 +123,7 @@ A gust of wind makes the hairs on the back of your neck
 stand on end. You look up, and a pale light draws you eyes 
 to the top of the stairs. There stands a small figure, a 
 child. This must be the child you heard from outside, for 
-now he calls out again, "Help me!" in a voice that seems to 
+now he calls out again, “Help me!” in a voice that seems to 
 come from a great distance. The hilt of a knife protrudes 
 from the child's chest, but there is no blood. Indeed the 
 child seems utterly pale and bloodless, and looking closer 
@@ -132,7 +132,7 @@ you find you can see right through him.
 
 .page ghost_talk
 Supressing the tremor in our voice, you say to the child,
-"Are you OK? Can I help you?"
+“Are you OK? Can I help you?”
 
 The ghostly child looks at you and walks slowly down the
 stairs. You back away, trying to keep some distance. At
@@ -159,8 +159,8 @@ You follow the child downstairs and find him in the
 corner of the cellar looking down. At his feet is a small
 human skeleton, a child's skeleton.
 
-"It's you, isn't it?" you say, "Someone killed you and
-hid your body down here."
+“It's you, isn't it?” you say, “Someone killed you and
+hid your body down here.”
 
 The child looks at you and nods. You promise to find out 
 what happened and make sure he's properly buried. The 
