@@ -8,9 +8,14 @@ namespace Adventure
     /// </summary>
     class Page
     {
-        public string Description { get; set; }
+        public Page(string name)
+        {
+            Name = name;
+            Links = new List<Link>();
+        }
 
-        List<Link> m_links = new List<Link>();
-        public List<Link> Links => m_links;
+        public string Name { get; }
+        public string Description { get; set; }
+        public List<Link> Links { get; }
     }
 }

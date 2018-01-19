@@ -1,3 +1,5 @@
+.title The Haunted House
+
 .page start
 You're walking home from school one afternoon in January. It's 
 late afternoon because you stayed after school for coding club, 

@@ -7,22 +7,86 @@ namespace Adventure
 {
     class Program
     {
+        const string m_usage =
+            "To play an interactive adventure:\n" +
+            "\n" +
+            "    Adventure /play <storyFile.txt>\n" +
+            "\n" +
+            "To compile an interactive adventure to HTML:\n" +
+            "\n" +
+            "    Adventure /compile [ /out <outputDir> ] <storyFile.txt>\n";
+
         static void Main(string[] args)
         {
-            // Make sure a story file is specified on the command line.
-            if (args.Length != 1)
+            if (args.Length == 0)
             {
-                Console.WriteLine("Usage: Adventure <storyFile.txt>");
+                Console.WriteLine(m_usage);
                 return;
             }
 
+            switch (args[0])
+            {
+                case "-play":
+                case "/play":
+                    if (args.Length != 2)
+                    {
+                        Console.WriteLine(m_usage);
+                    }
+                    else
+                    {
+                        PlayStory(args[1]);
+                    }
+                    break;
+
+                case "-compile":
+                case "/compile":
+                    if (args.Length < 2)
+                    {
+                        Console.WriteLine(m_usage);
+                    }
+                    else
+                    {
+                        // The last argument must be the story file name.
+                        int lastIndex = args.Length - 1;
+                        string storyFileName = args[lastIndex];
+
+                        // Process any other arguments.
+                        string outputDir = null;
+
+                        for (int i = 1; i < lastIndex; ++i)
+                        {
+                            switch (args[i])
+                            {
+                                case "-out":
+                                case "/out":
+                                    outputDir = args[++i];
+                                    break;
+
+                                default:
+                                    Console.WriteLine(m_usage);
+                                    return;
+                            }
+                        }
+
+                        CompileStory(storyFileName, outputDir);
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine(m_usage);
+                    return;
+            }
+        }
+
+        static void PlayStory(string storyFileName)
+        {
             // Load the story file, returning if it fails.
-            var startPage = LoadPages(args[0]);
+            var startPage = LoadPages(storyFileName);
             if (startPage == null)
                 return;
 
             // Play the game repeatedly until the user quits or says no.
-            while (PlayGame(startPage))
+            while (PlayStoryOnce(startPage))
             {
                 Console.WriteLine("THE END\n\nDo you want to play again? [yn] ");
 
@@ -33,7 +97,7 @@ namespace Adventure
             }
         }
 
-        static bool PlayGame(Page startPage)
+        static bool PlayStoryOnce(Page startPage)
         {
             var currentPage = startPage;
 
@@ -133,6 +197,26 @@ namespace Adventure
                 Console.Error.Write($"Error: Could not open {fileName}.");
             }
             return null;
+        }
+
+        static void CompileStory(string fileName, string outputDir)
+        {
+            try
+            {
+                using (var reader = new StreamReader(fileName))
+                {
+                    var parser = new StoryParser();
+
+                    if (parser.Parse(reader))
+                    {
+                        parser.WriteHtml(outputDir);
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.Write($"Error: Could not open {fileName}.");
+            }
         }
     }
 }
