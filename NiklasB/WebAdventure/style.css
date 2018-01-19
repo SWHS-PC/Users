@@ -4,3 +4,12 @@
     font-family: 'Sitka Text';
     font-size: 14pt;
 }
+
+h1 {
+    font-family: 'Sitka Heading';
+    font-size: 24pt;
+}
+
+h1 a {
+    text-decoration: none;
+}

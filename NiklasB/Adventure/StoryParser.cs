@@ -15,7 +15,7 @@ namespace Adventure
             Links
         }
 
-        string m_title = "Text Adventure"; // TODO - .title tag
+        string m_title = "Text Adventure";
         Dictionary<string, Page> m_pages = new Dictionary<string, Page>();
         Page m_startPage = null;
         Page m_currentPage = null;
@@ -67,7 +67,7 @@ namespace Adventure
         {
             foreach (var page in m_pages.Values)
             {
-                string fileName = $"{page.Name}.html";
+                string fileName = GetFileName(page);
                 if (outputDir != null)
                 {
                     fileName = Path.Combine(outputDir, fileName);
@@ -86,6 +86,11 @@ namespace Adventure
                     return;
                 }
             }
+        }
+
+        static string GetFileName(Page page)
+        {
+            return $"{page.Name}.html";
         }
 
         void WritePage(Page page, XmlWriter writer)
@@ -107,11 +112,26 @@ namespace Adventure
             writer.WriteEndElement(); // head
 
             writer.WriteStartElement("body");
+            WriteHeading(page, writer);
             WriteParagraphs(page, writer);
             WriteLinks(page.Links, writer);
             writer.WriteEndElement(); // body
 
             writer.WriteEndElement(); // html
+        }
+
+        void WriteHeading(Page page, XmlWriter writer)
+        {
+            writer.WriteStartElement("h1");
+            if (page == m_startPage)
+            {
+                writer.WriteString(m_title);
+            }
+            else
+            {
+                WriteLink(m_title, GetFileName(m_startPage), writer);
+            }
+            writer.WriteEndElement();
         }
 
         void WriteParagraphs(Page page, XmlWriter writer)
@@ -173,9 +193,14 @@ namespace Adventure
 
         void WriteLink(Link link, XmlWriter writer)
         {
+            WriteLink(link.Text, GetFileName(link.Target), writer);
+        }
+
+        void WriteLink(string text, string targetUrl, XmlWriter writer)
+        {
             writer.WriteStartElement("a");
-            writer.WriteAttributeString("href", $"{link.Target.Name}.html");
-            writer.WriteString(link.Text);
+            writer.WriteAttributeString("href", targetUrl);
+            writer.WriteString(text);
             writer.WriteEndElement();
         }
 
