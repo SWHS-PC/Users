@@ -23,9 +23,23 @@ namespace Adventure
 
         Page StartPage => m_story.StartPage;
 
-        static public Story Parse(TextReader reader)
+        static public Story Parse(string fileName)
         {
-            return new StoryParser().ParseInternal(reader);
+            Story story = null;
+
+            try
+            {
+                using (var reader = new StreamReader(fileName))
+                {
+                    story = new StoryParser().ParseInternal(reader);
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.Write($"Error: Could not open {fileName}.");
+            }
+
+            return story;
         }
 
         Story ParseInternal(TextReader reader)
