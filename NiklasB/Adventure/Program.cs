@@ -184,11 +184,10 @@ namespace Adventure
             {
                 using (var reader = new StreamReader(fileName))
                 {
-                    var parser = new StoryParser();
-
-                    if (parser.Parse(reader))
+                    var story = StoryParser.Parse(reader);
+                    if (story != null)
                     {
-                        return parser.StartPage;
+                        return story.StartPage;
                     }
                 }
             }
@@ -201,21 +200,23 @@ namespace Adventure
 
         static void CompileStory(string fileName, string outputDir)
         {
+            Story story = null;
+
             try
             {
                 using (var reader = new StreamReader(fileName))
                 {
-                    var parser = new StoryParser();
-
-                    if (parser.Parse(reader))
-                    {
-                        parser.WriteHtml(outputDir);
-                    }
+                    story = StoryParser.Parse(reader);
                 }
             }
             catch (IOException)
             {
                 Console.Error.Write($"Error: Could not open {fileName}.");
+            }
+
+            if (story != null)
+            {
+                StoryWriter.Write(story, outputDir);
             }
         }
     }

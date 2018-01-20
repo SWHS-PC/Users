@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml;
 
 namespace Adventure
 {
@@ -15,41 +14,47 @@ namespace Adventure
             Links
         }
 
-        string m_title = "Text Adventure";
+        Story m_story = new Story();
         Dictionary<string, Page> m_pages = new Dictionary<string, Page>();
-        Page m_startPage = null;
         Page m_currentPage = null;
         StringBuilder m_description = new StringBuilder();
         State m_state = State.None;
         int m_lineNumber = 0;
 
-        public bool Parse(TextReader reader)
+        Page StartPage => m_story.StartPage;
+
+        static public Story Parse(TextReader reader)
+        {
+            return new StoryParser().ParseInternal(reader);
+        }
+
+        Story ParseInternal(TextReader reader)
         {
             string line;
             while ((line = reader.ReadLine()) != null)
             {
                 ++m_lineNumber;
                 if (!ProcessLine(line.Trim()))
-                    return false;
+                    return null;
             }
 
-            if (m_startPage == null)
+            if (StartPage == null)
             {
                 LogError("No pages specified.");
-                return false;
+                return null;
             }
 
             if (m_state == State.Page)
             {
                 LogError(".page with no .end.");
-                return false;
+                return null;
             }
 
             // Recursively follow links from the start page to determine
             // which pages are reachable.
             var keys = new HashSet<string>();
-            keys.Add(m_startPage.Name);
-            FollowLinks(m_startPage.Links, keys);
+            keys.Add(StartPage.Name);
+            FollowLinks(StartPage.Links, keys);
 
             // Output warnings for unreachable pages.
             foreach (var page in m_pages.Values)
@@ -60,148 +65,7 @@ namespace Adventure
                 }
             }
 
-            return true;
-        }
-
-        public void WriteHtml(string outputDir)
-        {
-            foreach (var page in m_pages.Values)
-            {
-                string fileName = GetFileName(page);
-                if (outputDir != null)
-                {
-                    fileName = Path.Combine(outputDir, fileName);
-                }
-
-                try
-                {
-                    using (var writer = XmlWriter.Create(fileName, new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true }))
-                    {
-                        WritePage(page, writer);
-                    }
-                }
-                catch (IOException)
-                {
-                    Console.Error.WriteLine($"Error: Could not create {fileName}.");
-                    return;
-                }
-            }
-        }
-
-        static string GetFileName(Page page)
-        {
-            return $"{page.Name}.html";
-        }
-
-        void WritePage(Page page, XmlWriter writer)
-        {
-            writer.WriteDocType("html", null, null, null);
-            writer.WriteStartElement("html", "http://www.w3.org/1999/xhtml");
-            writer.WriteAttributeString("lang", "en");
-
-            writer.WriteStartElement("head");
-            writer.WriteStartElement("meta");
-            writer.WriteAttributeString("charset", "utf-8");
-            writer.WriteEndElement(); // meta
-            WriteElementWithText("title", m_title, writer);
-            writer.WriteStartElement("link");
-            writer.WriteAttributeString("rel", "stylesheet");
-            writer.WriteAttributeString("type", "text/css");
-            writer.WriteAttributeString("href", "style.css");
-            writer.WriteEndElement(); // link
-            writer.WriteEndElement(); // head
-
-            writer.WriteStartElement("body");
-            WriteHeading(page, writer);
-            WriteParagraphs(page, writer);
-            WriteLinks(page.Links, writer);
-            writer.WriteEndElement(); // body
-
-            writer.WriteEndElement(); // html
-        }
-
-        void WriteHeading(Page page, XmlWriter writer)
-        {
-            writer.WriteStartElement("h1");
-            if (page == m_startPage)
-            {
-                writer.WriteString(m_title);
-            }
-            else
-            {
-                WriteLink(m_title, GetFileName(m_startPage), writer);
-            }
-            writer.WriteEndElement();
-        }
-
-        void WriteParagraphs(Page page, XmlWriter writer)
-        {
-            var paragraphs = page.Description.Split(
-                new string[] { "\n\n" },
-                StringSplitOptions.RemoveEmptyEntries
-                );
-
-            foreach (var par in paragraphs)
-            {
-                WriteElementWithText("p", par.Trim('\n'), writer);
-            }
-        }
-
-        void WriteElementWithText(string tag, string text, XmlWriter writer)
-        {
-            // Replace double hyphens with the Unicode em dash character.
-            text = text.Replace("--", "\u2014");
-
-            writer.WriteStartElement(tag);
-            writer.WriteString(text);
-            writer.WriteEndElement();
-        }
-
-        void WriteLinks(List<Link> links, XmlWriter writer)
-        {
-            switch (links.Count)
-            {
-                case 0:
-                    // No links, so it's the end of the store.
-                    WriteElementWithText("p", "THE END", writer);
-                    break;
-
-                case 1:
-                    // Only one link, so write it as a paragraph.
-                    writer.WriteStartElement("p");
-                    WriteLink(links[0], writer);
-                    writer.WriteEndElement();
-                    break;
-
-                default:
-                    // Multiple links, so write a prompt followed by
-                    // an unordered list of links.
-                    WriteElementWithText("p", "What do you do?", writer);
-                    writer.WriteStartElement("ul");
-
-                    foreach (var link in links)
-                    {
-                        writer.WriteStartElement("li");
-                        WriteLink(link, writer);
-                        writer.WriteEndElement();
-                    }
-
-                    writer.WriteEndElement(); // ul
-                    break;
-            }
-        }
-
-        void WriteLink(Link link, XmlWriter writer)
-        {
-            WriteLink(link.Text, GetFileName(link.Target), writer);
-        }
-
-        void WriteLink(string text, string targetUrl, XmlWriter writer)
-        {
-            writer.WriteStartElement("a");
-            writer.WriteAttributeString("href", targetUrl);
-            writer.WriteString(text);
-            writer.WriteEndElement();
+            return m_story;
         }
 
         void FollowLinks(List<Link> links, HashSet<string> keys)
@@ -243,12 +107,12 @@ namespace Adventure
                             LogError("Text expected after .title tag.");
                             return false;
                         }
-                        if (m_state != State.None || m_startPage != null)
+                        if (m_state != State.None || StartPage != null)
                         {
                             LogError(".title must be the first tag in the file.");
                             return false;
                         }
-                        m_title = line.Substring(tokens[0].Length + 1);
+                        m_story.Title = line.Substring(tokens[0].Length + 1);
                         return true;
 
                     case ".page":
@@ -335,15 +199,24 @@ namespace Adventure
                 return false;
             }
 
-            m_currentPage = new Page(pageName);
-            m_pages.Add(pageName, m_currentPage);
+            // Create the new page.
+            var page = new Page(pageName);
 
-            if (m_startPage == null)
+            // Add the page to the story, and make it the start
+            // page if there isn't one already.
+            m_story.Pages.Add(page);
+            if (m_story.StartPage == null)
             {
-                m_startPage = m_currentPage;
+                m_story.StartPage = page;
             }
 
+            // Add the page to the dictionary.
+            m_pages.Add(pageName, page);
+
+            // Set the current page and the state.
+            m_currentPage = page;
             m_state = State.Page;
+
             return true;
         }
 
@@ -384,7 +257,5 @@ namespace Adventure
         {
             Console.Error.Write($"Error line {m_lineNumber}: {message}");
         }
-
-        public Page StartPage => m_startPage;
     }
 }
