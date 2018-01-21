@@ -109,17 +109,21 @@ namespace Adventure
 
             if (m_page == null)
             {
-                WriteElementWithText(
-                    "script",
+                // This is a single-file story, so each page will be written
+                // witin a div element. Use CSS to hide all the div elements
+                // by default.
+                WriteElementWithText("style", "div{display:none}");
+
+                // Add a script to show the specified page element.
+                const string scriptBlock =
                     "\n" +
-                    $"var currentId = '{m_story.StartPage.Name}';\n" +
-                    "function show(id)\n" +
-                    "{\n" +
-                    "    document.getElementById(currentId).style = 'display:none';\n" +
-                    "    document.getElementById(id).style = 'display:block';\n" +
-                    "    currentId = id;\n" +
-                    "}\n"
-                    );
+                    "var current = null;\n" +
+                    "function show(id) {\n" +
+                    "    if (current != null) current.style = '';\n" +
+                    "    current = document.getElementById(id);\n" +
+                    "    current.style = 'display:block';\n" +
+                    "}\n";
+                WriteElementWithText("script", scriptBlock);
             }
 
             m_writer.WriteEndElement(); // head
@@ -128,6 +132,16 @@ namespace Adventure
         void WriteBody()
         {
             m_writer.WriteStartElement("body");
+
+            if (m_page == null)
+            {
+                // This is a single-file story, so show the start page's
+                // div element when the body element is loaded.
+                m_writer.WriteAttributeString(
+                    "onload",
+                    $"show('{m_story.StartPage.Name}')"
+                    );
+            }
 
             m_writer.WriteStartElement("h1");
             if (m_page != m_story.StartPage)
