@@ -47,7 +47,7 @@ flashlight does not illuminate.
 .page kitchen
 You find yourself in an old kitchen with a large cast-iron 
 stove and many cabinets. You quickly search the cabinets, 
-hoping to find something useful -- a knife perhaps -- but 
+hoping to find something useful – a knife perhaps – but 
 they're empty of everything except cobwebs.
 
 Through a partially-open door in the back of the kitchen, 
@@ -80,7 +80,7 @@ someone need help?”
 There is no response at first, but then you hear a high,
 wordless voice somewhere on your left. Aiming your flashlight 
 there, you see a small door, which you had overlooked before 
-because it blends into the dark panelling -- a closet perhaps.
+because it blends into the dark panelling – a closet perhaps.
 
 Cautiously, you open the door, then laugh as a cat emerges, 
 meowing pitiably. It was only a cat you heard all along! 
@@ -117,7 +117,7 @@ You open the glass door in the front of the clock. Driven
 by some impulse you don't understand, you start the pendulum 
 swinging. Suddenly, the mechanism springs to life! The 
 weights begin descending, and the hands start moving 
-rapidly -- backwards!
+rapidly – backwards!
 
 A gust of wind makes the hairs on the back of your neck 
 stand on end. You look up, and a pale light draws you eyes 

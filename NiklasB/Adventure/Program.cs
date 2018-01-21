@@ -14,7 +14,7 @@ namespace Adventure
             "\n" +
             "To compile an interactive adventure to HTML:\n" +
             "\n" +
-            "    Adventure /compile [ /out <outputDir> ] <storyFile.txt>\n";
+            "    Adventure /compile <storyFile.txt> <outputFile.html>\n";
 
         static void Main(string[] args)
         {
@@ -40,35 +40,13 @@ namespace Adventure
 
                 case "-compile":
                 case "/compile":
-                    if (args.Length < 2)
+                    if (args.Length != 3)
                     {
                         Console.WriteLine(m_usage);
                     }
                     else
                     {
-                        // The last argument must be the story file name.
-                        int lastIndex = args.Length - 1;
-                        string storyFileName = args[lastIndex];
-
-                        // Process any other arguments.
-                        string outputDir = null;
-
-                        for (int i = 1; i < lastIndex; ++i)
-                        {
-                            switch (args[i])
-                            {
-                                case "-out":
-                                case "/out":
-                                    outputDir = args[++i];
-                                    break;
-
-                                default:
-                                    Console.WriteLine(m_usage);
-                                    return;
-                            }
-                        }
-
-                        CompileStory(storyFileName, outputDir);
+                        CompileStory(args[1], args[2]);
                     }
                     break;
 
@@ -80,19 +58,19 @@ namespace Adventure
 
         static void PlayStory(string storyFileName)
         {
-            var story = StoryParser.Parse(storyFileName);
+            Story story = StoryParser.Parse(storyFileName);
             if (story != null)
             {
                 StoryPlayer.Play(story);
             }
         }
 
-        static void CompileStory(string fileName, string outputDir)
+        static void CompileStory(string storyFileName, string outputFileName)
         {
-            Story story = StoryParser.Parse(fileName);
+            Story story = StoryParser.Parse(storyFileName);
             if (story != null)
             {
-                StoryWriter.Write(story, outputDir);
+                StoryWriter.Write(story, outputFileName);
             }
         }
     }
