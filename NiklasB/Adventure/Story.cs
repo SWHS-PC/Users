@@ -13,5 +13,6 @@ namespace Adventure
         public string Title { get; set; }
         public List<Page> Pages { get; }
         public Page StartPage { get; set; }
+        public bool IsOneFile { get; set; }
     }
 }

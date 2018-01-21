@@ -123,10 +123,24 @@ namespace Adventure
                         }
                         if (m_state != State.None || StartPage != null)
                         {
-                            LogError(".title must be the first tag in the file.");
+                            LogError(".title must precede any page definitions.");
                             return false;
                         }
                         m_story.Title = line.Substring(tokens[0].Length + 1);
+                        return true;
+
+                    case ".onefile":
+                        if (tokens.Length != 1)
+                        {
+                            LogError("Unexpected arguments after .onefile tag.");
+                            return false;
+                        }
+                        if (m_state != State.None || StartPage != null)
+                        {
+                            LogError(".onefile must precede any page definitions.");
+                            return false;
+                        }
+                        m_story.IsOneFile = true;
                         return true;
 
                     case ".page":

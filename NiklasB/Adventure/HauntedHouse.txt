@@ -1,4 +1,5 @@
 ﻿.title The Haunted House
+.onefile
 
 .page start
 You're walking home from school one afternoon in January. It's 
