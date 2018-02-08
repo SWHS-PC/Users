@@ -9,7 +9,24 @@ namespace File_Converter
 {
     class Program
     {
-        static void Main(string[] args)
+        static void main()
+        {
+            string input = Console.ReadLine();
+            if (input == "k wd")
+            {
+                Kringle(Directory.GetCurrentDirectory());
+            }
+            else if(input == "k")
+            {
+                Kringle(input);
+            }
+            else
+            {
+                Console.WriteLine("Choose a tool");
+            }
+        }
+
+        static void ConvertFile(string[] args)
         {
             Console.WriteLine("Enter File Name or Path.");
             Console.Write("> ");
@@ -28,6 +45,25 @@ namespace File_Converter
             Console.WriteLine("{0} converted to type {1}, new file: {2}", fileEntered, newFileType, newFile);
             Close();
         }
+
+        static void Kringle(string subDirectory)
+        {
+            var dirInfo = new DirectoryInfo(subDirectory);
+            if (dirInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                return;
+
+            foreach (string currentFiles in Directory.EnumerateFiles(subDirectory))
+            {
+                Console.WriteLine(currentFiles);
+            }
+            foreach (string dir in Directory.EnumerateDirectories(subDirectory))
+            {
+                Kringle(dir);
+            }
+        }
+
+
+
 
         public static void Close()
         {
