@@ -23,10 +23,14 @@ namespace File_Converter
                         case "wd":
                             Kringle(Directory.GetCurrentDirectory());
                             break;
-                        case "c":
-                            ConvertFile();
+                        case "f":
+                            Kringle(input[1]);
                             break;
                     }
+                }
+                else if(input[0] == "c")
+                {
+                    ConvertFile();
                 }
                 else
                 {
