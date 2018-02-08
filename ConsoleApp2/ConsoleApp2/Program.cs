@@ -9,9 +9,17 @@ namespace ConsoleApp2
 {
     class Program
     {
-        static void Main(string[] args)
-        {         
-            Kringle(Directory.GetCurrentDirectory());
+        static void Main()
+        {
+            string input= Console.ReadLine();
+            if (input == "" || input == "wd")
+            {
+                Kringle(Directory.GetCurrentDirectory());
+            }
+            else
+            {
+                Kringle(input);
+            }
         }
         static void Kringle(string subDirectory)
         {
@@ -28,5 +36,6 @@ namespace ConsoleApp2
                 Kringle(dir);
             }
         }
+        
     }
 }
