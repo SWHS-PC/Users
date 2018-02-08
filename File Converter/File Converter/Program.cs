@@ -9,24 +9,33 @@ namespace File_Converter
 {
     class Program
     {
-        static void main()
+        static void Main()
         {
-            string input = Console.ReadLine();
-            if (input == "k wd")
+            while (true)
             {
-                Kringle(Directory.GetCurrentDirectory());
-            }
-            else if(input == "k")
-            {
-                Kringle(input);
-            }
-            else
-            {
-                Console.WriteLine("Choose a tool");
+                string userInput = Console.ReadLine();
+                string[] input = userInput.Split(' ');
+
+                if (input[0] == "k" && input.Length > 1)
+                {
+                    switch (input[1])
+                    {
+                        case "wd":
+                            Kringle(Directory.GetCurrentDirectory());
+                            break;
+                        case "c":
+                            ConvertFile();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Choose a tool.");
+                }
             }
         }
 
-        static void ConvertFile(string[] args)
+        static void ConvertFile()
         {
             Console.WriteLine("Enter File Name or Path.");
             Console.Write("> ");
@@ -43,7 +52,7 @@ namespace File_Converter
             File.Move(fileEntered, Path.ChangeExtension(fileEntered, newFileType));
             string newFile = Path.GetFileNameWithoutExtension(fileEntered) + "." + newFileType;
             Console.WriteLine("{0} converted to type {1}, new file: {2}", fileEntered, newFileType, newFile);
-            Close();
+            //Close();
         }
 
         static void Kringle(string subDirectory)
@@ -65,13 +74,13 @@ namespace File_Converter
 
 
 
-        public static void Close()
-        {
-            Console.WriteLine("\nPress Space to Close...");
-            if (Console.ReadKey().KeyChar == (char)13)
-            {
-                return;
-            }
-        }
+        //public static void Close()
+        //{
+        //    Console.WriteLine("\nPress Space to Close...");
+        //    if (Console.ReadKey().KeyChar == (char)13)
+        //    {
+        //        return;
+        //    }
+        //}
     }
 }
