@@ -17,6 +17,7 @@ namespace File_Converter
                 string userInput = Console.ReadLine();
                 string[] input = userInput.Split(' ');
 
+
                 if (input[0] == "k" && input.Length > 1)
                 {
                     switch (input[1])
@@ -29,9 +30,16 @@ namespace File_Converter
                             break;
                     }
                 }
-                else if(input[0] == "c")
+
+                else if (input[0] == "c")
                 {
+
                     FileOptions.ChangeFileEnding();
+                }
+                else if (input[0] == "html" || input[0] == "HTML")
+                {
+                    File_Converter.Convert.TextToHtml(input);
+
                 }
                 else
                 {
@@ -39,6 +47,8 @@ namespace File_Converter
                 }
             }
         }
+         
+        
 
 
         //public static void Close()
