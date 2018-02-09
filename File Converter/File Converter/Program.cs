@@ -22,11 +22,14 @@ namespace File_Converter
                 {
                     switch (input[1])
                     {
-                        case "wd":
+                        case "dir":
                             FileOptions.Kringle(Directory.GetCurrentDirectory());
                             break;
-                        case "f":
+                        case "ftree":
                             FileOptions.Kringle(input[1]);
+                            break;
+                        case "rn":
+                            FileOptions.ChangeFileProperties(2);
                             break;
                     }
                 }
@@ -34,7 +37,7 @@ namespace File_Converter
                 else if (input[0] == "c")
                 {
 
-                    FileOptions.ChangeFileEnding();
+                    FileOptions.ChangeFileProperties(1);
                 }
                 else if (input[0] == "html" || input[0] == "HTML")
                 {
