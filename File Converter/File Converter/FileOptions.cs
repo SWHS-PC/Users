@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-
+using Microsoft.VisualBasic.FileIO;
 namespace File_Converter
 {
     public class FileOptions
@@ -21,24 +21,25 @@ namespace File_Converter
             string filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory() + "\\" + fileEntered);
             string filePathFull = Directory.GetCurrentDirectory() + "\\" + fileEntered;
 
-            Console.WriteLine("{0}\n{1}\n{2}\n{3}",fileEntered, fileType, filePath, filePathFull);
+            //Console.WriteLine("{0}\n{1}\n{2}\n{3}",fileEntered, fileType, filePath, filePathFull);
             switch (prop)
             {
                 case 1:
-                    Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", filePath, fileType);
+                    Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", filePathFull, fileType);
                     string newFileType = Console.ReadLine();
                     string newFile = Path.ChangeExtension(fileEntered, newFileType);
-                    if (!Directory.Exists(filePath))
-                    {
-                        Directory.CreateDirectory(filePath);
-                    }
+
                     File.Move(fileEntered, newFile);
                     Console.WriteLine("{0} converted to type {1}, new file: {2}", fileEntered, newFileType, newFile);
                     break;
                 case 2:
-                    Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", filePath, fileType);
+                    Console.WriteLine("Enter new file name:");
                     string newFileName = Console.ReadLine();
-                    File.Move(fileEntered, newFileName);
+                    if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
+                    }
+                    FileSystem.CopyDirectory(fileEntered, newFileName, UIOption.AllDialogs);
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
             }

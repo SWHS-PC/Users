@@ -17,7 +17,6 @@ namespace File_Converter
                 string userInput = Console.ReadLine();
                 string[] input = userInput.Split(' ');
 
-
                 if (input[0] == "k" && input.Length > 1)
                 {
                     switch (input[1])
@@ -28,7 +27,7 @@ namespace File_Converter
                         case "ftree":
                             FileOptions.Kringle(input[1]);
                             break;
-                        case "rn":
+                        case "mv":
                             FileOptions.ChangeFileProperties(2);
                             break;
                     }
@@ -42,7 +41,6 @@ namespace File_Converter
                 else if (input[0] == "html" || input[0] == "HTML")
                 {
                     File_Converter.Convert.TextToHtml(input);
-
                 }
                 else
                 {
