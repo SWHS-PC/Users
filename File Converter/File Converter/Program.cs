@@ -13,6 +13,7 @@ namespace File_Converter
         {
             while (true)
             {
+                Console.WriteLine("Enter a command(k for Kringle: wd, f | c for Convert File)\n>");
                 string userInput = Console.ReadLine();
                 string[] input = userInput.Split(' ');
 
