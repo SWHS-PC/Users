@@ -31,6 +31,7 @@ namespace Adventure
             {
                 using (var reader = new StreamReader(fileName))
                 {
+                    //new storyparser object and member of function story ParseInternal passing reader
                     story = new StoryParser().ParseInternal(reader);
                 }
             }
