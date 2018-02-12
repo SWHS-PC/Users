@@ -21,6 +21,7 @@ namespace File_Converter
             string filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory() + "\\" + fileEntered);
             string filePathFull = Directory.GetCurrentDirectory() + "\\" + fileEntered;
 
+            //debug print
             //Console.WriteLine("{0}\n{1}\n{2}\n{3}",fileEntered, fileType, filePath, filePathFull);
             switch (prop)
             {
@@ -28,8 +29,7 @@ namespace File_Converter
                     Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", filePathFull, fileType);
                     string newFileType = Console.ReadLine();
                     string newFile = Path.ChangeExtension(fileEntered, newFileType);
-
-                    File.Move(fileEntered, newFile);
+                    FileSystem.CopyDirectory(fileEntered, newFile, UIOption.AllDialogs);
                     Console.WriteLine("{0} converted to type {1}, new file: {2}", fileEntered, newFileType, newFile);
                     break;
                 case 2:
@@ -44,6 +44,7 @@ namespace File_Converter
                     break;
             }
             
+            //could add the close function but its a while loop
             //Close();
         }
         

@@ -10,9 +10,9 @@ namespace File_Converter
 {
     public class Convert
     {
-        const string mUsage = "HTML <inputFile> <outputFile>";
         public static void TextToHtml(string[] args)
         {
+            const string mUsage = "HTML <inputFile> <outputFile>";
             if (args.Length != 3)
             {
                 Console.Error.WriteLine(mUsage);

@@ -13,52 +13,51 @@ namespace File_Converter
         {
             while (true)
             {
-                Console.WriteLine("Enter a command(k for Kringle: wd, f | c for Convert File)\n>");
-                string userInput = Console.ReadLine();
-                string[] input = userInput.Split(' ');
+                Console.WriteLine("Enter a command, dir, ftree, mv, c, html\n>");
+                string[] input = Console.ReadLine().Split(' ');
 
-                if (input[0] == "k" && input.Length > 1)
-                {
-                    switch (input[1])
-                    {
-                        case "dir":
-                            FileOptions.Kringle(Directory.GetCurrentDirectory());
-                            break;
-                        case "ftree":
-                            FileOptions.Kringle(input[1]);
-                            break;
-                        case "mv":
-                            FileOptions.ChangeFileProperties(2);
-                            break;
-                    }
-                }
-
-                else if (input[0] == "c")
-                {
-
-                    FileOptions.ChangeFileProperties(1);
-                }
-                else if (input[0] == "html" || input[0] == "HTML")
-                {
-                    File_Converter.Convert.TextToHtml(input);
-                }
-                else
-                {
-                    Console.WriteLine("Choose a tool.");
-                }
+                InputSelection(input);
             }
         }
-         
-        
 
 
-        //public static void Close()
-        //{
-        //    Console.WriteLine("\nPress Space to Close...");
-        //    if (Console.ReadKey().KeyChar == (char)13)
-        //    {
-        //        return;
-        //    }
-        //}
+        public static void InputSelection(string[] input)
+        {
+            switch (input[0])
+            {
+                case "dir":
+                    FileOptions.Kringle(Directory.GetCurrentDirectory());
+                    break;
+                case "ftree":
+                    if (input.Length == 1)
+                    {
+                        Console.WriteLine("Specify a directory.");
+                    }
+                    FileOptions.Kringle(input[1]);
+                    break;
+                case "mv":
+                    FileOptions.ChangeFileProperties(2);
+                    break;
+                case "c":
+                    FileOptions.ChangeFileProperties(1);
+                    break;
+                case "html":
+                    //specifying File_Converter Namespace because Convert.cs is also the name of a System.IO class
+                    File_Converter.Convert.TextToHtml(input);
+                    break;
+                case "":
+                    Console.WriteLine("Choose a tool.");
+                    break;
+            }
+        }
+
+        public static void Close()
+        {
+            Console.WriteLine("\nPress Space to Close...");
+            if (Console.ReadKey().KeyChar == (char)13)
+            {
+                return;
+            }
+        }
     }
 }
