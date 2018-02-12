@@ -1,0 +1,29 @@
+﻿<Window x:Class="GuiTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GuiTest"
+        mc:Ignorable="d"
+        Title="Welcome" Height="350" Width="525">
+
+    <Grid Cursor="Wait">
+        <TextBlock HorizontalAlignment="Center" Margin="43,34,45,0" TextWrapping="Wrap" Text="Click a button and then click display." VerticalAlignment="Top" FontFamily="Trebuchet MS" Width="429">
+
+        </TextBlock>
+        <RadioButton x:Name="RadioButton1" Content="Option 1" HorizontalAlignment="Left" Margin="95,94,0,0" VerticalAlignment="Top" FontFamily="Trebuchet MS"/>
+        <RadioButton x:Name="RadioButton2" Content="Option 2" HorizontalAlignment="Left" Margin="95,123,0,0" VerticalAlignment="Top" IsThreeState="True" FontFamily="Trebuchet MS"/>
+
+        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="0,204,0,0" FontFamily="Trebuchet MS" Cursor="IBeam" Click="Button_Click">
+            <Button.Content></Button.Content>
+        </Button>
+
+        <!--<Button x:Name="btn" Height="335" Width="100" Background="Transparent" BorderThickness="0" BorderBrush="Transparent">
+            <Button.Content>
+                <Border CornerRadius="0" Height="25" Width="75" Margin="0" BorderBrush="Black" BorderThickness="1,1,1,1" >
+                    <TextBlock Text="Display" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+            </Button.Content>
+        </Button> -->
+    </Grid>
+</Window>
