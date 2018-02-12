@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texashold", "Texashold\Texashold.csproj", "{B269FF26-FC7E-45C5-9359-585C9028026B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B269FF26-FC7E-45C5-9359-585C9028026B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B269FF26-FC7E-45C5-9359-585C9028026B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B269FF26-FC7E-45C5-9359-585C9028026B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B269FF26-FC7E-45C5-9359-585C9028026B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {98574CA9-CDE0-4C0A-99B6-6CC8B395B237}
+	EndGlobalSection
+EndGlobal
