@@ -5,18 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
+using System.Windows.Forms;
+
 namespace File_Converter
 {
     public class FileOptions
     {
-        
+
         //Change file ending/convert file
         public static void ChangeFileProperties(int prop)
         {
             Console.WriteLine("Enter File Name or Path.");
             Console.Write("> ");
 
-            string fileEntered = Console.ReadLine();
+            string fileEntered = "";
             string fileType = Path.GetExtension(fileEntered);
             string filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory() + "\\" + fileEntered);
             string filePathFull = Directory.GetCurrentDirectory() + "\\" + fileEntered;
