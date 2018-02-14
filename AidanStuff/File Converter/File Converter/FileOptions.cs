@@ -2,21 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
+using System.Windows.Forms;
+
 namespace File_Converter
 {
     public class FileOptions
     {
-        
         //Change file ending/convert file
         public static void ChangeFileProperties(int prop)
         {
-            Console.WriteLine("Enter File Name or Path.");
-            Console.Write("> ");
+            string fnls = "";
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                fnls = fbd.SelectedPath;
+                Console.WriteLine(fnls);
+            }
 
-            string fileEntered = Console.ReadLine();
+            //Console.WriteLine("Enter File Name or Path.");
+            //Console.Write("> ");
+
+            string fileEntered = fnls;
             string fileType = Path.GetExtension(fileEntered);
             string filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory() + "\\" + fileEntered);
             string filePathFull = Directory.GetCurrentDirectory() + "\\" + fileEntered;

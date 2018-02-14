@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 
 namespace File_Converter
 {
     class Program
     {
-        static void Main()
+        [STAThread]
+        static void Main(string[] args)
         {
             while (true)
             {
