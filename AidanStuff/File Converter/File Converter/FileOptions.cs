@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Windows.Forms;
@@ -11,31 +11,37 @@ namespace File_Converter
 {
     public class FileOptions
     {
-        //Change file ending/convert file
-        public static void ChangeFileProperties(int prop)
+        string fileEntered { get; set; }
+        public void getFile()
         {
-            string fnls = "";
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                fnls = fbd.SelectedPath;
-                Console.WriteLine(fnls);
-            }
+            OpenFileDialog FDial = new OpenFileDialog();
+            FDial.FilterIndex = 2;
+            FDial.RestoreDirectory = true;
 
+
+            if (FDial.ShowDialog() == DialogResult.OK)
+            {
+                fileEntered = FDial.FileName;
+                return;
+            }
+        }
+
+        //Change file ending/convert file
+        public void ChangeFileProperties(int prop)
+        {
             //Console.WriteLine("Enter File Name or Path.");
             //Console.Write("> ");
 
-            string fileEntered = fnls;
+            getFile();
+            //Console.WriteLine(fileEntered);
             string fileType = Path.GetExtension(fileEntered);
-            string filePath = Path.GetDirectoryName(Directory.GetCurrentDirectory() + "\\" + fileEntered);
-            string filePathFull = Directory.GetCurrentDirectory() + "\\" + fileEntered;
-
+            string fileDirectoryPath = Path.GetDirectoryName(fileEntered);
             //debug print
-            //Console.WriteLine("{0}\n{1}\n{2}\n{3}",fileEntered, fileType, filePath, filePathFull);
+            //Console.WriteLine("{0}\n{1}",fileEntered, fileType);
             switch (prop)
             {
                 case 1:
-                    Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", filePathFull, fileType);
+                    Console.WriteLine("Path to: {0} \nThe File Type is: {1} \n\nEnter File type to convert to.", fileEntered, fileType);
                     string newFileType = Console.ReadLine();
                     string newFile = Path.ChangeExtension(fileEntered, newFileType);
                     FileSystem.CopyDirectory(fileEntered, newFile, UIOption.AllDialogs);
@@ -43,7 +49,8 @@ namespace File_Converter
                     break;
                 case 2:
                     Console.WriteLine("Enter new file name:");
-                    string newFileName = Console.ReadLine();
+                    string newFileName = fileDirectoryPath + Console.ReadLine();
+
                     if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
@@ -52,12 +59,12 @@ namespace File_Converter
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
             }
-            
+
             //could add the close function but its a while loop
             //Close();
         }
-        
-        
+
+
         //print dirtree
         public static void Kringle(string subDirectory)
         {
@@ -74,6 +81,6 @@ namespace File_Converter
                 Kringle(dir);
             }
         }
-    
+
     }
 }
