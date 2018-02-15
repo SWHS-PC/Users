@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace ConsoleApp2
 {
-    class Program
+    class Program : System.Windows.Forms.Form
     {
         private const int MF_BYCOMMAND = 0x00000000;
         private const int MF_BYPOSITION = 0x00000400;
@@ -32,6 +33,8 @@ namespace ConsoleApp2
 
         static void Main()
         {
+         
+            
 
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
             DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
@@ -116,11 +119,24 @@ namespace ConsoleApp2
 
             String[] drives = Environment.GetLogicalDrives();
             Console.WriteLine("GetLogicalDrives: {0}", String.Join(", ", drives));
-    
 
-            Console.Read();
+            begin:
+            string code = Console.ReadLine();
+            if (code == "new form")
+            {
+                Application.EnableVisualStyles();
+                Application.Run(new Program()); 
+                goto begin;
+            }
 
         }
 
+        private void InitializeComponent() 
+        {
+            this.SuspendLayout();
+            this.ClientSize = new System.Drawing.Size(367, 188);
+            this.Name = "Program";
+            this.ResumeLayout(false);
+        }
     }
 }
