@@ -13,15 +13,25 @@ namespace File_Converter
     {
         string fileEntered { get; set; }
         public void getFile()
-        {
-            OpenFileDialog FDial = new OpenFileDialog();
-            FDial.FilterIndex = 2;
-            FDial.RestoreDirectory = true;
+        {  
+            OpenFileDialog FileD = new OpenFileDialog();
+            FileD.FilterIndex = 2;
+            FileD.RestoreDirectory = true;
 
             
-            if (FDial.ShowDialog() == DialogResult.OK)
+            if (FileD.ShowDialog() == DialogResult.OK)
             {
-                fileEntered = FDial.FileName;
+                fileEntered = FileD.FileName;
+                return;
+            }
+        }
+        public void getFolder()
+        {
+            FolderBrowserDialog FolderD = new FolderBrowserDialog();
+
+            if (FolderD.ShowDialog() == DialogResult.OK)
+            {
+                fileEntered = FolderD.SelectedPath;
                 return;
             }
         }
@@ -29,15 +39,14 @@ namespace File_Converter
         //Change file ending/convert file
         public void ChangeFileProperties(int prop)
         {
-            //Console.WriteLine("Enter File Name or Path.");
-            //Console.Write("> ");
-
             getFile();
-            //Console.WriteLine(fileEntered);
+
+            //debugPrint(1);//Console.WriteLine(fileEntered);
+
             string fileType = Path.GetExtension(fileEntered);
             string fileDirectoryPath = Path.GetDirectoryName(fileEntered);
-            //debug print
-            //Console.WriteLine("{0}\n{1}",fileEntered, fileType);
+            
+            //debugPrint(2);// Console.WriteLine("{0}\n{1}",fileEntered, fileDirectoryPath);
             switch (prop)
             {
                 case 1:
@@ -49,13 +58,16 @@ namespace File_Converter
                     break;
                 case 2:
                     Console.WriteLine("Enter new file name:");
-                    string newFileName = fileDirectoryPath + Console.ReadLine();
-                    
+                    string newFileName = fileDirectoryPath + "\\" + Console.ReadLine() + fileType;
+
+                    //FileAttributes NF = File.GetAttributes(fileEntered);
+                    //debugPrint(3);//Console.WriteLine(newFileName);
+
                     if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
                     }
-                    FileSystem.CopyDirectory(fileEntered, newFileName, UIOption.AllDialogs);
+                    File.Move(fileEntered, newFileName);    
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
             }
