@@ -52,7 +52,6 @@ namespace File_Converter
                     Console.WriteLine("Enter new file name:");
                     string newFileName = fileDirectoryPath + "\\" + Console.ReadLine() + fileType;
 
-                    //FileAttributes NF = File.GetAttributes(fileEntered);
                     //debugPrint(3);//Console.WriteLine(newFileName);
 
                     if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
