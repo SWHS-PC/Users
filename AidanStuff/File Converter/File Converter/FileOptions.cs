@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace File_Converter
@@ -64,6 +65,13 @@ namespace File_Converter
             }
         }
 
+        public static void createGodModeFolder()
+        {
+            string currentUser = Environment.GetEnvironmentVariable("USERNAME");
+            Console.WriteLine(currentUser);
+            Directory.CreateDirectory("C:\\Users\\" + currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
+          
+        }
         public static void Kringle(string subDirectory)
         {
             var dirInfo = new DirectoryInfo(subDirectory);

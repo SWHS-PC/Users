@@ -18,9 +18,8 @@ namespace File_Converter
                 Console.Error.WriteLine(mUsage);
                 return;
             }
-            var iFile = ReadTextFile(args[1]);
 
-            WriteHTML(iFile, args[2]);
+            WriteHTML(ReadTextFile(args[1]), args[2]);
         }
         static List<string> ReadTextFile(string fileName)
         {
