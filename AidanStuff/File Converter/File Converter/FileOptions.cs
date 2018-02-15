@@ -32,13 +32,12 @@ namespace File_Converter
             //Console.WriteLine("Enter File Name or Path.");
             //Console.Write("> ");
 
-
             getFile();
-            Console.WriteLine(fileEntered);
+            //Console.WriteLine(fileEntered);
             string fileType = Path.GetExtension(fileEntered);
             string fileDirectoryPath = Path.GetDirectoryName(fileEntered);
             //debug print
-            Console.WriteLine("{0}\n{1}",fileEntered, fileType);
+            //Console.WriteLine("{0}\n{1}",fileEntered, fileType);
             switch (prop)
             {
                 case 1:

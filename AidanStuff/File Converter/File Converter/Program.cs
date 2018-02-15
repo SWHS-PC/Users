@@ -21,9 +21,9 @@ namespace File_Converter
             }
         }
 
+
         public static void InputSelection(string[] input)
         {
-            FileOptions newFO = new FileOptions();
             switch (input[0])
             {
                 case "dir":
@@ -37,10 +37,10 @@ namespace File_Converter
                     FileOptions.Kringle(input[1]);
                     break;
                 case "mv":
-                    newFO.ChangeFileProperties(2);
+                    FileOptions.ChangeFileProperties(2);
                     break;
                 case "c":
-                    newFO.ChangeFileProperties(1);
+                    FileOptions.ChangeFileProperties(1);
                     break;
                 case "html":
                     //specifying File_Converter Namespace because Convert.cs is also the name of a System.IO class
