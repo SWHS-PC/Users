@@ -6,40 +6,32 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace File_Converter
 {
     public class FileOptions
     {
         string fileEntered { get; set; }
-        public void getFile()
+        public void getFileOrFolder(int forfold)
         {
-            OpenFileDialog FileD = new OpenFileDialog();
-            FileD.FilterIndex = 2;
-            FileD.RestoreDirectory = true;
+            CommonOpenFileDialog FileD = new CommonOpenFileDialog();
+            FileD.AllowNonFileSystemItems = true;
+            if(forfold == 2)
+            {
+                FileD.IsFolderPicker = true;
+            }
 
-
-            if (FileD.ShowDialog() == DialogResult.OK)
+            if (FileD.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 fileEntered = FileD.FileName;
                 return;
             }
         }
-        public void getFolder()
-        {
-            FolderBrowserDialog FolderD = new FolderBrowserDialog();
 
-            if (FolderD.ShowDialog() == DialogResult.OK)
-            {
-                fileEntered = FolderD.SelectedPath;
-                return;
-            }
-        }
-
-        //Change file ending/convert file
         public void ChangeFileProperties(int prop)
         {
-            getFile();
+            getFileOrFolder(1);
 
             //debugPrint(1);//Console.WriteLine(fileEntered);
 
@@ -71,13 +63,8 @@ namespace File_Converter
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
             }
-
-            //could add the close function but its a while loop
-            //Close();
         }
 
-
-        //print dirtree
         public static void Kringle(string subDirectory)
         {
             var dirInfo = new DirectoryInfo(subDirectory);
