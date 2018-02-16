@@ -32,6 +32,12 @@ namespace Wind2DThing
             mitems.Add(new Contact { FirstName = "Russell" });
             mitems.Add(new Contact { FirstName = "Ben" });
             mitems.Add(new Contact { FirstName = "Niklas" });
+            mitems.Add(new Contact { LastName = "Daly" });
+            mitems.Add(new Contact { LastName = "Borson" });
+            mitems.Add(new Contact { LastName = "Borson" });
+            mitems.Add(new Contact { Email = "rdaly@sw.wednet.edu" });
+            mitems.Add(new Contact { Email = "bborson@sw.wednet.edu" });
+            mitems.Add(new Contact { Email = "Niklas@gmail.com" });
         }
     }
 }
