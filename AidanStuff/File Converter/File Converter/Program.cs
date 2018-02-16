@@ -13,7 +13,7 @@ namespace File_Converter
         [STAThread]
         static void Main(string[] args)
         {
-            FileOptions.createGodModeFolder();
+
             while (true)
             {
                 Console.WriteLine("Enter a command, dir, ftree, mv, c, html\n>");
@@ -51,6 +51,9 @@ namespace File_Converter
                     break;
                 case "":
                     Console.WriteLine("Choose a tool.");
+                    break;
+                case "GM":
+                    FileOptions.createGodModeFolder();
                     break;
             }
         }

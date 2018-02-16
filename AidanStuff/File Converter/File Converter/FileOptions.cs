@@ -67,11 +67,13 @@ namespace File_Converter
 
         public static void createGodModeFolder()
         {
-            string currentUser = Environment.GetEnvironmentVariable("USERNAME");
+            string currentUser = Environment.GetEnvironmentVariable("USERPROFILE");
             Console.WriteLine(currentUser);
-            Directory.CreateDirectory("C:\\Users\\" + currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
+            Console.Read();
+            Directory.CreateDirectory(currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
           
         }
+
         public static void Kringle(string subDirectory)
         {
             var dirInfo = new DirectoryInfo(subDirectory);
