@@ -16,7 +16,7 @@ namespace SL
             
             Controls();
         }
-        public static int wx = 160, wy = 59;
+        public static int wx = Console.LargestWindowWidth / 2, wy = Console.LargestWindowHeight / 2;
         public static void Controls()
         {
             const string s6 =    "                         (@@)  (  )  (@)   ( )  @@    ()   @   o   @   o    @";
