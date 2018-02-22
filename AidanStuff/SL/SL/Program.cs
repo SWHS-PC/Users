@@ -14,8 +14,11 @@ namespace SL
             
             Console.SetWindowSize(wx, wy);
             Console.SetBufferSize(wx*2, wy);
+            Console.SetWindowPosition(wx / 4, 0);
 
             Controls();
+            Thread.Sleep(500);
+
         }
         public static int wx = Console.LargestWindowWidth / 2, wy = Console.LargestWindowHeight / 2;
         public static void Controls()
@@ -39,63 +42,33 @@ namespace SL
             lines.Add("   \\_/       \\O=====O=====O=====O/       \\_/          ");
 
 
-            Console.WriteLine(wx + "\n" + wy);
             Console.Read();
-            int x = wx, y = (wy/2)-10;       
+            int x = wx, y = (wy/3);       
                                   
-            Write(lines, x, y); 
-
-            //while (true)
-            //{
-            //    if (Console.KeyAvailable)
-            //    {
-            //        var command = Console.ReadKey().Key;
-            //        switch (command)
-            //        {
-            //            case ConsoleKey.DownArrow:
-            //                y++;
-            //                break;
-            //            case ConsoleKey.UpArrow:
-            //                if (y > 0)
-            //                {
-            //                    y--;
-            //                }
-            //                break;
-            //            case ConsoleKey.LeftArrow:
-            //                if (x > 0)
-            //                {
-            //                    x--;
-            //                }
-            //                break;
-            //            case ConsoleKey.RightArrow:
-            //                x++;
-            //                break;
-            //        }
-            //        Write(lines, x, y);
-            //    }
-            //}
+            Write(lines, x, y);
+ 
         }
 
         public static void Write(List<string> lines, int x, int y)
         {
             try
             {
-                for (int i = 0; i < wx-5; i++)
+                for (int i = 0; i < x; i++)
                 {
                     Console.Clear();
                     for (int l = 0; l < lines.Count; l++)
                     {
                         Console.SetCursorPosition(x - i, y + l);
                         Console.Write(lines[l]);
-                    }
-                    Thread.Sleep(25);
+                    } 
+                    Thread.Sleep(35);
                 }
-                Console.Read();
+                
             }
             catch (Exception e)
-            {
+            { 
                 Console.Write(e);
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
             }
         }
     }
