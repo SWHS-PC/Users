@@ -17,8 +17,17 @@ namespace SL
             Console.SetWindowPosition(0, 0);
             Console.WindowLeft = Console.WindowTop = 0;
 
-            matrix.Run();
-            //sl.Run();
+            Console.WriteLine("Enter a command, sl or matrix>");
+            string input = Console.ReadLine();
+            switch (input)
+            {
+                case "sl":
+                    sl.Run();
+                    break;
+                case "matrix":
+                    matrix.Run();
+                    break;
+            }
         }
     }
 }
