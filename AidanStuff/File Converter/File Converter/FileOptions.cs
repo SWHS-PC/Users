@@ -14,6 +14,8 @@ namespace File_Converter
     public class FileOptions
     {
         string fileEntered { get; set; }
+        public static readonly string currentUser = Environment.GetEnvironmentVariable("USERPROFILE");
+
         public void getFileOrFolder(int forfold)
         {
             CommonOpenFileDialog FileD = new CommonOpenFileDialog();
@@ -67,7 +69,6 @@ namespace File_Converter
 
         public static void createGodModeFolder()
         {
-            string currentUser = Environment.GetEnvironmentVariable("USERPROFILE");
             Console.WriteLine(currentUser);
             Console.Read();
             Directory.CreateDirectory(currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
