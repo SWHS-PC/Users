@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IRCBot", "IRCBot\IRCBot.csproj", "{D0B7EF6B-F7C0-46CB-9554-8D740A83FEF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IRCClient", "IRCClient\IRCClient.csproj", "{0C04254D-1F82-4098-A6B9-ECD18815838C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{D0B7EF6B-F7C0-46CB-9554-8D740A83FEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0B7EF6B-F7C0-46CB-9554-8D740A83FEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0B7EF6B-F7C0-46CB-9554-8D740A83FEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C04254D-1F82-4098-A6B9-ECD18815838C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C04254D-1F82-4098-A6B9-ECD18815838C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C04254D-1F82-4098-A6B9-ECD18815838C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C04254D-1F82-4098-A6B9-ECD18815838C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BBD7F875-403D-4024-8A94-D68D1EE494B3}
 	EndGlobalSection
 EndGlobal

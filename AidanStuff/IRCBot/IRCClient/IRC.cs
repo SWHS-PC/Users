@@ -5,11 +5,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IRCClient
+namespace IRCBot
 {
     public class IRC
     {
-        public string input;
+
         string server = "4bit.pw";
         int port = 6667;
         string nick = "abot";
@@ -37,10 +37,10 @@ namespace IRCClient
 
                     while (true)
                     {
-                        
+                        string input;
                         while ((input = recieve.ReadLine()) != null)
                         {
-                            
+                            Console.WriteLine("< " + input);
 
                             string[] splitInput = input.Split(' ');
 
@@ -54,7 +54,11 @@ namespace IRCClient
                             {
                                 send.WriteLine("JOIN " + chan);
                             }
-
+                            
+                            //if (splitInput[3] == ":a")
+                            //{
+                            //    send.WriteLine("PRIVMSG " + "a");
+                            //}
                         }
                     }
                 }
@@ -64,7 +68,7 @@ namespace IRCClient
                 {
                     throw e;
 
-                    //Console.WriteLine(e.ToString());
+                    Console.WriteLine(e.ToString());
                     Thread.Sleep(5000);
                     recon = ++reconAmount <= maxRetries;
                 }
