@@ -5,11 +5,11 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IRCBot
+namespace IRCClient
 {
     public class IRC
     {
-
+        public string input;
         string server = "4bit.pw";
         int port = 6667;
         string nick = "abot";
@@ -37,7 +37,7 @@ namespace IRCBot
 
                     while (true)
                     {
-                        string input;
+                        
                         while ((input = recieve.ReadLine()) != null)
                         {
                             Console.WriteLine("< " + input);

@@ -69,14 +69,17 @@
             // 
             this.textBoxChat.AcceptsReturn = true;
             this.textBoxChat.AcceptsTab = true;
+            this.textBoxChat.AllowDrop = true;
             this.textBoxChat.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxChat.HideSelection = false;
             this.textBoxChat.Location = new System.Drawing.Point(3, 3);
             this.textBoxChat.MaxLength = 65536;
             this.textBoxChat.Multiline = true;
             this.textBoxChat.Name = "textBoxChat";
-            this.textBoxChat.ReadOnly = true;
+            this.textBoxChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxChat.Size = new System.Drawing.Size(1055, 710);
             this.textBoxChat.TabIndex = 1;
+            this.textBoxChat.Text = " ";
             this.textBoxChat.TextChanged += new System.EventHandler(this.ClientWindow_Load);
             // 
             // ClientWindow
