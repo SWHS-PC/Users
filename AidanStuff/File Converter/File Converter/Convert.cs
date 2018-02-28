@@ -19,7 +19,6 @@ namespace File_Converter
                 return;
             }
 
-            WriteHTML(ReadTextFile(args[1]), args[2]);
         }
         static List<string> ReadTextFile(string fileName)
         {

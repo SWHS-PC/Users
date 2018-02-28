@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.ApplicationServices;
-using Microsoft.WindowsAPICodePack.Dialogs;
+
 
 namespace File_Converter
 {
     public class FileOptions
     {
         string fileEntered { get; set; }
+
         public static readonly string currentUser = Environment.GetEnvironmentVariable("USERPROFILE");
 
         public void getFileOrFolder(int forfold)
@@ -32,9 +32,12 @@ namespace File_Converter
             }
         }
 
+
         public void ChangeFileProperties(int prop)
         {
             getFileOrFolder(1);
+
+
 
             //debugPrint(1);//Console.WriteLine(fileEntered);
 
@@ -55,12 +58,14 @@ namespace File_Converter
                     Console.WriteLine("Enter new file name:");
                     string newFileName = fileDirectoryPath + "\\" + Console.ReadLine() + fileType;
 
+
                     //debugPrint(3);//Console.WriteLine(newFileName);
 
                     if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
                     }
+
                     File.Move(fileEntered, newFileName);
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
@@ -74,6 +79,7 @@ namespace File_Converter
             Directory.CreateDirectory(currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
           
         }
+
 
         public static void Kringle(string subDirectory)
         {
