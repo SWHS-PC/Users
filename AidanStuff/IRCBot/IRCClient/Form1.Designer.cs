@@ -23,88 +23,70 @@
        
         private void InitializeComponent()
         {
-            this.textBoxInput = new System.Windows.Forms.TextBox();
-            this.listViewChannels = new System.Windows.Forms.ListView();
-            this.flowLayoutPanelBackground = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanelLeft = new System.Windows.Forms.FlowLayoutPanel();
             this.textBoxChat = new System.Windows.Forms.TextBox();
-            this.flowLayoutPanelBackground.SuspendLayout();
-            this.flowLayoutPanelLeft.SuspendLayout();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // textBoxInput
-            // 
-            this.textBoxInput.Location = new System.Drawing.Point(3, 719);
-            this.textBoxInput.Name = "textBoxInput";
-            this.textBoxInput.Size = new System.Drawing.Size(1055, 20);
-            this.textBoxInput.TabIndex = 0;
-            // 
-            // listViewChannels
-            // 
-            this.listViewChannels.Location = new System.Drawing.Point(1069, 3);
-            this.listViewChannels.Name = "listViewChannels";
-            this.listViewChannels.Size = new System.Drawing.Size(265, 740);
-            this.listViewChannels.TabIndex = 1;
-            this.listViewChannels.UseCompatibleStateImageBehavior = false;
-            // 
-            // flowLayoutPanelBackground
-            // 
-            this.flowLayoutPanelBackground.Controls.Add(this.flowLayoutPanelLeft);
-            this.flowLayoutPanelBackground.Controls.Add(this.listViewChannels);
-            this.flowLayoutPanelBackground.Location = new System.Drawing.Point(12, 12);
-            this.flowLayoutPanelBackground.Name = "flowLayoutPanelBackground";
-            this.flowLayoutPanelBackground.Size = new System.Drawing.Size(1340, 745);
-            this.flowLayoutPanelBackground.TabIndex = 2;
-            // 
-            // flowLayoutPanelLeft
-            // 
-            this.flowLayoutPanelLeft.Controls.Add(this.textBoxChat);
-            this.flowLayoutPanelLeft.Controls.Add(this.textBoxInput);
-            this.flowLayoutPanelLeft.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanelLeft.Name = "flowLayoutPanelLeft";
-            this.flowLayoutPanelLeft.Size = new System.Drawing.Size(1060, 740);
-            this.flowLayoutPanelLeft.TabIndex = 2;
             // 
             // textBoxChat
             // 
             this.textBoxChat.AcceptsReturn = true;
             this.textBoxChat.AcceptsTab = true;
-            this.textBoxChat.AllowDrop = true;
+            this.textBoxChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxChat.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxChat.Cursor = System.Windows.Forms.Cursors.Default;
             this.textBoxChat.HideSelection = false;
-            this.textBoxChat.Location = new System.Drawing.Point(3, 3);
+            this.textBoxChat.Location = new System.Drawing.Point(12, 12);
             this.textBoxChat.MaxLength = 65536;
             this.textBoxChat.Multiline = true;
             this.textBoxChat.Name = "textBoxChat";
+            this.textBoxChat.ReadOnly = true;
             this.textBoxChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxChat.Size = new System.Drawing.Size(1055, 710);
+            this.textBoxChat.Size = new System.Drawing.Size(1010, 680);
             this.textBoxChat.TabIndex = 1;
             this.textBoxChat.Text = " ";
             this.textBoxChat.TextChanged += new System.EventHandler(this.ClientWindow_Load);
             // 
+            // listView1
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView1.Location = new System.Drawing.Point(1028, 12);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(310, 706);
+            this.listView1.TabIndex = 2;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(12, 698);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(1010, 20);
+            this.textBox1.TabIndex = 3;
+            // 
             // ClientWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1366, 768);
-            this.Controls.Add(this.flowLayoutPanelBackground);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(1350, 730);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.textBoxChat);
             this.Name = "ClientWindow";
             this.Text = "IRC Client";
-            this.flowLayoutPanelBackground.ResumeLayout(false);
-            this.flowLayoutPanelLeft.ResumeLayout(false);
-            this.flowLayoutPanelLeft.PerformLayout();
+            this.Load += new System.EventHandler(this.ClientWindow_Load_1);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
-      
-
-
-        private System.Windows.Forms.TextBox textBoxInput;
-        private System.Windows.Forms.ListView listViewChannels;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBackground;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelLeft;
         private System.Windows.Forms.TextBox textBoxChat;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

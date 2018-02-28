@@ -40,8 +40,8 @@ namespace IRCBot
                         
                         while ((input = recieve.ReadLine()) != null)
                         {
-                            
 
+                            Console.WriteLine(input);
                             string[] splitInput = input.Split(' ');
 
                             if (splitInput[0] == "PING")

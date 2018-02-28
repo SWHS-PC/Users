@@ -19,22 +19,18 @@ namespace IRCClient
         List<string> DisplayInput = new List<string>(); 
         string server = "4bit.pw";
         int port = 6667;
-        string nick = "abot";
+        string nick = "CSClient";
         string chan = "#GRP";
-        string user = "USER abot 0 * :abot";
-
+        string user = "USER csclient 0 * :csclient";
+        
         public ClientWindow()
         {
             InitializeComponent();
 
-            var demoThread = new Thread(new ThreadStart(IRCStart));
-
-            demoThread.Start();
-            
-
-
+            var IRCThread = new Thread(new ThreadStart(IRCRun));
+            IRCThread.Start();
         }
-        private void IRCStart()
+        private void IRCRun()
         {
             using (var irc = new TcpClient(server, port))
             using (var stream = irc.GetStream())
@@ -50,14 +46,13 @@ namespace IRCClient
 
                     while ((input = recieve.ReadLine()) != null)
                     {
-
+                        
                         DisplayInput.Add(input);
                         Invoke(new MethodInvoker(delegate () 
                         {
                             textBoxChat.Text = "";
                             for (int i = 0; i < DisplayInput.Count; i++)
                             {
-
                                 textBoxChat.Text += DisplayInput[i] + "\r\n";
                             }
                         }));
@@ -83,6 +78,10 @@ namespace IRCClient
         {
 
         }
-        
+
+        private void ClientWindow_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
