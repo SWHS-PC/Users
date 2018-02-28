@@ -46,8 +46,15 @@ namespace IRCClient
 
                     while ((input = recieve.ReadLine()) != null)
                     {
-                        
-                        DisplayInput.Add(input);
+                        char[] servername = { ':', '4', 'b', 'i', 't', '.', 'p', 'w' };
+                        string servernamea = ":4bit.pw";
+
+                        string FilteredInput = input.Replace(servernamea, "");//.TrimStart(servername);
+                        string[] splitInput = input.Split(' ');
+
+                        DisplayInput.Add(FilteredInput);
+                        //DisplayInput.Add(input);
+
                         Invoke(new MethodInvoker(delegate () 
                         {
                             textBoxChat.Text = "";
@@ -57,17 +64,21 @@ namespace IRCClient
                             }
                         }));
 
-                        string[] splitInput = input.Split(' ');
+                        switch(splitInput[1])
+                        {
+                            case "376":
+                                send.WriteLine("JOIN " + chan);
+                                break;
+                            case "422":
+                                send.WriteLine("JOIN " + chan);
+                                break;
+                        }
 
                         if (splitInput[0] == "PING")
                         {
                             string reply = splitInput[1];
                             send.WriteLine("PONG " + reply);
                             send.Flush();
-                        }
-                        else if (splitInput[1] == "376" || splitInput[1] == "422")
-                        {
-                            send.WriteLine("JOIN " + chan);
                         }
                     }
                 }

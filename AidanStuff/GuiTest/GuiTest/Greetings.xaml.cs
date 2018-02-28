@@ -25,12 +25,16 @@ namespace GuiTest
             InitializeComponent();
 
         }
-
+        public int Str;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (RadioButton1.IsChecked == true)
             {
-                MessageBox.Show("Hello.");
+                MessageBox.Show(Str.ToString());
+                Str++;
+                MessageBox.Show(Str.ToString());
+
+
             }
             else
             {
