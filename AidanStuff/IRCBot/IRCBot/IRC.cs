@@ -10,6 +10,8 @@ namespace IRCBot
     public class IRC
     {
 
+        public string input;
+
         string server = "4bit.pw";
         int port = 6667;
         string nick = "abot";
@@ -36,11 +38,12 @@ namespace IRCBot
                     send.Flush();
 
                     while (true)
-                    {
-                        string input;
+                    {            
                         while ((input = recieve.ReadLine()) != null)
                         {
-                            Console.WriteLine("< " + input);
+
+                            Console.WriteLine(input);
+
 
                             string[] splitInput = input.Split(' ');
 
@@ -54,11 +57,6 @@ namespace IRCBot
                             {
                                 send.WriteLine("JOIN " + chan);
                             }
-                            
-                            //if (splitInput[3] == ":a")
-                            //{
-                            //    send.WriteLine("PRIVMSG " + "a");
-                            //}
                         }
                     }
                 }
@@ -67,6 +65,7 @@ namespace IRCBot
                 catch (ArgumentNullException e)
                 {
                     throw e;
+
 
                     Console.WriteLine(e.ToString());
                     Thread.Sleep(5000);

@@ -7,45 +7,43 @@ using System.IO;
 using Microsoft.VisualBasic.FileIO;
 using System.Windows.Forms;
 
+
 namespace File_Converter
 {
     public class FileOptions
     {
         string fileEntered { get; set; }
-        public void getFile()
-        {  
-            OpenFileDialog FileD = new OpenFileDialog();
-            FileD.FilterIndex = 2;
-            FileD.RestoreDirectory = true;
 
-            
-            if (FileD.ShowDialog() == DialogResult.OK)
+        public static readonly string currentUser = Environment.GetEnvironmentVariable("USERPROFILE");
+
+        public void getFileOrFolder(int forfold)
+        {
+            CommonOpenFileDialog FileD = new CommonOpenFileDialog();
+            FileD.AllowNonFileSystemItems = true;
+            if(forfold == 2)
+            {
+                FileD.IsFolderPicker = true;
+            }
+
+            if (FileD.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 fileEntered = FileD.FileName;
                 return;
             }
         }
-        public void getFolder()
-        {
-            FolderBrowserDialog FolderD = new FolderBrowserDialog();
 
-            if (FolderD.ShowDialog() == DialogResult.OK)
-            {
-                fileEntered = FolderD.SelectedPath;
-                return;
-            }
-        }
 
-        //Change file ending/convert file
         public void ChangeFileProperties(int prop)
         {
-            getFile();
+            getFileOrFolder(1);
+
+
 
             //debugPrint(1);//Console.WriteLine(fileEntered);
 
             string fileType = Path.GetExtension(fileEntered);
             string fileDirectoryPath = Path.GetDirectoryName(fileEntered);
-            
+
             //debugPrint(2);// Console.WriteLine("{0}\n{1}",fileEntered, fileDirectoryPath);
             switch (prop)
             {
@@ -60,24 +58,29 @@ namespace File_Converter
                     Console.WriteLine("Enter new file name:");
                     string newFileName = fileDirectoryPath + "\\" + Console.ReadLine() + fileType;
 
-                    //FileAttributes NF = File.GetAttributes(fileEntered);
+
                     //debugPrint(3);//Console.WriteLine(newFileName);
 
                     if (!Directory.Exists(Path.GetDirectoryName(newFileName)))
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
                     }
-                    File.Move(fileEntered, newFileName);    
+
+                    File.Move(fileEntered, newFileName);
                     Console.WriteLine("{0} renamed to {1}", fileEntered, newFileName);
                     break;
             }
-            
-            //could add the close function but its a while loop
-            //Close();
         }
-        
-        
-        //print dirtree
+
+        public static void createGodModeFolder()
+        {
+            Console.WriteLine(currentUser);
+            Console.Read();
+            Directory.CreateDirectory(currentUser + "\\Desktop\\God Mode.{ED7BA470-8E54-465E-825C-99712043E01C}");
+          
+        }
+
+
         public static void Kringle(string subDirectory)
         {
             var dirInfo = new DirectoryInfo(subDirectory);
@@ -93,6 +96,6 @@ namespace File_Converter
                 Kringle(dir);
             }
         }
-    
+
     }
 }
