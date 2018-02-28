@@ -17,11 +17,11 @@ namespace IRCClient
     {
         public string input;
         List<string> DisplayInput = new List<string>(); 
-        string server = "4bit.pw";
-        int port = 6667;
-        string nick = "CSClient";
-        string chan = "#GRP";
-        string user = "USER csclient 0 * :csclient";
+        const string server = "4bit.pw";
+        const int port = 6667;
+        const string nick = "CSClient";
+        const string chan = "#GRP";
+        const string user = "USER csclient 0 * :csclient";
         
         public ClientWindow()
         {
