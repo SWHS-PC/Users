@@ -66,7 +66,7 @@
             this.textBoxEnter.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textBoxEnter.ImeMode = System.Windows.Forms.ImeMode.On;
             this.textBoxEnter.Location = new System.Drawing.Point(12, 698);
-            this.textBoxEnter.Multiline = true;
+            this.textBoxEnter.Multiline = false;
             this.textBoxEnter.Name = "textBoxEnter";
             this.textBoxEnter.Size = new System.Drawing.Size(1010, 20);
             this.textBoxEnter.TabIndex = 3;
@@ -90,6 +90,7 @@
         private System.Windows.Forms.TextBox textBoxChat;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.TextBox textBoxEnter;
+        //private System.Windows.Forms.
     }
 }
 

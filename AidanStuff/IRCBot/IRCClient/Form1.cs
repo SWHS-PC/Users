@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -15,7 +16,7 @@ namespace IRCClient
 {
     public partial class ClientWindow : Form
     {
-        public string input;
+        public string input;                                    
         const string server = "irc.orderofthetilde.net";
         const int port = 6667;
         const string nick = "CSClient";
@@ -97,8 +98,9 @@ namespace IRCClient
 
         private void Return(object sender, KeyEventArgs e)
         {
-            send.WriteLine("PRIVMSG chan" + textBoxEnter.Text);
+            send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
             send.Flush();
+            textBoxEnter.Text = "";
         }
     }
 }
