@@ -25,7 +25,7 @@
         {
             this.textBoxChat = new System.Windows.Forms.TextBox();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBoxChat
@@ -47,7 +47,6 @@
             this.textBoxChat.Size = new System.Drawing.Size(1010, 680);
             this.textBoxChat.TabIndex = 1;
             this.textBoxChat.Text = " ";
-            this.textBoxChat.TextChanged += new System.EventHandler(this.ClientWindow_Load);
             // 
             // listView1
             // 
@@ -59,26 +58,30 @@
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
-            // textBox1
+            // textBoxEnter
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxEnter.AcceptsReturn = true;
+            this.textBoxEnter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(12, 698);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1010, 20);
-            this.textBox1.TabIndex = 3;
+            this.textBoxEnter.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.textBoxEnter.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.textBoxEnter.Location = new System.Drawing.Point(12, 698);
+            this.textBoxEnter.Multiline = true;
+            this.textBoxEnter.Name = "textBoxEnter";
+            this.textBoxEnter.Size = new System.Drawing.Size(1010, 20);
+            this.textBoxEnter.TabIndex = 3;
+            this.textBoxEnter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Return);
             // 
             // ClientWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1350, 730);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxEnter);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.textBoxChat);
             this.Name = "ClientWindow";
             this.Text = "IRC Client";
-            this.Load += new System.EventHandler(this.ClientWindow_Load_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,7 +89,7 @@
 
         private System.Windows.Forms.TextBox textBoxChat;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxEnter;
     }
 }
 

@@ -16,13 +16,14 @@ namespace IRCClient
     public partial class ClientWindow : Form
     {
         public string input;
-        List<string> DisplayInput = new List<string>(); 
-        const string server = "4bit.pw";
+        const string server = "irc.orderofthetilde.net";
         const int port = 6667;
         const string nick = "CSClient";
-        const string chan = "#GRP";
+        const string chan = "#test";
         const string user = "USER csclient 0 * :csclient";
+        public TcpClient irc = new TcpClient(server, port);
         
+
         public ClientWindow()
         {
             InitializeComponent();
@@ -30,11 +31,11 @@ namespace IRCClient
             var IRCThread = new Thread(new ThreadStart(IRCRun));
             IRCThread.Start();
         }
-        private void IRCRun()
+        public void IRCRun()
         {
-            using (var irc = new TcpClient(server, port))
-            using (var stream = irc.GetStream())
-            using (var recieve = new StreamReader(stream))
+            
+            var stream = irc.GetStream();
+            var recieve = new StreamReader(stream);
             using (var send = new StreamWriter(stream))
             {
                 send.WriteLine("NICK " + nick);
@@ -46,53 +47,74 @@ namespace IRCClient
 
                     while ((input = recieve.ReadLine()) != null)
                     {
-                        char[] servername = { ':', '4', 'b', 'i', 't', '.', 'p', 'w' };
-                        string servernamea = ":4bit.pw";
-
-                        string FilteredInput = input.Replace(servernamea, "");//.TrimStart(servername);
                         string[] splitInput = input.Split(' ');
 
-                        DisplayInput.Add(FilteredInput);
-                        //DisplayInput.Add(input);
-
-                        Invoke(new MethodInvoker(delegate () 
+                        if (splitInput[1] == "005" || splitInput[1] == "004")
                         {
-                            textBoxChat.Text = "";
-                            for (int i = 0; i < DisplayInput.Count; i++)
+                            continue;
+                        }
+                        else
+                        {
+                            string FilteredInput = input.Replace(":" + server, "");
+                            //string FilteredInput = input;
+                            if (Int32.TryParse(splitInput[1], out int LineIds) == true)
                             {
-                                textBoxChat.Text += DisplayInput[i] + "\r\n";
+                                string TrimLineId = Convert.ToString(LineIds);
+                                FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
                             }
-                        }));
-
-                        switch(splitInput[1])
-                        {
-                            case "376":
-                                send.WriteLine("JOIN " + chan);
-                                break;
-                            case "422":
-                                send.WriteLine("JOIN " + chan);
-                                break;
+                            if (FilteredInput.Split(' ').Any("00".Contains))
+                            {
+                                FilteredInput = FilteredInput.Replace("00", "");
+                            }
+                            FilteredInput = FilteredInput.Replace(nick + " ", "");
+                            FilteredInput = FilteredInput.Replace(":", "");
+                            FilteredInput = FilteredInput.Replace(" = ", " ");
+                            if (splitInput[0].Split('!')[0] == ":"+ nick)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                Console.WriteLine(input);
+                                Invoke(new MethodInvoker(delegate ()
+                                {
+                                    textBoxChat.AppendText(FilteredInput + "\r\n"); 
+                                }));
+                                switch (splitInput[1])
+                                {
+                                    case "376":
+                                        send.WriteLine("JOIN " + chan);
+                                        send.Flush();
+                                        break;
+                                    case "422":
+                                        send.WriteLine("JOIN " + chan);
+                                        send.Flush();
+                                        break;
+                                }
+                                if (splitInput[0] == "PING")
+                                {
+                                    string reply = splitInput[1];
+                                    send.WriteLine("PONG " + reply);
+                                    send.Flush();
+                                }
+                            }
                         }
-
-                        if (splitInput[0] == "PING")
-                        {
-                            string reply = splitInput[1];
-                            send.WriteLine("PONG " + reply);
-                            send.Flush();
-                        }
+                        
                     }
                 }
             }
         }
 
-        private void ClientWindow_Load(object sender, EventArgs e)
+        private void Return(object sender, KeyEventArgs e)
         {
-
-        }
-
-        private void ClientWindow_Load_1(object sender, EventArgs e)
-        {
-
+            var stream = irc.GetStream();
+            var recieve = new StreamReader(stream);
+            using (var send = new StreamWriter(stream))
+            {
+                
+                send.WriteLine("PRIVMSG " + textBoxEnter.Text);
+                send.Flush();
+            }
         }
     }
 }
