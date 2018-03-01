@@ -21,12 +21,13 @@ namespace IRCClient
         const int port = 6667;
         const string nick = "CSClient";
         const string chan = "#test";
-        const string user = "USER csclient 0 * :csclient";
+        const string user = "USER " + nick + " 0 * :" + nick;
         public static TcpClient irc = new TcpClient(server, port);
         public static NetworkStream stream = irc.GetStream();
         public static StreamReader recieve = new StreamReader(stream);
         public StreamWriter send = new StreamWriter(stream);
-        List<string> ActiveChannels;
+        List<string> ActiveChannels = new List<string>();
+        public static List<string> Servers = new List<string>();
 
         public ClientWindow()
         {
@@ -64,10 +65,12 @@ namespace IRCClient
                     FilteredInput = FilteredInput.Replace(nick + " ", "");
                     FilteredInput = FilteredInput.Replace(":", "");
                     FilteredInput = FilteredInput.Replace(" = ", " ");
+                    //FilteredInput = input;
                     if (splitInput[0].Split('!')[0] == ":" + nick)
                     {
                         continue;
                     }
+                    
                     else
                     {
                         Console.WriteLine(input);
@@ -85,11 +88,11 @@ namespace IRCClient
                                 send.WriteLine("JOIN " + chan);
                                 send.Flush();
                                 break;
-                            case "332":
-                                ActiveChannels.Add(splitInput[4]);
-                                break;
                             case "353":
-
+                                ActiveChannels.Add(splitInput[4]);
+                                Console.WriteLine(ActiveChannels[0]);
+                                break;
+                            case "333":
                                 break;
                         }
                         if (splitInput[0] == "PING")
@@ -102,15 +105,29 @@ namespace IRCClient
                 }            
             }
         }
-
-        private void Return(object sender, KeyEventArgs e)
+        private void ClientWindow_Load(object sender, EventArgs e)
         {
-            send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
-            send.Flush();
-            textBoxEnter.Text = "";
+
         }
 
-        private void ClientWindow_Load(object sender, EventArgs e)
+        private void Return(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                e.Handled = true;
+                send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
+                send.Flush();
+                textBoxEnter.Text = "";
+            } 
+        }
+
+        private void OpenClientWindowNewServer(object sender, EventArgs e)
+        {
+            NewServer LoadNewServer = new NewServer();
+            LoadNewServer.Show();
+        }
+
+        private void OpenClientWindowPreferences(object sender, EventArgs e)
         {
 
         }

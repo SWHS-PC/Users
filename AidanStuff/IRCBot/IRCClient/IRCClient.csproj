@@ -51,10 +51,19 @@
     <Compile Include="ClientWindowForm.Designer.cs">
       <DependentUpon>ClientWindowForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewServer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewServer.Designer.cs">
+      <DependentUpon>NewServer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ClientWindowForm.resx">
       <DependentUpon>ClientWindowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewServer.resx">
+      <DependentUpon>NewServer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -77,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="userconfig.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
