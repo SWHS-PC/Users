@@ -21,8 +21,10 @@ namespace IRCClient
         const string nick = "CSClient";
         const string chan = "#test";
         const string user = "USER csclient 0 * :csclient";
-        public TcpClient irc = new TcpClient(server, port);
-        
+        public static TcpClient irc = new TcpClient(server, port);
+        public static NetworkStream stream = irc.GetStream();
+        public static StreamReader recieve = new StreamReader(stream);
+        public StreamWriter send = new StreamWriter(stream);
 
         public ClientWindow()
         {
@@ -32,89 +34,71 @@ namespace IRCClient
             IRCThread.Start();
         }
         public void IRCRun()
-        {
-            
-            var stream = irc.GetStream();
-            var recieve = new StreamReader(stream);
-            using (var send = new StreamWriter(stream))
+        {          
+            send.WriteLine("NICK " + nick);
+            send.WriteLine(user);
+            send.Flush();
+
+            while ((input = recieve.ReadLine()) != null)
             {
-                send.WriteLine("NICK " + nick);
-                send.WriteLine(user);
-                send.Flush();
+                string[] splitInput = input.Split(' ');
 
-                while (true)
+                if (splitInput[1] == "005" || splitInput[1] == "004")
                 {
-
-                    while ((input = recieve.ReadLine()) != null)
-                    {
-                        string[] splitInput = input.Split(' ');
-
-                        if (splitInput[1] == "005" || splitInput[1] == "004")
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            string FilteredInput = input.Replace(":" + server, "");
-                            //string FilteredInput = input;
-                            if (Int32.TryParse(splitInput[1], out int LineIds) == true)
-                            {
-                                string TrimLineId = Convert.ToString(LineIds);
-                                FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
-                            }
-                            if (FilteredInput.Split(' ').Any("00".Contains))
-                            {
-                                FilteredInput = FilteredInput.Replace("00", "");
-                            }
-                            FilteredInput = FilteredInput.Replace(nick + " ", "");
-                            FilteredInput = FilteredInput.Replace(":", "");
-                            FilteredInput = FilteredInput.Replace(" = ", " ");
-                            if (splitInput[0].Split('!')[0] == ":"+ nick)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                Console.WriteLine(input);
-                                Invoke(new MethodInvoker(delegate ()
-                                {
-                                    textBoxChat.AppendText(FilteredInput + "\r\n"); 
-                                }));
-                                switch (splitInput[1])
-                                {
-                                    case "376":
-                                        send.WriteLine("JOIN " + chan);
-                                        send.Flush();
-                                        break;
-                                    case "422":
-                                        send.WriteLine("JOIN " + chan);
-                                        send.Flush();
-                                        break;
-                                }
-                                if (splitInput[0] == "PING")
-                                {
-                                    string reply = splitInput[1];
-                                    send.WriteLine("PONG " + reply);
-                                    send.Flush();
-                                }
-                            }
-                        }
-                        
-                    }
+                    continue;
                 }
+                else
+                {
+                    string FilteredInput = input.Replace(":" + server, "");
+                    if (Int32.TryParse(splitInput[1], out int LineIds) == true)
+                    {
+                        string TrimLineId = Convert.ToString(LineIds);
+                        FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
+                    }
+                    if (FilteredInput.Split(' ').Any("00".Contains))
+                    {
+                        FilteredInput = FilteredInput.Replace("00", "");
+                    }
+                    FilteredInput = FilteredInput.Replace(nick + " ", "");
+                    FilteredInput = FilteredInput.Replace(":", "");
+                    FilteredInput = FilteredInput.Replace(" = ", " ");
+                    if (splitInput[0].Split('!')[0] == ":" + nick)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Console.WriteLine(input);
+                        Invoke(new MethodInvoker(delegate ()
+                        {
+                            textBoxChat.AppendText(FilteredInput + "\r\n");
+                        }));
+                        switch (splitInput[1])
+                        {
+                            case "376":
+                                send.WriteLine("JOIN " + chan);
+                                send.Flush();
+                                break;
+                            case "422":
+                                send.WriteLine("JOIN " + chan);
+                                send.Flush();
+                                break;
+                        }
+                        if (splitInput[0] == "PING")
+                        {
+                            string reply = splitInput[1];
+                            send.WriteLine("PONG " + reply);
+                            send.Flush();
+                        }
+                    }
+                }            
             }
         }
 
         private void Return(object sender, KeyEventArgs e)
         {
-            var stream = irc.GetStream();
-            var recieve = new StreamReader(stream);
-            using (var send = new StreamWriter(stream))
-            {
-                
-                send.WriteLine("PRIVMSG " + textBoxEnter.Text);
-                send.Flush();
-            }
+            send.WriteLine("PRIVMSG chan" + textBoxEnter.Text);
+            send.Flush();
         }
     }
 }
