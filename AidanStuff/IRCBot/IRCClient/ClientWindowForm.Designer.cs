@@ -66,7 +66,6 @@
             this.textBoxEnter.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textBoxEnter.ImeMode = System.Windows.Forms.ImeMode.On;
             this.textBoxEnter.Location = new System.Drawing.Point(12, 698);
-            this.textBoxEnter.Multiline = false;
             this.textBoxEnter.Name = "textBoxEnter";
             this.textBoxEnter.Size = new System.Drawing.Size(1010, 20);
             this.textBoxEnter.TabIndex = 3;
@@ -82,6 +81,7 @@
             this.Controls.Add(this.textBoxChat);
             this.Name = "ClientWindow";
             this.Text = "IRC Client";
+            this.Load += new System.EventHandler(this.ClientWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

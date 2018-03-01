@@ -26,6 +26,7 @@ namespace IRCClient
         public static NetworkStream stream = irc.GetStream();
         public static StreamReader recieve = new StreamReader(stream);
         public StreamWriter send = new StreamWriter(stream);
+        List<string> ActiveChannels;
 
         public ClientWindow()
         {
@@ -84,6 +85,12 @@ namespace IRCClient
                                 send.WriteLine("JOIN " + chan);
                                 send.Flush();
                                 break;
+                            case "332":
+                                ActiveChannels.Add(splitInput[4]);
+                                break;
+                            case "353":
+
+                                break;
                         }
                         if (splitInput[0] == "PING")
                         {
@@ -101,6 +108,11 @@ namespace IRCClient
             send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
             send.Flush();
             textBoxEnter.Text = "";
+        }
+
+        private void ClientWindow_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
