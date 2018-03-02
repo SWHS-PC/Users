@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace IRCClient
 {
@@ -22,10 +23,12 @@ namespace IRCClient
         public static string user;
         public string TrimServer = " ";
         List<string> ActiveChannels = new List<string>();
-        
+        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "NICK", "PART", "USER", "PING", "PONG" };
+        public string MessageSender;
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
         StreamWriter send;
+        TcpClient irc;
 
         
         public ClientWindow()
@@ -81,7 +84,26 @@ namespace IRCClient
                     FilteredInput = FilteredInput.Replace(nick + " ", "");
                     FilteredInput = FilteredInput.Replace(":", "");
                     FilteredInput = FilteredInput.Replace(" = ", " ");
+
                     //FilteredInput = input;
+
+                    
+                    if (IRCCommands.Any(splitInput[1].Contains))
+                    {
+                        MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
+                    }
+                    switch (splitInput[1])
+                    {
+                        case "PRIVMSG":
+                            FilteredInput = MessageSender + "> " + splitInput[3];
+                            break;
+                        case "JOIN":
+                            break;
+                        case "PART":
+                            break;
+                        case "USER":
+                            break;
+                    }
                     if (splitInput[0].Split('!')[0] == ":" + nick)
                     {
                         continue;
@@ -133,21 +155,46 @@ namespace IRCClient
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
-                if (textBoxEnter.Text.Split(' ')[0].ToCharArray()[0] == '/')
+                
+                string TextToSend;
+                string[] TextSplit = textBoxEnter.Text.Split(' ');
+                char[] TextSplitChar = textBoxEnter.Text.Split(' ')[0].ToCharArray();
+                
+
+                if (textBoxEnter.Text != "")
                 {
-                    send.WriteLine(textBoxEnter.Text.Split(' ')[0].TrimStart('/') + " " + textBoxEnter.Text.Split(' ')[1]);
-                    
-                    if (textBoxEnter.Text.Split(' ')[0].TrimStart('/') == "join")
+                    if (TextSplit.Length > 1)
                     {
-                        chan = textBoxEnter.Text.Split(' ')[1];
+                        TextToSend = TextSplit[1];
+                    }
+                    else
+                    {
+                        TextToSend = "";
+                    }
+                    if (IsConnected == true)
+                    {
+                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1 && IRCCommands.Any(TextSplit[0].TrimStart('/').Contains))
+                        {
+                            send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
+
+                            if (TextSplit[0].TrimStart('/') == "join")
+                            {
+                                chan = TextSplit[1];
+                            }
+                        }
+                        else
+                        {
+                            send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
+                            //send.WriteLine("PRIVMSG " + ActiveChan + " " + textBoxEnter.Text);\
+                        }
+                        send.Flush();
+                    }
+                    else
+                    {
+                        textBoxChat.AppendText("Connect to a server to send a message." + "\r\n");
                     }
                 }
-                else
-                {
-                    send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
-                    //send.WriteLine("PRIVMSG " + ActiveChan + " " + textBoxEnter.Text);\
-                }
-                send.Flush();
+                
                 textBoxEnter.Text = "";
             }
             
@@ -169,7 +216,7 @@ namespace IRCClient
             
             user = "USER " + nick + " 0 * :" + nick;
 
-            TcpClient irc = new TcpClient(server, port);
+            irc = new TcpClient(server, port);
             NetworkStream stream = irc.GetStream();
             StreamReader recieve = new StreamReader(stream);
             send = new StreamWriter(stream);
@@ -180,9 +227,16 @@ namespace IRCClient
 
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
-            send.WriteLine("QUIT Bye");
-            send.Flush();
-            textBoxChat.Text = "Select a Server or type /server <ipaddress> <port>";
+            if (IsConnected)
+            {
+                send.WriteLine("QUIT Bye");
+                send.Flush();
+                textBoxChat.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+            }
+            else
+            {
+                textBoxChat.Text = "You need to connect to a server before you can Disconnect \r\n";
+            }
         }
 
         private void Server1Con(object sender, EventArgs e)
@@ -219,6 +273,41 @@ namespace IRCClient
             int port = Convert.ToInt32(Servers[4].Split(' ')[1]);
             nick = Servers[4].Split(' ')[2];
             ToolStripMenuItemServerConnect(server, port);
+        }
+        public bool IsConnected
+        {
+            get
+            {
+                try
+                {
+                    if (irc != null && irc.Client != null && irc.Client.Connected)
+                    {
+                        
+                        if (irc.Client.Poll(0, SelectMode.SelectRead))
+                        {
+                            byte[] buff = new byte[1];
+                            if (irc.Client.Receive(buff, SocketFlags.Peek) == 0)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
     }
 }

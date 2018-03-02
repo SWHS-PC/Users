@@ -62,7 +62,7 @@
             this.textBoxChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxChat.Size = new System.Drawing.Size(1068, 654);
             this.textBoxChat.TabIndex = 1;
-            this.textBoxChat.Text = "Select a Server or type /server <ipaddress> <port>";
+            this.textBoxChat.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
             // 
             // listView1
             // 
