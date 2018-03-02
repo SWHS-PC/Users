@@ -1,4 +1,7 @@
-﻿namespace IRCClient
+﻿
+using System.Windows.Forms;
+
+namespace IRCClient
 {
     partial class NewServer
     {
@@ -49,6 +52,8 @@
             this.buttonNewServerSubmit.TabIndex = 0;
             this.buttonNewServerSubmit.Text = "Add Server";
             this.buttonNewServerSubmit.UseVisualStyleBackColor = true;
+            this.buttonNewServerSubmit.Click += new System.EventHandler(this.CloseNewServerDialogue);
+
             // 
             // textBoxHostname
             // 
@@ -148,7 +153,6 @@
             this.Controls.Add(this.buttonNewServerSubmit);
             this.Name = "NewServer";
             this.Text = "NewServer";
-            this.Click += new System.EventHandler(this.AddNewServer);
             this.ResumeLayout(false);
             this.PerformLayout();
 

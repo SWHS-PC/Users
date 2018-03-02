@@ -30,9 +30,15 @@
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Server2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.Server3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.Server4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.Server5 = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Server1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripTopNav.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,16 +116,40 @@
             // serversToolStripMenuItem
             // 
             this.serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testToolStripMenuItem});
+            this.Server1,
+            this.Server2,
+            this.Server3,
+            this.Server4,
+            this.Server5,
+            this.ServerListSeperator,
+            this.openServerListToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
             this.serversToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.serversToolStripMenuItem.Text = "Servers";
             // 
-            // testToolStripMenuItem
+            // Server2
             // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.testToolStripMenuItem.Text = "test";
+            this.Server2.Name = "Server2";
+            this.Server2.Size = new System.Drawing.Size(159, 22);
+            this.Server2.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            // 
+            // Server3
+            // 
+            this.Server3.Name = "Server3";
+            this.Server3.Size = new System.Drawing.Size(159, 22);
+            this.Server3.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            // 
+            // Server4
+            // 
+            this.Server4.Name = "Server4";
+            this.Server4.Size = new System.Drawing.Size(159, 22);
+            this.Server4.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            // 
+            // Server5
+            // 
+            this.Server5.Name = "Server5";
+            this.Server5.Size = new System.Drawing.Size(159, 22);
+            this.Server5.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
             // 
             // settingsToolStripMenuItem
             // 
@@ -135,6 +165,23 @@
             this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowPreferences);
+            // 
+            // Server1
+            // 
+            this.Server1.Name = "Server1";
+            this.Server1.Size = new System.Drawing.Size(159, 22);
+            this.Server1.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            // 
+            // ServerListSeperator
+            // 
+            this.ServerListSeperator.Name = "ServerListSeperator";
+            this.ServerListSeperator.Size = new System.Drawing.Size(156, 6);
+            // 
+            // openServerListToolStripMenuItem
+            // 
+            this.openServerListToolStripMenuItem.Name = "openServerListToolStripMenuItem";
+            this.openServerListToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.openServerListToolStripMenuItem.Text = "Open Server List";
             // 
             // ClientWindow
             // 
@@ -166,8 +213,13 @@
         private System.Windows.Forms.ToolStripMenuItem newServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serversToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-        
+        private System.Windows.Forms.ToolStripMenuItem Server2;
+        private System.Windows.Forms.ToolStripMenuItem Server3;
+        private System.Windows.Forms.ToolStripMenuItem Server4;
+        private System.Windows.Forms.ToolStripMenuItem Server5;
+        public System.Windows.Forms.ToolStripMenuItem Server1;
+        private System.Windows.Forms.ToolStripSeparator ServerListSeperator;
+        private System.Windows.Forms.ToolStripMenuItem openServerListToolStripMenuItem;
     }
 }
 

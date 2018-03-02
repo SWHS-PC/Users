@@ -16,35 +16,43 @@ namespace IRCClient
 {
     public partial class ClientWindow : Form
     {
-        public string input;                                    
-        const string server = "irc.orderofthetilde.net";
-        const int port = 6667;
-        const string nick = "CSClient";
-        const string chan = "#test";
-        const string user = "USER " + nick + " 0 * :" + nick;
-        public static TcpClient irc = new TcpClient(server, port);
-        public static NetworkStream stream = irc.GetStream();
-        public static StreamReader recieve = new StreamReader(stream);
-        public StreamWriter send = new StreamWriter(stream);
+        public string input;
+        public static string nick;
+        public static string chan = "#test";
+        public static string user;
+        public string TrimServer = " ";
         List<string> ActiveChannels = new List<string>();
-        public static List<string> Servers = new List<string>();
+        
+        public static string ServerListFile = "configs\\serverlist.txt";
+        public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
+        StreamWriter send;
 
         public ClientWindow()
         {
             InitializeComponent();
+            this.Server1.Text = Servers[0].Split(' ')[0];
+            this.Server2.Text = Servers[1].Split(' ')[0];
+            this.Server3.Text = Servers[2].Split(' ')[0];
+            this.Server4.Text = Servers[3].Split(' ')[0];
+            this.Server5.Text = Servers[4].Split(' ')[0];
 
-            var IRCThread = new Thread(new ThreadStart(IRCRun));
-            IRCThread.Start();
         }
-        public void IRCRun()
-        {          
+        
+
+        public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
+        {
             send.WriteLine("NICK " + nick);
             send.WriteLine(user);
             send.Flush();
 
-            while ((input = recieve.ReadLine()) != null)
+            while ((input = await recieve.ReadLineAsync()) != null)
             {
                 string[] splitInput = input.Split(' ');
+                
+                if (splitInput[1] == "NOTICE")
+                {
+                    TrimServer = splitInput[0];
+                }
 
                 if (splitInput[1] == "005" || splitInput[1] == "004")
                 {
@@ -52,7 +60,8 @@ namespace IRCClient
                 }
                 else
                 {
-                    string FilteredInput = input.Replace(":" + server, "");
+                    string FilteredInput = input.Replace(TrimServer, "");
+
                     if (Int32.TryParse(splitInput[1], out int LineIds) == true)
                     {
                         string TrimLineId = Convert.ToString(LineIds);
@@ -95,6 +104,7 @@ namespace IRCClient
                             case "333":
                                 break;
                         }
+
                         if (splitInput[0] == "PING")
                         {
                             string reply = splitInput[1];
@@ -112,24 +122,42 @@ namespace IRCClient
 
         private void Return(object sender, KeyPressEventArgs e)
         {
+            
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
                 send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
                 send.Flush();
                 textBoxEnter.Text = "";
-            } 
+            }
+            
         }
 
         private void OpenClientWindowNewServer(object sender, EventArgs e)
         {
-            NewServer LoadNewServer = new NewServer();
+            NewServer LoadNewServer = new NewServer(this);
             LoadNewServer.Show();
         }
 
         private void OpenClientWindowPreferences(object sender, EventArgs e)
         {
 
+        }
+
+        private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
+        {
+            string server = Servers[0].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
+            nick = Servers[0].Split(' ')[2];
+            user = "USER " + nick + " 0 * :" + nick;
+
+            TcpClient irc = new TcpClient(server, port);
+            NetworkStream stream = irc.GetStream();
+            StreamReader recieve = new StreamReader(stream);
+            send = new StreamWriter(stream);
+
+            Thread IRCThread = new Thread(() => IRCRun(send, recieve, server));
+            IRCThread.Start();
         }
     }
 }
