@@ -22,8 +22,8 @@ namespace IRCClient
 
         public void SetServerList(object sender, EventArgs e)
         {
-            Invoke(new MethodInvoker(delegate ()
-            {               
+            //Invoke(new MethodInvoker(delegate ()
+            //{               
                 string content = textBoxHostname.Text + " " + textBoxPort.Text + " " + textBoxPrefNick.Text;
                 List<string> ServersInFile = new List<string>(); 
                 ServersInFile.Add(content);
@@ -38,7 +38,7 @@ namespace IRCClient
                 {
                     System.IO.File.AppendAllText(ClientWindow.ServerListFile, ServersInFile[i] + "\r\n");
                 }
-            }));
+            //}));
         }
         private void CloseNewServerDialogue(Object sender, EventArgs e)
         {

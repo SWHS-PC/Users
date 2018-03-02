@@ -23,7 +23,7 @@ namespace IRCClient
         public string TrimServer = " ";
         List<string> ActiveChannels = new List<string>();
         
-        public static string ServerListFile = "configs\\serverlist.txt";
+        public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
         StreamWriter send;
 
@@ -133,23 +133,19 @@ namespace IRCClient
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
-                //Console.WriteLine(textBoxEnter.Text.ToString() + "gayyyyyyyyyyyyyyyyyyyyyyyyy");
                 if (textBoxEnter.Text.Split(' ')[0].ToCharArray()[0] == '/')
                 {
-                    switch (textBoxEnter.Text.Split(' ')[0])
+                    send.WriteLine(textBoxEnter.Text.Split(' ')[0].TrimStart('/') + " " + textBoxEnter.Text.Split(' ')[1]);
+                    
+                    if (textBoxEnter.Text.Split(' ')[0].TrimStart('/') == "join")
                     {
-                        case "/join":
-                            send.WriteLine("JOIN " + textBoxEnter.Text.Split(' ')[1]);
-                            chan = textBoxEnter.Text.Split(' ')[1];
-                            break;
-                        case "/quit":
-                            send.WriteLine("QUIT " + textBoxEnter.Text.Split(' ')[1]);
-                            break;
+                        chan = textBoxEnter.Text.Split(' ')[1];
                     }
                 }
                 else
                 {
                     send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
+                    //send.WriteLine("PRIVMSG " + ActiveChan + " " + textBoxEnter.Text);\
                 }
                 send.Flush();
                 textBoxEnter.Text = "";
