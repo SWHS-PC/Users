@@ -27,20 +27,27 @@ namespace IRCClient
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
         StreamWriter send;
 
+        
         public ClientWindow()
         {
             InitializeComponent();
-            this.Server1.Text = Servers[0].Split(' ')[0];
-            this.Server2.Text = Servers[1].Split(' ')[0];
-            this.Server3.Text = Servers[2].Split(' ')[0];
-            this.Server4.Text = Servers[3].Split(' ')[0];
-            this.Server5.Text = Servers[4].Split(' ')[0];
-
+            ActiveControl = textBoxEnter;
+            Server1.Text = Servers[0].Split(' ')[0];
+            Console.WriteLine(Servers[1].Split(' ')[0]);
+            Server2.Text = Servers[1].Split(' ')[0];
+            Server3.Text = Servers[2].Split(' ')[0];
+            Server4.Text = Servers[3].Split(' ')[0];
+            Server5.Text = Servers[4].Split(' ')[0];
+            textBoxChat.SelectionStart = 0;
+            textBoxChat.SelectionLength = 0;
         }
-        
 
         public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
         {
+            Invoke(new MethodInvoker(delegate ()
+            {
+                textBoxChat.Text = "";
+            }));
             send.WriteLine("NICK " + nick);
             send.WriteLine(user);
             send.Flush();
@@ -126,7 +133,24 @@ namespace IRCClient
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
-                send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
+                //Console.WriteLine(textBoxEnter.Text.ToString() + "gayyyyyyyyyyyyyyyyyyyyyyyyy");
+                if (textBoxEnter.Text.Split(' ')[0].ToCharArray()[0] == '/')
+                {
+                    switch (textBoxEnter.Text.Split(' ')[0])
+                    {
+                        case "/join":
+                            send.WriteLine("JOIN " + textBoxEnter.Text.Split(' ')[1]);
+                            chan = textBoxEnter.Text.Split(' ')[1];
+                            break;
+                        case "/quit":
+                            send.WriteLine("QUIT " + textBoxEnter.Text.Split(' ')[1]);
+                            break;
+                    }
+                }
+                else
+                {
+                    send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
+                }
                 send.Flush();
                 textBoxEnter.Text = "";
             }
@@ -144,11 +168,9 @@ namespace IRCClient
 
         }
 
-        private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
+        private void ToolStripMenuItemServerConnect(string server, int port)
         {
-            string server = Servers[0].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
-            nick = Servers[0].Split(' ')[2];
+            
             user = "USER " + nick + " 0 * :" + nick;
 
             TcpClient irc = new TcpClient(server, port);
@@ -158,6 +180,49 @@ namespace IRCClient
 
             Thread IRCThread = new Thread(() => IRCRun(send, recieve, server));
             IRCThread.Start();
+        }
+
+        private void DiconnectFromSelectedServer(object sender, EventArgs e)
+        {
+            send.WriteLine("QUIT Bye");
+            send.Flush();
+            textBoxChat.Text = "Select a Server or type /server <ipaddress> <port>";
+        }
+
+        private void Server1Con(object sender, EventArgs e)
+        {
+            string server = Servers[0].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
+            nick = Servers[0].Split(' ')[2];
+            ToolStripMenuItemServerConnect(server, port);
+        }
+        private void Server2Con(object sender, EventArgs e)
+        {
+            string server = Servers[1].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[1].Split(' ')[1]);
+            nick = Servers[1].Split(' ')[2];
+            ToolStripMenuItemServerConnect(server, port);
+        }
+        private void Server3Con(object sender, EventArgs e)
+        {
+            string server = Servers[2].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[2].Split(' ')[1]);
+            nick = Servers[2].Split(' ')[2];
+            ToolStripMenuItemServerConnect(server, port);
+        }
+        private void Server4Con(object sender, EventArgs e)
+        {
+            string server = Servers[3].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[3].Split(' ')[1]);
+            nick = Servers[3].Split(' ')[2];
+            ToolStripMenuItemServerConnect(server, port);
+        }
+        private void Server5Con(object sender, EventArgs e)
+        {
+            string server = Servers[4].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[4].Split(' ')[1]);
+            nick = Servers[4].Split(' ')[2];
+            ToolStripMenuItemServerConnect(server, port);
         }
     }
 }
