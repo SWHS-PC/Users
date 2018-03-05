@@ -23,7 +23,7 @@
        
         private void InitializeComponent()
         {
-            this.textBoxChat = new System.Windows.Forms.TextBox();
+            this.textBoxServer1 = new System.Windows.Forms.TextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.menuStripTopNav = new System.Windows.Forms.MenuStrip();
@@ -40,29 +40,36 @@
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabPageServer1 = new System.Windows.Forms.TabPage();
+            this.tabPageServer1Chan1 = new System.Windows.Forms.TabPage();
+            this.textBoxServer1Chan1 = new System.Windows.Forms.TextBox();
             this.menuStripTopNav.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabPageServer1.SuspendLayout();
+            this.tabPageServer1Chan1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // textBoxChat
+            // textBoxServer1
             // 
-            this.textBoxChat.AcceptsReturn = true;
-            this.textBoxChat.AcceptsTab = true;
-            this.textBoxChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxServer1.AcceptsReturn = true;
+            this.textBoxServer1.AcceptsTab = true;
+            this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxChat.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxChat.CausesValidation = false;
-            this.textBoxChat.HideSelection = false;
-            this.textBoxChat.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.textBoxChat.Location = new System.Drawing.Point(12, 38);
-            this.textBoxChat.MaxLength = 65536;
-            this.textBoxChat.Multiline = true;
-            this.textBoxChat.Name = "textBoxChat";
-            this.textBoxChat.ReadOnly = true;
-            this.textBoxChat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxChat.Size = new System.Drawing.Size(1068, 654);
-            this.textBoxChat.TabIndex = 1;
-            this.textBoxChat.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+            this.textBoxServer1.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxServer1.CausesValidation = false;
+            this.textBoxServer1.HideSelection = false;
+            this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.textBoxServer1.Location = new System.Drawing.Point(0, 0);
+            this.textBoxServer1.MaxLength = 65536;
+            this.textBoxServer1.Multiline = true;
+            this.textBoxServer1.Name = "textBoxServer1";
+            this.textBoxServer1.ReadOnly = true;
+            this.textBoxServer1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxServer1.Size = new System.Drawing.Size(1060, 628);
+            this.textBoxServer1.TabIndex = 1;
+            this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
             // 
             // listView1
             // 
@@ -112,7 +119,7 @@
             // newServerToolStripMenuItem
             // 
             this.newServerToolStripMenuItem.Name = "newServerToolStripMenuItem";
-            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.newServerToolStripMenuItem.Text = "New Server";
             this.newServerToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowNewServer);
             // 
@@ -127,7 +134,7 @@
             this.ServerListSeperator,
             this.openServerListToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
-            this.serversToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.serversToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.serversToolStripMenuItem.Text = "Servers";
             // 
             // Server1
@@ -174,7 +181,7 @@
             // disconnectToolStripMenuItem
             // 
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
             this.disconnectToolStripMenuItem.Click += new System.EventHandler(this.DiconnectFromSelectedServer);
             // 
@@ -193,15 +200,66 @@
             this.preferencesToolStripMenuItem.Text = "Preferences";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowPreferences);
             // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabPageServer1);
+            this.tabControl.Controls.Add(this.tabPageServer1Chan1);
+            this.tabControl.Location = new System.Drawing.Point(12, 38);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1068, 654);
+            this.tabControl.TabIndex = 5;
+            // 
+            // tabPageServer1
+            // 
+            this.tabPageServer1.Controls.Add(this.textBoxServer1);
+            this.tabPageServer1.Location = new System.Drawing.Point(4, 22);
+            this.tabPageServer1.Name = "tabPageServer1";
+            this.tabPageServer1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageServer1.Size = new System.Drawing.Size(1060, 628);
+            this.tabPageServer1.TabIndex = 0;
+            this.tabPageServer1.UseVisualStyleBackColor = true;
+            // 
+            // tabPageServer1Chan1
+            // 
+            this.tabPageServer1Chan1.Controls.Add(this.textBoxServer1Chan1);
+            this.tabPageServer1Chan1.Location = new System.Drawing.Point(4, 22);
+            this.tabPageServer1Chan1.Name = "tabPageServer1Chan1";
+            this.tabPageServer1Chan1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageServer1Chan1.Size = new System.Drawing.Size(1060, 628);
+            this.tabPageServer1Chan1.TabIndex = 1;
+            this.tabPageServer1Chan1.UseVisualStyleBackColor = true;
+            // 
+            // textBoxServer1Chan1
+            // 
+            this.textBoxServer1Chan1.AcceptsReturn = true;
+            this.textBoxServer1Chan1.AcceptsTab = true;
+            this.textBoxServer1Chan1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxServer1Chan1.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxServer1Chan1.CausesValidation = false;
+            this.textBoxServer1Chan1.HideSelection = false;
+            this.textBoxServer1Chan1.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.textBoxServer1Chan1.Location = new System.Drawing.Point(0, 0);
+            this.textBoxServer1Chan1.MaxLength = 65536;
+            this.textBoxServer1Chan1.Multiline = true;
+            this.textBoxServer1Chan1.Name = "textBoxServer1Chan1";
+            this.textBoxServer1Chan1.ReadOnly = true;
+            this.textBoxServer1Chan1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxServer1Chan1.Size = new System.Drawing.Size(1060, 628);
+            this.textBoxServer1Chan1.TabIndex = 2;
+            this.textBoxServer1Chan1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+            // 
             // ClientWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1350, 730);
+            this.Controls.Add(this.tabControl);
             this.Controls.Add(this.textBoxEnter);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.textBoxChat);
             this.Controls.Add(this.menuStripTopNav);
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
@@ -209,12 +267,17 @@
             this.Load += new System.EventHandler(this.ClientWindow_Load);
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.tabPageServer1.ResumeLayout(false);
+            this.tabPageServer1.PerformLayout();
+            this.tabPageServer1Chan1.ResumeLayout(false);
+            this.tabPageServer1Chan1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
-        private System.Windows.Forms.TextBox textBoxChat;
+        private System.Windows.Forms.TextBox textBoxServer1;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.TextBox textBoxEnter;
         private System.Windows.Forms.MenuStrip menuStripTopNav;
@@ -231,6 +294,10 @@
         private System.Windows.Forms.ToolStripSeparator ServerListSeperator;
         private System.Windows.Forms.ToolStripMenuItem openServerListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabPageServer1;
+        private System.Windows.Forms.TabPage tabPageServer1Chan1;
+        private System.Windows.Forms.TextBox textBoxServer1Chan1;
     }
 }
 
