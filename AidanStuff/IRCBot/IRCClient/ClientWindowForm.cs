@@ -21,9 +21,12 @@ namespace IRCClient
         public static string nick;
         public static string chan = "#test";
         public static string user;
-        public string TrimServer = " ";
+        public string TrimServer;
+        public string TrimServerToName;
+        public string GetOnlyMessage;
         List<string> ActiveChannels = new List<string>();
         string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "NICK", "PART", "USER", "PING", "PONG" };
+        string[] IdsToAvoid = { "004", "005", "366", "353" };
         public string MessageSender;
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
@@ -47,101 +50,107 @@ namespace IRCClient
 
         public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
         {
-            Invoke(new MethodInvoker(delegate ()
+            try
             {
-                textBoxChat.Text = "";
-            }));
-            send.WriteLine("NICK " + nick);
-            send.WriteLine(user);
-            send.Flush();
+                Invoke(new MethodInvoker(delegate() { textBoxChat.Text = ""; }));
+                send.WriteLine("NICK " + nick);
+                send.WriteLine(user);
+                send.Flush();
 
-            while ((input = await recieve.ReadLineAsync()) != null)
-            {
-                string[] splitInput = input.Split(' ');
-                
-                if (splitInput[1] == "NOTICE")
+                while ((input = await recieve.ReadLineAsync()) != null)
                 {
-                    TrimServer = splitInput[0];
-                }
+                    string[] splitInput = input.Split(' ');
 
-                if (splitInput[1] == "005" || splitInput[1] == "004")
-                {
-                    continue;
-                }
-                else
-                {
-                    string FilteredInput = input.Replace(TrimServer, "");
-
-                    if (Int32.TryParse(splitInput[1], out int LineIds) == true)
-                    {
-                        string TrimLineId = Convert.ToString(LineIds);
-                        FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
-                    }
-                    if (FilteredInput.Split(' ').Any("00".Contains))
-                    {
-                        FilteredInput = FilteredInput.Replace("00", "");
-                    }
-                    FilteredInput = FilteredInput.Replace(nick + " ", "");
-                    FilteredInput = FilteredInput.Replace(":", "");
-                    FilteredInput = FilteredInput.Replace(" = ", " ");
-
-                    //FilteredInput = input;
-
-                    
-                    if (IRCCommands.Any(splitInput[1].Contains))
-                    {
-                        MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
-                    }
                     switch (splitInput[1])
                     {
-                        case "PRIVMSG":
-                            FilteredInput = MessageSender + "> " + splitInput[3];
+                        case "376":
+                            send.WriteLine("JOIN " + chan);
+                            send.Flush();
                             break;
-                        case "JOIN":
+                        case "422":
+                            send.WriteLine("JOIN " + chan);
+                            send.Flush();
                             break;
-                        case "PART":
+                        case "353":
+                            ActiveChannels.Add(splitInput[4]);
+                            Console.WriteLine(ActiveChannels[0]);
                             break;
-                        case "USER":
+                        case "333":
                             break;
                     }
-                    if (splitInput[0].Split('!')[0] == ":" + nick)
+
+                    if (splitInput[0] == "PING")
                     {
-                        continue;
+                        string reply = splitInput[1];
+                        send.WriteLine("PONG " + reply);
+                        send.Flush();
                     }
-                    
-                    else
+
+                    if (splitInput[1] == "NOTICE")
                     {
-                        Console.WriteLine(input);
-                        Invoke(new MethodInvoker(delegate ()
+                        TrimServer = splitInput[0];
+                        TrimServerToName = splitInput[0].TrimStart(':');
+                    }
+
+                    if (!IdsToAvoid.Any(splitInput[1].Contains))
+                    {
+                        string FilteredInput = input.Replace(TrimServer, "");
+
+                        if (Int32.TryParse(splitInput[1], out int LineIds) == true)
                         {
-                            textBoxChat.AppendText(FilteredInput + "\r\n");
-                        }));
+                            string TrimLineId = Convert.ToString(LineIds);
+                            FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
+                        }
+
+                        if (FilteredInput.Split(' ')[1] == "00" + nick)
+                        {
+                            FilteredInput = FilteredInput.Replace(splitInput[1], "");
+                        }
+
+                        if (splitInput[2] == nick)
+
+
+                            FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
+
+                        //FilteredInput = TrimServerToName + "> " + FilteredInput.Replace(nick + " ", "").Replace(":", "").Replace(" = ", " ")
+                        //FilteredInput = input;
+
+                        //get data for PRIVMSG lines, which is a majority of the lines
+                        if (IRCCommands.Any(splitInput[1].Contains))
+                        {
+                            MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
+                            GetOnlyMessage = input.Replace(splitInput[0] + " " + splitInput[1] + " " + splitInput[2] + " :", "");
+                        }
+
+                        FilteredInput = TrimServerToName + ">" + FilteredInput;
+                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ",TrimServerToName + "> ");
+                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ",TrimServerToName + "> ");
                         switch (splitInput[1])
                         {
-                            case "376":
-                                send.WriteLine("JOIN " + chan);
-                                send.Flush();
+                            case "PRIVMSG":
+                                FilteredInput = MessageSender + "> " + GetOnlyMessage;
                                 break;
-                            case "422":
-                                send.WriteLine("JOIN " + chan);
-                                send.Flush();
+                            case "JOIN":
+                                FilteredInput = MessageSender + " Joined " + splitInput[2].Replace(":", "");
                                 break;
-                            case "353":
-                                ActiveChannels.Add(splitInput[4]);
-                                Console.WriteLine(ActiveChannels[0]);
+                            case "PART":
                                 break;
-                            case "333":
+                            case "USER":
+                                break;
+                            case "MODE":
+                                FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
                                 break;
                         }
 
-                        if (splitInput[0] == "PING")
-                        {
-                            string reply = splitInput[1];
-                            send.WriteLine("PONG " + reply);
-                            send.Flush();
-                        }
+
+                        Console.WriteLine(input);
+                        Invoke(new MethodInvoker(delegate() { textBoxChat.AppendText(FilteredInput + "\r\n"); }));
                     }
-                }            
+                }
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine(e);
             }
         }
         private void ClientWindow_Load(object sender, EventArgs e)
@@ -184,8 +193,10 @@ namespace IRCClient
                         }
                         else
                         {
-                            send.WriteLine("PRIVMSG " + chan + " " + textBoxEnter.Text);
-                            //send.WriteLine("PRIVMSG " + ActiveChan + " " + textBoxEnter.Text);\
+                            string textEntered = "PRIVMSG " + chan + " " + textBoxEnter.Text;
+                            send.WriteLine(textEntered);
+                            //send.WriteLine("PRIVMSG " + ActiveChan + " " + textBoxEnter.Text);
+                            textBoxChat.AppendText(nick + "> " + textBoxEnter.Text +"\r\n");
                         }
                         send.Flush();
                     }
