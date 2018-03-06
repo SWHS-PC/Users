@@ -234,9 +234,25 @@ namespace IRCClient
 
         }
 
-        private void ToolStripMenuItemServerConnect(string server, int port)
+        private void AddNewChan()
         {
-            
+            this.tabPageServer1Chan2 = new System.Windows.Forms.TabPage();
+            this.tabControl.Controls.Add(this.tabPageServer1Chan2);
+            this.tabPageServer1Chan2.Controls.Add(this.textBoxServer1Chan1);
+            this.tabPageServer1Chan2.Location = new System.Drawing.Point(4, 22);
+            this.tabPageServer1Chan2.Name = "tabPageServer1Chan2";
+            this.tabPageServer1Chan2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageServer1Chan2.Size = new System.Drawing.Size(1060, 628);
+            this.tabPageServer1Chan2.TabIndex = 2;
+            this.tabPageServer1Chan2.UseVisualStyleBackColor = true;
+            this.tabPageServer1Chan2.Text = "aaaaaa";
+        }
+        
+        private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
+        {
+            string server = Servers[0].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
+            nick = Servers[0].Split(' ')[2];
             user = "USER " + nick + " 0 * :" + nick;
 
             irc = new TcpClient(server, port);
@@ -250,66 +266,53 @@ namespace IRCClient
 
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
-//            if (IsConnected)
-//            {
-//                send.WriteLine("QUIT Bye");
-//                send.Flush();
-//                textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
-//                textBoxServer1Chan1.Visible = false;
-//            }
-//            else
-//            {
-//                textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
-//                textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
-//            }
-            
-            this.tabPageServer1Chan2 = new System.Windows.Forms.TabPage();
-            this.tabControl.Controls.Add(this.tabPageServer1Chan2);
-            this.tabPageServer1Chan2.Controls.Add(this.textBoxServer1Chan1);
-            this.tabPageServer1Chan2.Location = new System.Drawing.Point(4, 22);
-            this.tabPageServer1Chan2.Name = "tabPageServer1Chan2";
-            this.tabPageServer1Chan2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageServer1Chan2.Size = new System.Drawing.Size(1060, 628);
-            this.tabPageServer1Chan2.TabIndex = 2;
-            this.tabPageServer1Chan2.UseVisualStyleBackColor = true;
-            this.tabPageServer1Chan2.Text = "aaaaaa";
+            if (IsConnected)
+            {
+                send.WriteLine("QUIT Bye");
+                send.Flush();
+                textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+                //textBoxServer1Chan1.Visible = false;
+            }
+            else
+            {
+                textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
+                //textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
+            }
 
         }
 
         private void Server1Con(object sender, EventArgs e)
         {
-            string server = Servers[0].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
-            nick = Servers[0].Split(' ')[2];
-            ToolStripMenuItemServerConnect(server, port);
+            
+            //ToolStripMenuItemServerConnect(server, port);
         }
         private void Server2Con(object sender, EventArgs e)
         {
             string server = Servers[1].Split(' ')[0];
             int port = Convert.ToInt32(Servers[1].Split(' ')[1]);
             nick = Servers[1].Split(' ')[2];
-            ToolStripMenuItemServerConnect(server, port);
+            //ToolStripMenuItemServerConnect(server, port);
         }
         private void Server3Con(object sender, EventArgs e)
         {
             string server = Servers[2].Split(' ')[0];
             int port = Convert.ToInt32(Servers[2].Split(' ')[1]);
             nick = Servers[2].Split(' ')[2];
-            ToolStripMenuItemServerConnect(server, port);
+            //ToolStripMenuItemServerConnect(server, port);
         }
         private void Server4Con(object sender, EventArgs e)
         {
             string server = Servers[3].Split(' ')[0];
             int port = Convert.ToInt32(Servers[3].Split(' ')[1]);
             nick = Servers[3].Split(' ')[2];
-            ToolStripMenuItemServerConnect(server, port);
+            //ToolStripMenuItemServerConnect(server, port);
         }
         private void Server5Con(object sender, EventArgs e)
         {
             string server = Servers[4].Split(' ')[0];
             int port = Convert.ToInt32(Servers[4].Split(' ')[1]);
             nick = Servers[4].Split(' ')[2];
-            ToolStripMenuItemServerConnect(server, port);
+            //ToolStripMenuItemServerConnect(server, port);
         }
         public bool IsConnected
         {

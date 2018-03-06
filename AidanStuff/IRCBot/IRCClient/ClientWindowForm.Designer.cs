@@ -141,7 +141,7 @@
             // 
             this.Server1.Name = "Server1";
             this.Server1.Size = new System.Drawing.Size(159, 22);
-            this.Server1.Click += new System.EventHandler(this.Server1Con);
+            this.Server1.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
             // 
             // Server2
             // 
