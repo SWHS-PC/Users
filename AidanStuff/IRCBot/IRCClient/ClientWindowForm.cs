@@ -48,6 +48,8 @@ namespace IRCClient
             textBoxServer1.SelectionLength = 0;
             textBoxServer1Chan1.SelectionStart = 0;
             textBoxServer1Chan1.SelectionLength = 0;
+            tabPageServer1.Text = "ayyyyy";
+            tabPageServer1Chan1.Text = "ayyy"; 
         }
 
         public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
@@ -197,6 +199,7 @@ namespace IRCClient
                             {
                                 chan = TextSplit[1];
                                 tabPageServer1Chan1.Text = chan;
+                               
                             }
                         }
                         else
@@ -247,18 +250,30 @@ namespace IRCClient
 
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
-            if (IsConnected)
-            {
-                send.WriteLine("QUIT Bye");
-                send.Flush();
-                textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
-                textBoxServer1Chan1.Visible = false;
-            }
-            else
-            {
-                textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
-                textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
-            }
+//            if (IsConnected)
+//            {
+//                send.WriteLine("QUIT Bye");
+//                send.Flush();
+//                textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+//                textBoxServer1Chan1.Visible = false;
+//            }
+//            else
+//            {
+//                textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
+//                textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
+//            }
+            
+            this.tabPageServer1Chan2 = new System.Windows.Forms.TabPage();
+            this.tabControl.Controls.Add(this.tabPageServer1Chan2);
+            this.tabPageServer1Chan2.Controls.Add(this.textBoxServer1Chan1);
+            this.tabPageServer1Chan2.Location = new System.Drawing.Point(4, 22);
+            this.tabPageServer1Chan2.Name = "tabPageServer1Chan2";
+            this.tabPageServer1Chan2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageServer1Chan2.Size = new System.Drawing.Size(1060, 628);
+            this.tabPageServer1Chan2.TabIndex = 2;
+            this.tabPageServer1Chan2.UseVisualStyleBackColor = true;
+            this.tabPageServer1Chan2.Text = "aaaaaa";
+
         }
 
         private void Server1Con(object sender, EventArgs e)

@@ -296,8 +296,9 @@
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageServer1;
-        private System.Windows.Forms.TabPage tabPageServer1Chan1;
+        public System.Windows.Forms.TabPage tabPageServer1Chan1;
         private System.Windows.Forms.TextBox textBoxServer1Chan1;
+        public System.Windows.Forms.TabPage tabPageServer1Chan2;
     }
 }
 
