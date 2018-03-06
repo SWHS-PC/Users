@@ -19,14 +19,14 @@ namespace IRCClient
     {
         public string input;
         public static string nick;
-        public static string chan = "#test";
+        public static string chan;
         public static string user;
         public string TrimServer;
         public string TrimServerToName;
         public string GetOnlyMessage;
         List<string> ActiveChannels = new List<string>();
-        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "NICK", "PART", "USER", "PING", "PONG" };
-        string[] IdsToAvoid = { "004", "005", "366", "353" };
+        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "PART"};
+        string[] IdsToAvoid = { "004", "005", "366", "353", "333", "332" };
         public string MessageSender;
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
@@ -54,7 +54,7 @@ namespace IRCClient
         {
             try
             {
-                Invoke(new MethodInvoker(delegate() { textBoxServer1.Text = ""; }));
+                Invoke(new MethodInvoker(delegate() { textBoxServer1.Text = ""; textBoxServer1Chan1.Text = ""; tabPageServer1.Text = server; }));
                 send.WriteLine("NICK " + nick);
                 send.WriteLine(user);
                 send.Flush();
@@ -65,19 +65,16 @@ namespace IRCClient
 
                     switch (splitInput[1])
                     {
-                        case "376":
-                            send.WriteLine("JOIN " + chan);
-                            send.Flush();
-                            break;
-                        case "422":
-                            send.WriteLine("JOIN " + chan);
-                            send.Flush();
+                        case "NOTICE":
+                            TrimServer = splitInput[0];
+                            TrimServerToName = splitInput[0].TrimStart(':');
                             break;
                         case "353":
                             ActiveChannels.Add(splitInput[4]);
-                            Console.WriteLine(ActiveChannels[0]);
-                            break;
-                        case "333":
+                            foreach (string x in ActiveChannels)
+                            {
+                                Console.WriteLine(x);
+                            }
                             break;
                     }
 
@@ -86,12 +83,6 @@ namespace IRCClient
                         string reply = splitInput[1];
                         send.WriteLine("PONG " + reply);
                         send.Flush();
-                    }
-
-                    if (splitInput[1] == "NOTICE")
-                    {
-                        TrimServer = splitInput[0];
-                        TrimServerToName = splitInput[0].TrimStart(':');
                     }
 
                     if (!IdsToAvoid.Any(splitInput[1].Contains) && splitInput.Length > 1)
@@ -112,47 +103,55 @@ namespace IRCClient
                         if (splitInput[2] == nick)
                         {
                             FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
-                        }
-                        
+                        }                        
 
                         //get data for PRIVMSG lines, which is a majority of the lines
                         if (IRCCommands.Any(splitInput[1].Contains))
                         {
                             MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
-                            GetOnlyMessage = input.Replace(splitInput[0] + " " + splitInput[1] + " " + splitInput[2] + " :", "");
                         }
 
                         FilteredInput = TrimServerToName + ">" + FilteredInput;
                         FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ",TrimServerToName + "> ");
                         FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ",TrimServerToName + "> ");
-                        switch (splitInput[1])
-                        {
-                            case "PRIVMSG":
-                                FilteredInput = MessageSender + "> " + GetOnlyMessage;
-                                break;
-                            case "JOIN":
-                                FilteredInput = MessageSender + " Joined " + splitInput[2].Replace(":", "") + ".";
-                                break;
-                            case "PART":
-                                //4bit.pw>:Zaldimmar!Zaldimmar@net-dhf.lkm.44.204.IP PART #test :"Leaving"
-                                FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
-                                break;
-                            case "USER":
-                                break;
-                            case "MODE":
-                                FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
-                                break;
-                        }
-                        FilteredInput = input;
 
-                        Console.WriteLine(input);
-                        Invoke(new MethodInvoker(delegate() 
+                        Invoke(new MethodInvoker(delegate ()
                         {
+                            switch (splitInput[1])
+                            {
+                                case "PRIVMSG":
+                                    FilteredInput = MessageSender + "> " + Regex.Split(input, chan + " :")[1];
+                                    textBoxServer1Chan1.AppendText(FilteredInput + "\r\n");
+                                    break;
+                                case "JOIN":
+                                    string JoinedChan = splitInput[2].Replace(":", "");
+                                    FilteredInput = MessageSender + " Joined " + JoinedChan + ".";
+                                    textBoxServer1Chan1.AppendText(FilteredInput + "\r\n");
+                                    if (MessageSender == nick)
+                                    {
+                                        tabPageServer1Chan1.Text = JoinedChan;
+                                    }
+                                    break;
+                                case "PART":
+                                    FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
+                                    textBoxServer1Chan1.AppendText(FilteredInput + "\r\n");
+                                    break;
+                                case "USER":
+                                    break;
+                                case "MODE":
+                                    FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
+                                    textBoxServer1Chan1.AppendText(FilteredInput + "\r\n");
+                                    break;
+                            }
+                            //debug print
+                            //FilteredInput = input;
+
+                            Console.WriteLine(input);
                             if (splitInput[0].Replace(":", "") == TrimServerToName)
                             {
                                 textBoxServer1.AppendText(FilteredInput + "\r\n");
                             }
-                            else if (true) { }
+
                         }));
                     }
                 }
@@ -191,13 +190,13 @@ namespace IRCClient
                     }
                     if (IsConnected == true)
                     {
-                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1 && IRCCommands.Any(TextSplit[0].TrimStart('/').Contains))
+                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1 )
                         {
                             send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
-
                             if (TextSplit[0].TrimStart('/') == "join")
                             {
                                 chan = TextSplit[1];
+                                tabPageServer1Chan1.Text = chan;
                             }
                         }
                         else
@@ -258,6 +257,7 @@ namespace IRCClient
             else
             {
                 textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
+                textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
             }
         }
 
