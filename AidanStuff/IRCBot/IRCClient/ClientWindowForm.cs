@@ -40,16 +40,33 @@ namespace IRCClient
         {
             InitializeComponent();
             ActiveControl = textBoxEnter;
-            Server1.Text = Servers[0].Split(' ')[0];
+            ServerItems[1].Text = Servers[0].Split(' ')[0];
             Console.WriteLine(Servers[1].Split(' ')[0]);
-            Server2.Text = Servers[1].Split(' ')[0];
-            Server3.Text = Servers[2].Split(' ')[0];
-            Server4.Text = Servers[3].Split(' ')[0];
-            Server5.Text = Servers[4].Split(' ')[0];
             textBoxServer1.SelectionStart = 0;
             textBoxServer1.SelectionLength = 0;
             tabPageServer1.Text = "";
-            
+
+            //ServerItems[1].Name = "Server1";
+            //ServerItems[1].Size = new System.Drawing.Size(159, 22);
+            //ServerItems[1].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
+            {         
+                ServerItems[0],
+                ServerItems[1],
+                ServerItems[2],
+                ServerItems[3],
+                ServerItems[4],
+                ServerItems[5],
+                ServerItems[6],
+                ServerItems[7],
+                ServerItems[8],
+                ServerItems[9],
+                ServerListSeperator,
+                openServerListToolStripMenuItem
+            });
+
+
+
         }
 
         public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
@@ -194,17 +211,11 @@ namespace IRCClient
                         if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1 )
                         {
                             send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
-                            if (TextSplit[0].TrimStart('/') == "join")
-                            {
-                                SC = 1;
-                                AddNewChan(TextSplit[1]);
-                                textBoxServer1Chan[GetTab(SC)].AppendText("");
-                            }
                         }
                         else
                         {
                             SC = 3;
-                            ChanDestination = Convert.ToString(tabControl.SelectedTab).Split(' ')[0];
+                            ChanDestination = Convert.ToString(tabControl.SelectedTab.Name).Split(' ')[0];
                             string textEntered = "PRIVMSG " + ChanDestination + " " + textBoxEnter.Text;
                             send.WriteLine(textEntered);
                             textBoxServer1Chan[GetTab(SC)].AppendText(nick + "> " + textBoxEnter.Text +"\r\n");
@@ -250,10 +261,9 @@ namespace IRCClient
                     tabPageServer1Chan[ChanNum].Controls.Add(textBoxServer1Chan[ChanNum]);
                     tabPageServer1Chan[ChanNum].Location = new Point(4, 22);
                     tabPageServer1Chan[ChanNum].Name = JoinedChan + " " + Convert.ToString(ChanNum);
-                    Console.WriteLine(tabPageServer1Chan[ChanNum].Name);
                     tabPageServer1Chan[ChanNum].Padding = new Padding(3);
                     tabPageServer1Chan[ChanNum].Size = new Size(1060, 628);
-                    tabPageServer1Chan[ChanNum].TabIndex = ChanNum + 1;
+                    tabPageServer1Chan[ChanNum].TabIndex = ChanNum;
                     tabPageServer1Chan[ChanNum].UseVisualStyleBackColor = true;
                     tabPageServer1Chan[ChanNum].ResumeLayout(false);
                     tabPageServer1Chan[ChanNum].PerformLayout();
@@ -281,16 +291,18 @@ namespace IRCClient
             
             if(SC == 3)
             {
-                ChanSelected = Convert.ToInt32(Convert.ToString(tabControl.SelectedTab).Split(' ')[1]);
+                Console.WriteLine(tabControl.SelectedTab.Name);
+
+                ChanSelected = Convert.ToInt32(Convert.ToString(tabControl.SelectedTab.Name).Split(' ')[1]);
             }
 
             return ChanSelected;
         }
         private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
         {
-            string server = Servers[2].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[2].Split(' ')[1]);
-            nick = Servers[2].Split(' ')[2];
+            string server = Servers[0].Split(' ')[0];
+            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
+            nick = Servers[0].Split(' ')[2];
             user = "USER " + nick + " 0 * :" + nick;
 
             irc = new TcpClient(server, port);
@@ -332,39 +344,6 @@ namespace IRCClient
             }
         }
 
-        private void Server1Con(object sender, EventArgs e)
-        {
-            
-            //ToolStripMenuItemServerConnect(server, port);
-        }
-        private void Server2Con(object sender, EventArgs e)
-        {
-            string server = Servers[1].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[1].Split(' ')[1]);
-            nick = Servers[1].Split(' ')[2];
-            //ToolStripMenuItemServerConnect(server, port);
-        }
-        private void Server3Con(object sender, EventArgs e)
-        {
-            string server = Servers[2].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[2].Split(' ')[1]);
-            nick = Servers[2].Split(' ')[2];
-            //ToolStripMenuItemServerConnect(server, port);
-        }
-        private void Server4Con(object sender, EventArgs e)
-        {
-            string server = Servers[3].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[3].Split(' ')[1]);
-            nick = Servers[3].Split(' ')[2];
-            //ToolStripMenuItemServerConnect(server, port);
-        }
-        private void Server5Con(object sender, EventArgs e)
-        {
-            string server = Servers[4].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[4].Split(' ')[1]);
-            nick = Servers[4].Split(' ')[2];
-            //ToolStripMenuItemServerConnect(server, port);
-        }
         private void OpenClientWindowNewServer(object sender, EventArgs e)
         {
             NewServer LoadNewServer = new NewServer(this);

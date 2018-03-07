@@ -30,11 +30,6 @@
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Server1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Server2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Server3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Server4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.Server5 = new System.Windows.Forms.ToolStripMenuItem();
             this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,47 +117,11 @@
             // 
             // serversToolStripMenuItem
             // 
-            this.serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Server1,
-            this.Server2,
-            this.Server3,
-            this.Server4,
-            this.Server5,
-            this.ServerListSeperator,
-            this.openServerListToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
             this.serversToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.serversToolStripMenuItem.Text = "Servers";
-            // 
-            // Server1
-            // 
-            this.Server1.Name = "Server1";
-            this.Server1.Size = new System.Drawing.Size(159, 22);
-            this.Server1.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-            // 
-            // Server2
-            // 
-            this.Server2.Name = "Server2";
-            this.Server2.Size = new System.Drawing.Size(159, 22);
-            this.Server2.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-            // 
-            // Server3
-            // 
-            this.Server3.Name = "Server3";
-            this.Server3.Size = new System.Drawing.Size(159, 22);
-            this.Server3.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-            // 
-            // Server4
-            // 
-            this.Server4.Name = "Server4";
-            this.Server4.Size = new System.Drawing.Size(159, 22);
-            this.Server4.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-            // 
-            // Server5
-            // 
-            this.Server5.Name = "Server5";
-            this.Server5.Size = new System.Drawing.Size(159, 22);
-            this.Server5.Click += new System.EventHandler(this.Server5Con);
+            
+           
             // 
             // ServerListSeperator
             // 
@@ -248,16 +207,13 @@
         private System.Windows.Forms.ToolStripMenuItem newServerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serversToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem Server2;
-        private System.Windows.Forms.ToolStripMenuItem Server3;
-        private System.Windows.Forms.ToolStripMenuItem Server4;
-        private System.Windows.Forms.ToolStripMenuItem Server5;
-        public System.Windows.Forms.ToolStripMenuItem Server1;
         private System.Windows.Forms.ToolStripSeparator ServerListSeperator;
         private System.Windows.Forms.ToolStripMenuItem openServerListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageServer1;
+
+        public System.Windows.Forms.ToolStripMenuItem[] ServerItems = new System.Windows.Forms.ToolStripMenuItem[10];
 
         public System.Windows.Forms.TextBox[] textBoxServer1Chan = new System.Windows.Forms.TextBox[1000];
         public System.Windows.Forms.TabPage[] tabPageServer1Chan = new System.Windows.Forms.TabPage[1000];
