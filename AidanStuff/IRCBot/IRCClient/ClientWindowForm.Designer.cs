@@ -116,7 +116,7 @@
             // newServerToolStripMenuItem
             // 
             this.newServerToolStripMenuItem.Name = "newServerToolStripMenuItem";
-            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newServerToolStripMenuItem.Text = "New Server";
             this.newServerToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowNewServer);
             // 
@@ -131,7 +131,7 @@
             this.ServerListSeperator,
             this.openServerListToolStripMenuItem});
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
-            this.serversToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.serversToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.serversToolStripMenuItem.Text = "Servers";
             // 
             // Server1
@@ -144,19 +144,19 @@
             // 
             this.Server2.Name = "Server2";
             this.Server2.Size = new System.Drawing.Size(159, 22);
-            this.Server2.Click += new System.EventHandler(this.Server2Con);
+            this.Server2.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
             // 
             // Server3
             // 
             this.Server3.Name = "Server3";
             this.Server3.Size = new System.Drawing.Size(159, 22);
-            this.Server3.Click += new System.EventHandler(this.Server3Con);
+            this.Server3.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
             // 
             // Server4
             // 
             this.Server4.Name = "Server4";
             this.Server4.Size = new System.Drawing.Size(159, 22);
-            this.Server4.Click += new System.EventHandler(this.Server4Con);
+            this.Server4.Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
             // 
             // Server5
             // 
@@ -178,7 +178,7 @@
             // disconnectToolStripMenuItem
             // 
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
             this.disconnectToolStripMenuItem.Click += new System.EventHandler(this.DiconnectFromSelectedServer);
             // 
@@ -215,7 +215,6 @@
             this.tabPageServer1.Size = new System.Drawing.Size(1060, 628);
             this.tabPageServer1.TabIndex = 0;
             this.tabPageServer1.UseVisualStyleBackColor = true;
-            
             // 
             // ClientWindow
             // 
@@ -230,7 +229,6 @@
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
             this.Text = "IRC Client";
-            this.Load += new System.EventHandler(this.ClientWindow_Load);
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
             this.tabControl.ResumeLayout(false);
@@ -261,8 +259,9 @@
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageServer1;
 
-        public System.Windows.Forms.TextBox[] textBoxServer1Chan;
-        public System.Windows.Forms.TabPage[] tabPageServer1Chan;
+        public System.Windows.Forms.TextBox[] textBoxServer1Chan = new System.Windows.Forms.TextBox[1000];
+        public System.Windows.Forms.TabPage[] tabPageServer1Chan = new System.Windows.Forms.TabPage[1000];
+
 
     }
 }
