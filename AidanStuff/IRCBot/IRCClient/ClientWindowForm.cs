@@ -40,31 +40,23 @@ namespace IRCClient
         {
             InitializeComponent();
             ActiveControl = textBoxEnter;
-            ServerItems[1].Text = Servers[0].Split(' ')[0];
-            Console.WriteLine(Servers[1].Split(' ')[0]);
             textBoxServer1.SelectionStart = 0;
             textBoxServer1.SelectionLength = 0;
             tabPageServer1.Text = "";
 
-            //ServerItems[1].Name = "Server1";
-            //ServerItems[1].Size = new System.Drawing.Size(159, 22);
-            //ServerItems[1].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            ServerItems[0] = new System.Windows.Forms.ToolStripMenuItem();
+            ServerItems[0].Name = "Server1";
+            ServerItems[0].Size = new System.Drawing.Size(159, 22);
+            ServerItems[0].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+            serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                ServerItems[0]
+            });
             serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
             {         
-                ServerItems[0],
-                ServerItems[1],
-                ServerItems[2],
-                ServerItems[3],
-                ServerItems[4],
-                ServerItems[5],
-                ServerItems[6],
-                ServerItems[7],
-                ServerItems[8],
-                ServerItems[9],
                 ServerListSeperator,
                 openServerListToolStripMenuItem
             });
-
 
 
         }
