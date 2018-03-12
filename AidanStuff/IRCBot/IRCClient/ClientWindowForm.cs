@@ -33,9 +33,9 @@ namespace IRCClient
         string[] IdsToAvoid = { "004", "005", "366", "353", "333", "332" };
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
+        public static string[] UsersInChannel = new string[1000];
         StreamWriter send;
         TcpClient irc;
-        
         public ClientWindow()
         {
             InitializeComponent();
@@ -43,15 +43,25 @@ namespace IRCClient
             textBoxServer1.SelectionStart = 0;
             textBoxServer1.SelectionLength = 0;
             tabPageServer1.Text = "";
-
-            ServerItems[0] = new System.Windows.Forms.ToolStripMenuItem();
-            ServerItems[0].Name = "Server1";
-            ServerItems[0].Size = new System.Drawing.Size(159, 22);
-            ServerItems[0].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-            serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            int ServerItemCount = 0;
+            
+            foreach (string x in Servers)
             {
-                ServerItems[0]
-            });
+                if (x.Split(' ')[0] == "$")
+                {
+                    ServerItems[ServerItemCount] = new System.Windows.Forms.ToolStripMenuItem();
+                    ServerItems[ServerItemCount].Name = Servers[ServerItemCount].Split(' ')[1];
+                    ServerItems[ServerItemCount].Text = Servers[ServerItemCount].Split(' ')[1];
+                    ServerItems[ServerItemCount].Size = new System.Drawing.Size(159, 22);
+                    ServerItems[ServerItemCount].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+                    serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+                    {
+                        ServerItems[ServerItemCount]
+                    });
+                    ServerItemCount++;
+                }
+            }
+
             serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
             {         
                 ServerListSeperator,
@@ -72,6 +82,7 @@ namespace IRCClient
 
                 while ((input = await recieve.ReadLineAsync()) != null)
                 {
+                    Console.WriteLine(input);
                     string[] splitInput = input.Split(' ');
 
                     switch (splitInput[1])
@@ -86,7 +97,13 @@ namespace IRCClient
                             {
                                 Console.WriteLine(x);
                             }
+                            UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
+                            for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length + 1; i++)
+                            {
+                                textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
+                            }
                             break;
+                        
                     }
 
                     if (splitInput[0] == "PING")
@@ -162,7 +179,7 @@ namespace IRCClient
                             //debug print
                             //FilteredInput = input;
 
-                            Console.WriteLine(input);
+                            
                             if (splitInput[0].Replace(":", "") == TrimServerToName)
                             {
                                 textBoxServer1.AppendText(FilteredInput + "\r\n");
@@ -292,9 +309,9 @@ namespace IRCClient
         }
         private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
         {
-            string server = Servers[0].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[0].Split(' ')[1]);
-            nick = Servers[0].Split(' ')[2];
+            string server = Servers[0].Split(' ')[1];
+            int port = Convert.ToInt32(Servers[0].Split(' ')[2]);
+            nick = Servers[0].Split(' ')[3];
             user = "USER " + nick + " 0 * :" + nick;
 
             irc = new TcpClient(server, port);

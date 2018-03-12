@@ -24,7 +24,7 @@
         private void InitializeComponent()
         {
             this.textBoxServer1 = new System.Windows.Forms.TextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.textBoxUsers = new System.Windows.Forms.TextBox();
             this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.menuStripTopNav = new System.Windows.Forms.MenuStrip();
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,15 +63,26 @@
             this.textBoxServer1.TabIndex = 1;
             this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
             // 
-            // listView1
+            // textBoxUsers
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Location = new System.Drawing.Point(1086, 38);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(252, 680);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.textBoxUsers.Location = new System.Drawing.Point(1086, 38);
+            this.textBoxUsers.Name = "textBoxUsers";
+            this.textBoxUsers.Size = new System.Drawing.Size(252, 680);
+            this.textBoxUsers.TabIndex = 2;
+            this.textBoxUsers.Text = "";
+            this.textBoxUsers.AcceptsReturn = true;
+            this.textBoxUsers.AcceptsTab = true;
+            this.textBoxUsers.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxUsers.CausesValidation = false;
+            this.textBoxUsers.HideSelection = false;
+            this.textBoxUsers.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.textBoxUsers.MaxLength = 65536;
+            this.textBoxUsers.Multiline = true;
+            this.textBoxUsers.ReadOnly = true;
+            this.textBoxUsers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxUsers.Text = "";
             // 
             // textBoxEnter
             // 
@@ -183,7 +194,7 @@
             this.ClientSize = new System.Drawing.Size(1350, 730);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.textBoxEnter);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.textBoxUsers);
             this.Controls.Add(this.menuStripTopNav);
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
@@ -199,7 +210,7 @@
         }
 
         private System.Windows.Forms.TextBox textBoxServer1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.TextBox textBoxUsers;
         private System.Windows.Forms.TextBox textBoxEnter;
         private System.Windows.Forms.MenuStrip menuStripTopNav;
         private System.Windows.Forms.ToolStripMenuItem serverToolStripMenuItem;
