@@ -30,11 +30,11 @@
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serversToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
-            this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
+            this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageServer1 = new System.Windows.Forms.TabPage();
             this.menuStripTopNav.SuspendLayout();
@@ -65,24 +65,22 @@
             // 
             // textBoxUsers
             // 
-            this.textBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxUsers.Location = new System.Drawing.Point(1086, 38);
-            this.textBoxUsers.Name = "textBoxUsers";
-            this.textBoxUsers.Size = new System.Drawing.Size(252, 680);
-            this.textBoxUsers.TabIndex = 2;
-            this.textBoxUsers.Text = "";
             this.textBoxUsers.AcceptsReturn = true;
             this.textBoxUsers.AcceptsTab = true;
+            this.textBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxUsers.BackColor = System.Drawing.SystemColors.Window;
             this.textBoxUsers.CausesValidation = false;
             this.textBoxUsers.HideSelection = false;
             this.textBoxUsers.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.textBoxUsers.Location = new System.Drawing.Point(1086, 38);
             this.textBoxUsers.MaxLength = 65536;
             this.textBoxUsers.Multiline = true;
+            this.textBoxUsers.Name = "textBoxUsers";
             this.textBoxUsers.ReadOnly = true;
             this.textBoxUsers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxUsers.Text = "";
+            this.textBoxUsers.Size = new System.Drawing.Size(252, 680);
+            this.textBoxUsers.TabIndex = 2;
             // 
             // textBoxEnter
             // 
@@ -122,33 +120,20 @@
             // newServerToolStripMenuItem
             // 
             this.newServerToolStripMenuItem.Name = "newServerToolStripMenuItem";
-            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newServerToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.newServerToolStripMenuItem.Text = "New Server";
             this.newServerToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowNewServer);
             // 
             // serversToolStripMenuItem
             // 
             this.serversToolStripMenuItem.Name = "serversToolStripMenuItem";
-            this.serversToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.serversToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.serversToolStripMenuItem.Text = "Servers";
-            
-           
-            // 
-            // ServerListSeperator
-            // 
-            this.ServerListSeperator.Name = "ServerListSeperator";
-            this.ServerListSeperator.Size = new System.Drawing.Size(156, 6);
-            // 
-            // openServerListToolStripMenuItem
-            // 
-            this.openServerListToolStripMenuItem.Name = "openServerListToolStripMenuItem";
-            this.openServerListToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.openServerListToolStripMenuItem.Text = "Open Server List";
             // 
             // disconnectToolStripMenuItem
             // 
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
             this.disconnectToolStripMenuItem.Click += new System.EventHandler(this.DiconnectFromSelectedServer);
             // 
@@ -166,6 +151,17 @@
             this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.OpenClientWindowPreferences);
+            // 
+            // ServerListSeperator
+            // 
+            this.ServerListSeperator.Name = "ServerListSeperator";
+            this.ServerListSeperator.Size = new System.Drawing.Size(156, 6);
+            // 
+            // openServerListToolStripMenuItem
+            // 
+            this.openServerListToolStripMenuItem.Name = "openServerListToolStripMenuItem";
+            this.openServerListToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.openServerListToolStripMenuItem.Text = "Open Server List";
             // 
             // tabControl
             // 

@@ -53,7 +53,6 @@ namespace IRCClient
             this.buttonNewServerSubmit.Text = "Add Server";
             this.buttonNewServerSubmit.UseVisualStyleBackColor = true;
             this.buttonNewServerSubmit.Click += new System.EventHandler(this.CloseNewServerDialogue);
-
             // 
             // textBoxHostname
             // 
@@ -153,6 +152,7 @@ namespace IRCClient
             this.Controls.Add(this.buttonNewServerSubmit);
             this.Name = "NewServer";
             this.Text = "NewServer";
+            this.Load += new System.EventHandler(this.NewServer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

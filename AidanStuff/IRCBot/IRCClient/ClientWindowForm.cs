@@ -6,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
@@ -36,6 +35,7 @@ namespace IRCClient
         public static string[] UsersInChannel = new string[1000];
         StreamWriter send;
         TcpClient irc;
+
         public ClientWindow()
         {
             InitializeComponent();
@@ -75,7 +75,9 @@ namespace IRCClient
         {
             try
             {
-                Invoke(new MethodInvoker(delegate() { textBoxServer1.Text = ""; tabPageServer1.Text = server;  }));
+                textBoxServer1.Text = "";
+                tabPageServer1.Text = server;
+
                 send.WriteLine("NICK " + nick);
                 send.WriteLine(user);
                 send.Flush();
@@ -98,9 +100,11 @@ namespace IRCClient
                                 Console.WriteLine(x);
                             }
                             UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
-                            for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length + 1; i++)
+                            for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
                             {
-                                textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
+                          
+                                    textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
+                               
                             }
                             break;
                         
@@ -144,8 +148,7 @@ namespace IRCClient
                         FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ",TrimServerToName + "> ");
                         FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ",TrimServerToName + "> ");
 
-                        Invoke(new MethodInvoker(delegate ()
-                        {
+                        
                             int SC;
                             switch (splitInput[1])
                             {
@@ -184,7 +187,7 @@ namespace IRCClient
                             {
                                 textBoxServer1.AppendText(FilteredInput + "\r\n");
                             }
-                        }));
+                     
                     }
                 }
             }
@@ -243,10 +246,11 @@ namespace IRCClient
         public void AddNewChan(string JoinedChan)
         {
             
-                Invoke(new MethodInvoker(delegate ()
-                {
+           
                     textBoxServer1Chan[ChanNum] = new TextBox();
                     tabPageServer1Chan[ChanNum] = new TabPage();
+                    tabPageServer1Chan[ChanNum].Controls.Add(textBoxServer1Chan[ChanNum]);
+                    tabControl.TabPages.Add(tabPageServer1Chan[ChanNum]);
 
                     textBoxServer1Chan[ChanNum].AcceptsReturn = true;
                     textBoxServer1Chan[ChanNum].AcceptsTab = true;
@@ -255,33 +259,31 @@ namespace IRCClient
                     textBoxServer1Chan[ChanNum].CausesValidation = false;
                     textBoxServer1Chan[ChanNum].HideSelection = false;
                     textBoxServer1Chan[ChanNum].ImeMode = ImeMode.Off;
-                    textBoxServer1Chan[ChanNum].Location = new Point(0, 0);
+                    textBoxServer1Chan[ChanNum].Location = new System.Drawing.Point(0, 0);
                     textBoxServer1Chan[ChanNum].MaxLength = 65536;
                     textBoxServer1Chan[ChanNum].Multiline = true;
                     textBoxServer1Chan[ChanNum].Name = JoinedChan;
                     textBoxServer1Chan[ChanNum].ReadOnly = true;
                     textBoxServer1Chan[ChanNum].ScrollBars = ScrollBars.Vertical;
-                    textBoxServer1Chan[ChanNum].Size = new Size(1060, 628);
+                    textBoxServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
                     textBoxServer1Chan[ChanNum].TabIndex = ChanNum;
                     textBoxServer1Chan[ChanNum].Text = "";
                     textBoxServer1Chan[ChanNum].SelectionStart = 0;
                     textBoxServer1Chan[ChanNum].SelectionLength = 0;
                     
-                    tabPageServer1Chan[ChanNum].Controls.Add(textBoxServer1Chan[ChanNum]);
-                    tabPageServer1Chan[ChanNum].Location = new Point(4, 22);
+                    
+                    tabPageServer1Chan[ChanNum].Location = new System.Drawing.Point(4, 22);
                     tabPageServer1Chan[ChanNum].Name = JoinedChan + " " + Convert.ToString(ChanNum);
-                    tabPageServer1Chan[ChanNum].Padding = new Padding(3);
-                    tabPageServer1Chan[ChanNum].Size = new Size(1060, 628);
+                    tabPageServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
                     tabPageServer1Chan[ChanNum].TabIndex = ChanNum;
                     tabPageServer1Chan[ChanNum].UseVisualStyleBackColor = true;
                     tabPageServer1Chan[ChanNum].ResumeLayout(false);
                     tabPageServer1Chan[ChanNum].PerformLayout();
                     tabPageServer1Chan[ChanNum].Text = JoinedChan;
 
-                    tabControl.TabPages.Add(tabPageServer1Chan[ChanNum]);
+                    
                     ChanNum++;
-
-                }));
+            
         }
         private int GetTab(int SC)
         {
@@ -319,24 +321,10 @@ namespace IRCClient
             StreamReader recieve = new StreamReader(stream);
             send = new StreamWriter(stream);
 
-            Thread IRCThread = new Thread(() => IRCRun(send, recieve, server));
-            IRCThread.Start();
+            IRCRun(send, recieve, server);
+            
         }
-        private void Tool()
-        {
-            string server = Servers[2].Split(' ')[0];
-            int port = Convert.ToInt32(Servers[2].Split(' ')[1]);
-            nick = Servers[2].Split(' ')[2];
-            user = "USER " + nick + " 0 * :" + nick;
-
-            irc = new TcpClient(server, port);
-            NetworkStream stream = irc.GetStream();
-            StreamReader recieve = new StreamReader(stream);
-            send = new StreamWriter(stream);
-
-            Thread IRCThread = new Thread(() => IRCRun(send, recieve, server));
-            IRCThread.Start();
-        }
+        
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
             if (IsConnected)
