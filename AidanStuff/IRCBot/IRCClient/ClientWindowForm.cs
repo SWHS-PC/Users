@@ -67,6 +67,11 @@ namespace IRCClient
             catch
             {
 
+                textBoxServer1.Select(textBoxServer1.TextLength, 0);
+                textBoxServer1.SelectionColor = Color.Red;
+                textBoxServer1.AppendText("Error Connecting to Server: " + Servers[0].Split(' ')[1] + ".\r\n");
+                textBoxServer1.Select(textBoxServer1.TextLength, 0);
+                textBoxServer1.SelectionColor = Color.Black;
             }
         }
 

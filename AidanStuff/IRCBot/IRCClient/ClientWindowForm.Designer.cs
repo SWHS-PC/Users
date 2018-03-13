@@ -23,7 +23,7 @@
        
         private void InitializeComponent()
         {
-            this.textBoxServer1 = new System.Windows.Forms.TextBox();
+            this.textBoxServer1 = new System.Windows.Forms.RichTextBox();
             this.textBoxUsers = new System.Windows.Forms.TextBox();
             this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.menuStripTopNav = new System.Windows.Forms.MenuStrip();
@@ -44,7 +44,6 @@
             // 
             // textBoxServer1
             // 
-            this.textBoxServer1.AcceptsReturn = true;
             this.textBoxServer1.AcceptsTab = true;
             this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -58,7 +57,6 @@
             this.textBoxServer1.Multiline = true;
             this.textBoxServer1.Name = "textBoxServer1";
             this.textBoxServer1.ReadOnly = true;
-            this.textBoxServer1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxServer1.Size = new System.Drawing.Size(1060, 628);
             this.textBoxServer1.TabIndex = 1;
             this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
@@ -207,7 +205,7 @@
 
         }
 
-        private System.Windows.Forms.TextBox textBoxServer1;
+        private System.Windows.Forms.RichTextBox textBoxServer1;
         private System.Windows.Forms.TextBox textBoxUsers;
         private System.Windows.Forms.TextBox textBoxEnter;
         private System.Windows.Forms.MenuStrip menuStripTopNav;
