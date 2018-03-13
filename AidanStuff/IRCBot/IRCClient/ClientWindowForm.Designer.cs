@@ -202,6 +202,8 @@
             this.tabPageServer1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.textBoxServer1.SelectionStart = 0;
+            this.textBoxServer1.SelectionLength = 0;
 
         }
 

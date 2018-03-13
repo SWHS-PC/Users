@@ -40,35 +40,34 @@ namespace IRCClient
         {
             InitializeComponent();
             ActiveControl = textBoxEnter;
-            textBoxServer1.SelectionStart = 0;
-            textBoxServer1.SelectionLength = 0;
-            tabPageServer1.Text = "";
-            int ServerItemCount = 0;
             
-            foreach (string x in Servers)
+            tabPageServer1.Text = "";
+
+            int ServerItemCount = 0;
+            ServerItemCount = SetServerList(ServerItemCount);
+
+        }
+
+        private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
+        {
+            try
             {
-                if (x.Split(' ')[0] == "$")
-                {
-                    ServerItems[ServerItemCount] = new System.Windows.Forms.ToolStripMenuItem();
-                    ServerItems[ServerItemCount].Name = Servers[ServerItemCount].Split(' ')[1];
-                    ServerItems[ServerItemCount].Text = Servers[ServerItemCount].Split(' ')[1];
-                    ServerItems[ServerItemCount].Size = new System.Drawing.Size(159, 22);
-                    ServerItems[ServerItemCount].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
-                    serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
-                    {
-                        ServerItems[ServerItemCount]
-                    });
-                    ServerItemCount++;
-                }
+                string server = Servers[0].Split(' ')[1];
+                int port = Convert.ToInt32(Servers[0].Split(' ')[2]);
+                nick = Servers[0].Split(' ')[3];
+                user = "USER " + nick + " 0 * :" + nick;
+
+                irc = new TcpClient(server, port);
+                NetworkStream stream = irc.GetStream();
+                StreamReader recieve = new StreamReader(stream);
+                send = new StreamWriter(stream);
+
+                IRCRun(send, recieve, server);
             }
+            catch
+            {
 
-            serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
-            {         
-                ServerListSeperator,
-                openServerListToolStripMenuItem
-            });
-
-
+            }
         }
 
         public async void IRCRun(StreamWriter send, StreamReader recieve, string server)
@@ -119,75 +118,45 @@ namespace IRCClient
 
                     if (!IdsToAvoid.Any(splitInput[1].Contains) && splitInput.Length > 1)
                     {
-                        string FilteredInput = input.Replace(TrimServer, "");
+                        string FilteredInput = FilterInput(splitInput);
 
-                        if (Int32.TryParse(splitInput[1], out int LineIds) == true)
+                        int SC;
+                        switch (splitInput[1])
                         {
-                            string TrimLineId = Convert.ToString(LineIds);
-                            FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
-                        }
+                            case "PRIVMSG":
+                                SC = 1;
+                                FilteredInput = MessageSender + "> " + Regex.Split(input, ChanSent + " :")[1];
+                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                break;
+                            case "JOIN":
+                                SC = 1;
+                                FilteredInput = MessageSender + " Joined " + ChanSent + ".";
+                                if (MessageSender == nick)
+                                {
+                                    AddNewChan(ChanSent);
+                                }
+                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                break;
+                            case "PART":
+                                SC = 1;
+                                FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
+                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                break;
+                            case "USER":
 
-                        if (FilteredInput.Split(' ')[1] == "00" + nick)
-                        {
-                            FilteredInput = FilteredInput.Replace(splitInput[1], "");
-                        }
-
-                        if (splitInput[2] == nick)
-                        {
-                            FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
-                        }                        
-
-                        //get data for PRIVMSG lines, which is a majority of the lines
-                        if (IRCCommands.Any(splitInput[1].Contains))
-                        {
-                            MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
-                            ChanSent = splitInput[2].Replace(":", "");
-                        }
-
-                        FilteredInput = TrimServerToName + ">" + FilteredInput;
-                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ",TrimServerToName + "> ");
-                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ",TrimServerToName + "> ");
-
-                        
-                            int SC;
-                            switch (splitInput[1])
-                            {
-                                case "PRIVMSG":
-                                    SC = 1;
-                                    FilteredInput = MessageSender + "> " + Regex.Split(input, ChanSent + " :")[1];
-                                    textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
-                                    break;
-                                case "JOIN":
-                                    SC = 1;
-                                    FilteredInput = MessageSender + " Joined " + ChanSent + ".";
-                                    if (MessageSender == nick)
-                                    {
-                                        AddNewChan(ChanSent);
-                                    }
-                                    textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
-                                    break;
-                                case "PART":
-                                    SC = 1;
-                                    FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
-                                    textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
-                                    break;
-                                case "USER":
-
-                                    break;
-                                case "MODE":
-                                    FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
-                                    textBoxServer1.AppendText(FilteredInput + "\r\n");
-                                    break;
-                            }
-                            //debug print
-                            //FilteredInput = input;
-
-                            
-                            if (splitInput[0].Replace(":", "") == TrimServerToName)
-                            {
+                                break;
+                            case "MODE":
+                                FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
                                 textBoxServer1.AppendText(FilteredInput + "\r\n");
-                            }
-                     
+                                break;
+                        }
+                        //FilteredInput = input;
+
+                        if (splitInput[0].Replace(":", "") == TrimServerToName)
+                        {
+                            textBoxServer1.AppendText(FilteredInput + "\r\n");
+                        }
+
                     }
                 }
             }
@@ -195,6 +164,38 @@ namespace IRCClient
             {
                 Console.WriteLine(e);
             }
+        }
+
+        private string FilterInput(string[] splitInput)
+        {
+            string FilteredInput = input.Replace(TrimServer, "");
+
+            if (Int32.TryParse(splitInput[1], out int LineIds) == true)
+            {
+                string TrimLineId = Convert.ToString(LineIds);
+                FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
+            }
+
+            if (FilteredInput.Split(' ')[1] == "00" + nick)
+            {
+                FilteredInput = FilteredInput.Replace(splitInput[1], "");
+            }
+
+            if (splitInput[2] == nick)
+            {
+                FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
+            }
+
+            if (IRCCommands.Any(splitInput[1].Contains))
+            {
+                MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
+                ChanSent = splitInput[2].Replace(":", "");
+            }
+
+            FilteredInput = TrimServerToName + ">" + FilteredInput;
+            FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ", TrimServerToName + "> ");
+            FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ", TrimServerToName + "> ");
+            return FilteredInput;
         }
 
         private void Return(object sender, KeyPressEventArgs e)
@@ -285,6 +286,34 @@ namespace IRCClient
                     ChanNum++;
             
         }
+
+        private int SetServerList(int ServerItemCount)
+        {
+            foreach (string x in Servers)
+            {
+                if (x.Split(' ')[0] == "$")
+                {
+                    ServerItems[ServerItemCount] = new System.Windows.Forms.ToolStripMenuItem();
+                    ServerItems[ServerItemCount].Name = Servers[ServerItemCount].Split(' ')[1];
+                    ServerItems[ServerItemCount].Text = Servers[ServerItemCount].Split(' ')[1];
+                    ServerItems[ServerItemCount].Size = new System.Drawing.Size(159, 22);
+                    ServerItems[ServerItemCount].Click += new System.EventHandler(this.ToolStripMenuItemServerConnect);
+                    serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+                    {
+                        ServerItems[ServerItemCount]
+                    });
+                    ServerItemCount++;
+                }
+            }
+
+            serversToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                ServerListSeperator,
+                openServerListToolStripMenuItem
+            });
+            return ServerItemCount;
+        }
+
         private int GetTab(int SC)
         {
             int ChanSelected = 0;
@@ -308,21 +337,6 @@ namespace IRCClient
             }
 
             return ChanSelected;
-        }
-        private void ToolStripMenuItemServerConnect(object sender, EventArgs e)
-        {
-            string server = Servers[0].Split(' ')[1];
-            int port = Convert.ToInt32(Servers[0].Split(' ')[2]);
-            nick = Servers[0].Split(' ')[3];
-            user = "USER " + nick + " 0 * :" + nick;
-
-            irc = new TcpClient(server, port);
-            NetworkStream stream = irc.GetStream();
-            StreamReader recieve = new StreamReader(stream);
-            send = new StreamWriter(stream);
-
-            IRCRun(send, recieve, server);
-            
         }
         
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
