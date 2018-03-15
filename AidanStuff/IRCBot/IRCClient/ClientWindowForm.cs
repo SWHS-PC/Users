@@ -66,12 +66,7 @@ namespace IRCClient
             }
             catch
             {
-
-                textBoxServer1.Select(textBoxServer1.TextLength, 0);
-                textBoxServer1.SelectionColor = Color.Red;
-                textBoxServer1.AppendText("Error Connecting to Server: " + Servers[0].Split(' ')[1] + ".\r\n");
-                textBoxServer1.Select(textBoxServer1.TextLength, 0);
-                textBoxServer1.SelectionColor = Color.Black;
+                SetTextColorAndAppend(Color.Red, Color.Black, "Error Connecting to Server: " + Servers[0].Split(' ')[1] + ".", 1);
             }
         }
 
@@ -123,43 +118,66 @@ namespace IRCClient
 
                     if (!IdsToAvoid.Any(splitInput[1].Contains) && splitInput.Length > 1)
                     {
-                        string FilteredInput = FilterInput(splitInput);
+                        string FilteredInput = input.Replace(TrimServer, "");
+
+                        if (Int32.TryParse(splitInput[1], out int LineIds) == true)
+                        {
+                            string TrimLineId = Convert.ToString(LineIds);
+                            FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
+                        }
+
+                        if (FilteredInput.Split(' ')[1] == "00" + nick)
+                        {
+                            FilteredInput = FilteredInput.Replace(splitInput[1], "");
+                        }
+
+                        if (splitInput[2] == nick)
+                        {
+                            FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
+                        }
+
+                        if (IRCCommands.Any(splitInput[1].Contains))
+                        {
+                            MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
+                            ChanSent = splitInput[2].Replace(":", "");
+                        }
+
+                        FilteredInput = TrimServerToName + ">" + FilteredInput;
+                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ", TrimServerToName + "> ");
+                        FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ", TrimServerToName + "> ");
 
                         int SC;
                         switch (splitInput[1])
                         {
                             case "PRIVMSG":
-                                SC = 1;
                                 FilteredInput = MessageSender + "> " + Regex.Split(input, ChanSent + " :")[1];
-                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
                                 break;
                             case "JOIN":
-                                SC = 1;
                                 FilteredInput = MessageSender + " Joined " + ChanSent + ".";
                                 if (MessageSender == nick)
                                 {
                                     AddNewChan(ChanSent);
                                 }
-                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
                                 break;
                             case "PART":
-                                SC = 1;
                                 FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
-                                textBoxServer1Chan[GetTab(SC)].AppendText(FilteredInput + "\r\n");
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
                                 break;
                             case "USER":
 
                                 break;
                             case "MODE":
                                 FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
-                                textBoxServer1.AppendText(FilteredInput + "\r\n");
+                                SetTextColorAndAppend(Color.Green, Color.Black, FilteredInput, 1);
                                 break;
                         }
                         //FilteredInput = input;
 
                         if (splitInput[0].Replace(":", "") == TrimServerToName)
                         {
-                            textBoxServer1.AppendText(FilteredInput + "\r\n");
+                            SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput, 1);
                         }
 
                     }
@@ -171,36 +189,23 @@ namespace IRCClient
             }
         }
 
-        private string FilterInput(string[] splitInput)
+        private void SetTextColorAndAppend(Color newColor, Color resetColor, string content, int x)
         {
-            string FilteredInput = input.Replace(TrimServer, "");
-
-            if (Int32.TryParse(splitInput[1], out int LineIds) == true)
+            textBoxServer1.Select(textBoxServer1.TextLength, 0);
+            textBoxServer1.SelectionColor = newColor;
+            if (x == 1)
             {
-                string TrimLineId = Convert.ToString(LineIds);
-                FilteredInput = FilteredInput.Replace(TrimLineId + " ", "");
+                textBoxServer1.AppendText(content + "\r\n");
             }
-
-            if (FilteredInput.Split(' ')[1] == "00" + nick)
+            else if(x == 2){
+                textBoxServer1Chan[GetTab(1)].AppendText(content + "\r\n");
+            }
+            else if (x == 3)
             {
-                FilteredInput = FilteredInput.Replace(splitInput[1], "");
+                textBoxServer1Chan[GetTab(3)].AppendText(content + "\r\n");
             }
-
-            if (splitInput[2] == nick)
-            {
-                FilteredInput = FilteredInput.Replace(":" + TrimServerToName, "");
-            }
-
-            if (IRCCommands.Any(splitInput[1].Contains))
-            {
-                MessageSender = Regex.Split(splitInput[0].TrimStart(':'), "!")[0];
-                ChanSent = splitInput[2].Replace(":", "");
-            }
-
-            FilteredInput = TrimServerToName + ">" + FilteredInput;
-            FilteredInput = FilteredInput.Replace(TrimServerToName + "> " + nick + " ", TrimServerToName + "> ");
-            FilteredInput = FilteredInput.Replace(TrimServerToName + "> 00" + nick + " ", TrimServerToName + "> ");
-            return FilteredInput;
+            textBoxServer1.Select(textBoxServer1.TextLength, 0);
+            textBoxServer1.SelectionColor = resetColor;
         }
 
         private void Return(object sender, KeyPressEventArgs e)
@@ -236,7 +241,8 @@ namespace IRCClient
                             ChanDestination = Convert.ToString(tabControl.SelectedTab.Name).Split(' ')[0];
                             string textEntered = "PRIVMSG " + ChanDestination + " " + textBoxEnter.Text;
                             send.WriteLine(textEntered);
-                            textBoxServer1Chan[GetTab(SC)].AppendText(nick + "> " + textBoxEnter.Text +"\r\n");
+                            SetTextColorAndAppend(Color.Black, Color.Black, nick + "> " + textBoxEnter.Text, 3);
+
                         }
                         send.Flush();
                     }
