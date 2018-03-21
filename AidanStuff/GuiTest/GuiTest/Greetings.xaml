@@ -14,10 +14,7 @@
         <RadioButton x:Name="RadioButton1" Content="Option 1" HorizontalAlignment="Left" Margin="95,94,0,0" VerticalAlignment="Top" FontFamily="Trebuchet MS"/>
         <RadioButton x:Name="RadioButton2" Content="Option 2" HorizontalAlignment="Left" Margin="95,123,0,0" VerticalAlignment="Top" IsThreeState="True" FontFamily="Trebuchet MS"/>
 
-        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="0,204,0,0" FontFamily="Trebuchet MS" Cursor="IBeam" Click="Button_Click">
-            <Button.Content></Button.Content>
-        </Button>
-
+        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="0,204,0,0" FontFamily="Trebuchet MS" Cursor="IBeam" Click="Button_Click"></Button>
         <!--<Button x:Name="btn" Height="335" Width="100" Background="Transparent" BorderThickness="0" BorderBrush="Transparent">
             <Button.Content>
                 <Border CornerRadius="0" Height="25" Width="75" Margin="0" BorderBrush="Black" BorderThickness="1,1,1,1" >
