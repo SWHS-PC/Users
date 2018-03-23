@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace LifeGui
 {
@@ -15,34 +16,36 @@ namespace LifeGui
     {
         System.Drawing.Graphics drawGraphics;
         System.Drawing.Pen drawPenBlack = new System.Drawing.Pen(Color.Black, 0.5F);
+        System.Drawing.Pen drawPenYellow = new System.Drawing.Pen(Color.Yellow, 0.5F);
         System.Drawing.SolidBrush drawBrushBlack = new System.Drawing.SolidBrush(Color.Black);
         System.Drawing.SolidBrush drawBrushWhite = new System.Drawing.SolidBrush(Color.White);
 
-        public static int w = 75, h = 25;
+        public static int w = 84, h = 33;
         public static bool[,] Map;
         public static bool[,] newMap;
-        public bool this[int x, int y]
-        {
-            get { return Map[x, y]; }
-            set { Map[x, y] = value; }
-        }
+        public bool this[int x, int y] { get { return Map[x, y]; } set { Map[x, y] = value; } }
         public bool clicked;
-
+        public bool autoRun = false;
+        System.Threading.Thread t;
+        public int genCount;
 
         public DrawForm()
         {
             InitializeComponent();
 
+            labelGeneration.Text = "Generation: " + Convert.ToString(genCount);
+
             Map = new bool[w, h];
             newMap = new bool[w, h];
-            AddCell(w / 2 - 1, h / 2);
-            AddCell(w / 2, h / 2);
-            AddCell(w / 2 + 1, h / 2);
-            AddCell(w / 2, h / 2 - 1);
-            AddCell(w / 2 - 1, h / 2 + 1);
-            AddCell(w / 2 + 1, h / 2 + 1);
-            AddCell(w / 2, h / 2 + 2);
             
+        }
+
+        private void DrawNext(object sender, EventArgs e)
+        {
+            NextGen();
+            Draw();
+            genCount++;
+            labelGeneration.Text = "Generation: " + Convert.ToString(genCount);
         }
 
         public void NextGen()
@@ -52,34 +55,27 @@ namespace LifeGui
             {
                 for (int j = 0; j < h; j++)
                 {
-                    int numberOfNeighbors = IsNeighbor(Map, i, j, -1, 0)
-                     + IsNeighbor(Map, i, j, -1, 1)
-                     + IsNeighbor(Map, i, j, 0, 1)
-                     + IsNeighbor(Map, i, j, 1, 1)
-                     + IsNeighbor(Map, i, j, 1, 0)
-                     + IsNeighbor(Map, i, j, 1, -1)
-                     + IsNeighbor(Map, i, j, 0, -1)
-                     + IsNeighbor(Map, i, j, -1, -1);
+                    int Neighbors = FindNeighbor(Map, i, j, -1, 0) + FindNeighbor(Map, i, j, -1, 1) + FindNeighbor(Map, i, j, 0, 1) + FindNeighbor(Map, i, j, 1, 1) + FindNeighbor(Map, i, j, 1, 0) + FindNeighbor(Map, i, j, 1, -1) + FindNeighbor(Map, i, j, 0, -1) + FindNeighbor(Map, i, j, -1, -1);
 
-                    bool shouldLive = false;
+                    bool KeepLiving = false;
                     bool isAlive = Map[i, j];
 
-                    if (isAlive && (numberOfNeighbors == 2 || numberOfNeighbors == 3))
+                    if (isAlive && (Neighbors == 2 || Neighbors == 3))
                     {
-                        shouldLive = true;
+                        KeepLiving = true;
                     }
-                    else if (!isAlive && numberOfNeighbors == 3)
+                    else if (!isAlive && Neighbors == 3)
                     {
-                        shouldLive = true;
+                        KeepLiving = true;
                     }
 
-                    newMap[i, j] = shouldLive;
+                    newMap[i, j] = KeepLiving;
                 }
             }
             Map = newMap;
         }
 
-        static int IsNeighbor(bool[,] Map, int x, int y, int offsetx, int offsety)
+        static int FindNeighbor(bool[,] Map, int x, int y, int offsetx, int offsety)
         {
             int result = 0;
             int proposedOffsetX = x + offsetx;
@@ -98,35 +94,28 @@ namespace LifeGui
             return Map[x, y] = !currentValue;
         }
 
-        private void DrawForm_Load(object sender, EventArgs e)
-        {
-            
-        }
-
         private void DrawClick(object sender, EventArgs e)
         {
-            drawGraphics = PictureBox1.CreateGraphics();
+            Map = new bool[w, h];
+            newMap = new bool[w, h];
+
+            drawGraphics = PictureBoxMap.CreateGraphics();
 
             for (int y = 0; y < h; y++)
             {
                 for (int x = 0; x < w; x++)
                 {
                     drawGraphics.DrawRectangle(drawPenBlack, x * 10, y * 10, 10, 10);
+                    drawGraphics.FillRectangle(Map[x, y] ? drawBrushBlack : drawBrushWhite, (x * 10) + 1, (y * 10) + 1, 9, 9);
                 }
             }
-        }
-
-        
-
-        private void DrawNext(object sender, EventArgs e)
-        {
-            Draw();
-            NextGen();
+            genCount = 0;
+            labelGeneration.Text = "Generation: " + Convert.ToString(genCount);
         }
 
         private void Draw()
         {
-            drawGraphics = PictureBox1.CreateGraphics();
+            drawGraphics = PictureBoxMap.CreateGraphics();
             
             for (int y = 0; y < h; y++)
             {
@@ -136,5 +125,63 @@ namespace LifeGui
                 }
             }
         }
+
+        private void ClickCell(object sender, MouseEventArgs e)
+        {
+            drawGraphics = PictureBoxMap.CreateGraphics();
+
+            int cx = e.Location.X, cy = e.Location.Y;
+            AddCell((cx - 1) / 10, (cy - 1) / 10);
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    drawGraphics.FillRectangle(Map[x, y] ? drawBrushBlack : drawBrushWhite, (x * 10) + 1, (y * 10) + 1, 9, 9);
+                    drawGraphics.DrawRectangle(Map[x, y] ? drawPenYellow : drawPenBlack, x * 10, y * 10, 10, 10);
+                    
+                }
+            }
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    drawGraphics.DrawRectangle(drawPenBlack, x * 10, y * 10, 10, 10);
+                }
+            }
+        }
+
+        private void AutoRun(object sender, EventArgs e)
+        {
+            if (autoRun == true)
+            {
+                autoRun = false;
+            }
+            else
+            {
+                autoRun = true;
+                t = new System.Threading.Thread(AutoRunThread);
+                t.Start();
+            }
+
+        }
+        private void AutoRunThread()
+        {
+            while (autoRun == true)
+            {
+                MethodInvoker mi = delegate () {
+                    NextGen();
+                    Draw();
+                    Thread.Sleep(100);
+                    genCount++;
+                    labelGeneration.Text = "Generation: " + Convert.ToString(genCount);
+                };
+                this.Invoke(mi);
+                
+            }
+        }
+
+        private void DrawForm_Load(object sender, EventArgs e)
+        {}
     }
 }
