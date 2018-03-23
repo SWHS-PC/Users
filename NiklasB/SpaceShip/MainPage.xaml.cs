@@ -13,17 +13,8 @@ namespace SpaceShip
 {
     public sealed partial class MainPage : Page
     {
-        // Resources created by Canvas_CreateResources
-        CanvasGeometry m_sunGeometry;
-        ICanvasImage m_sunImage;
-
-        CanvasGeometry m_shipGeometry;
-        ICanvasImage m_shipImage;
-
-        // Current position of the ship.
-        Vector2 m_shipCenter = new Vector2(200, 200);
-        float m_shipAngle = 0;
-        Matrix3x2 ShipTransform => Matrix3x2.CreateRotation(m_shipAngle) * Matrix3x2.CreateTranslation(m_shipCenter);
+        Sun m_sun = new Sun();
+        Ship m_ship = new Ship();
 
         // Canvas size and view transform.
         Vector2 m_canvasSize = new Vector2(1, 1);
@@ -48,6 +39,62 @@ namespace SpaceShip
             Canvas.CreateResources += Canvas_CreateResources;
             Canvas.Update += Canvas_Update;
             Canvas.Draw += Canvas_Draw;
+
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
+            SetInitialShipPosition();
+        }
+
+        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Left:
+                    m_ship.IsRotatingLeft = true;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Right:
+                    m_ship.IsRotatingRight = true;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Up:
+                    m_ship.IsThrusting = true;
+                    args.Handled = true;
+                    break;
+            }
+        }
+
+        private void CoreWindow_KeyUp(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Left:
+                    m_ship.IsRotatingLeft = false;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Right:
+                    m_ship.IsRotatingRight = false;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Up:
+                    m_ship.IsThrusting = false;
+                    args.Handled = true;
+                    break;
+            }
+        }
+
+        void SetInitialShipPosition()
+        {
+            float radius = 200;
+            float angularVelocity = Helpers.ComputeOrbitalRadiansPerSecond(m_sun.Gravity, radius);
+
+            m_ship.Position = new Vector2(radius, 0);
+            m_ship.Velocity = Helpers.ComputeOrbitalVelocity(0, radius, angularVelocity);
         }
 
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -62,40 +109,16 @@ namespace SpaceShip
 
         private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            // Create the sun geometry.
-            m_sunGeometry = CanvasGeometry.CreateCircle(sender, new Vector2(), 80);
-
-            // Create the sun image.
-            var sunCommandList = new CanvasCommandList(sender);
-            using (var drawingSession = sunCommandList.CreateDrawingSession())
-            {
-                drawingSession.FillGeometry(m_sunGeometry, Colors.Yellow);
-            }
-            m_sunImage = sunCommandList;
-
-            // Create the ship geometry.
-            var shipPoints = new Vector2[]
-            {
-                new Vector2(-15, -10),
-                new Vector2(18, 0),
-                new Vector2(-15, 10)
-            };
-            m_shipGeometry = CanvasGeometry.CreatePolygon(sender, shipPoints);
-
-            // Create the ship image.
-            var shipCommandList = new CanvasCommandList(sender);
-            using (var drawingSession = shipCommandList.CreateDrawingSession())
-            {
-                drawingSession.FillGeometry(m_shipGeometry, Colors.DarkSlateGray);
-                drawingSession.DrawGeometry(m_shipGeometry, Colors.SteelBlue, 2);
-            }
-            m_shipImage = shipCommandList;
+            m_sun.CreateResources(sender);
+            m_ship.CreateResources(sender);
         }
 
         private void Canvas_Update(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedUpdateEventArgs args)
         {
-            // TODO - here we will update values that change from one frame to the next,
-            //        such as the ship position.
+            float seconds = (float)args.Timing.ElapsedTime.TotalSeconds;
+
+            m_ship.AddGravity(seconds, m_sun.Gravity, m_sun.Center);
+            m_ship.Move(seconds);
         }
 
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
@@ -103,13 +126,13 @@ namespace SpaceShip
             // Draw the sun using the view transform.
             // The sun is already at the origin of the world coordinate space.
             args.DrawingSession.Transform = m_viewTransform;
-            args.DrawingSession.DrawImage(m_sunImage);
+            m_sun.Draw(args.DrawingSession);
 
             // Draw the ship using the product of the ship transform and view transform.
             // The ship transform goes from the ship's model space to world space.
             // The view transform goes from the world coordinate space to canvas coordinates.
-            args.DrawingSession.Transform = ShipTransform * m_viewTransform;
-            args.DrawingSession.DrawImage(m_shipImage);
+            args.DrawingSession.Transform = m_ship.WorldTransform * m_viewTransform;
+            m_ship.Draw(args.DrawingSession);
         }
     }
 }
