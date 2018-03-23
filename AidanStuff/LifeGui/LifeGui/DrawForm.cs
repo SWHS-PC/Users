@@ -23,6 +23,7 @@ namespace LifeGui
         public static int w = 84, h = 33;
         public static bool[,] Map;
         public static bool[,] newMap;
+        public static bool[,] oldMap;
         public bool this[int x, int y] { get { return Map[x, y]; } set { Map[x, y] = value; } }
         public bool clicked;
         public bool autoRun = false;
@@ -37,7 +38,7 @@ namespace LifeGui
 
             Map = new bool[w, h];
             newMap = new bool[w, h];
-            
+            oldMap = new bool[w, h];
         }
 
         private void DrawNext(object sender, EventArgs e)
@@ -50,6 +51,7 @@ namespace LifeGui
 
         public void NextGen()
         {
+            oldMap = Map;
             newMap = new bool[w, h];
             for (int i = 0; i < w; i++)
             {
@@ -121,7 +123,14 @@ namespace LifeGui
             {
                 for (int x = 0; x < w; x++)
                 {
-                    drawGraphics.FillRectangle(Map[x, y] ? drawBrushBlack : drawBrushWhite, (x * 10) + 1, (y * 10) + 1, 9, 9);
+                    if (oldMap[x, y] == true)
+                    {
+                        drawGraphics.FillRectangle(drawBrushWhite, (x * 10) + 1, (y * 10) + 1, 9, 9);
+                    }
+                    if (Map[x, y] == true)
+                    {
+                        drawGraphics.FillRectangle(drawBrushBlack, (x * 10) + 1, (y * 10) + 1, 9, 9);
+                    }
                 }
             }
         }
@@ -138,15 +147,6 @@ namespace LifeGui
                 for (int x = 0; x < w; x++)
                 {
                     drawGraphics.FillRectangle(Map[x, y] ? drawBrushBlack : drawBrushWhite, (x * 10) + 1, (y * 10) + 1, 9, 9);
-                    drawGraphics.DrawRectangle(Map[x, y] ? drawPenYellow : drawPenBlack, x * 10, y * 10, 10, 10);
-                    
-                }
-            }
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    drawGraphics.DrawRectangle(drawPenBlack, x * 10, y * 10, 10, 10);
                 }
             }
         }
@@ -180,8 +180,27 @@ namespace LifeGui
                 
             }
         }
-
+        private void DoNothing(){ }
         private void DrawForm_Load(object sender, EventArgs e)
         {}
+        private void button1_MouseLeave(object sender, EventArgs e)
+        {
+            this.buttonSet.Image = Properties.Resources._default;
+        }
+
+        private void button1_MouseEnter(object sender, EventArgs e)
+        {
+            this.buttonSet.Image = Properties.Resources._hover;
+        }
+
+        private void button1_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.buttonSet.Image = Properties.Resources._clicked;
+        }
+
+        private void button1_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.buttonSet.Image = Properties.Resources._default;
+        }
     }
 }
