@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace LifeGui
 {
@@ -30,40 +31,18 @@ namespace LifeGui
         /// </summary>
         private void InitializeComponent()
         {
-            this.PictureBoxMap = new System.Windows.Forms.PictureBox();
-            this.buttonSet = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.buttonStartAuto = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelGeneration = new System.Windows.Forms.Label();
+            this.buttonSet = new System.Windows.Forms.Button();
+            this.PictureBoxMap = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxMap)).BeginInit();
             this.SuspendLayout();
             // 
-            // PictureBoxMap
-            // 
-            this.PictureBoxMap.BackColor = System.Drawing.Color.White;
-            this.PictureBoxMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PictureBoxMap.Location = new System.Drawing.Point(9, 9);
-            this.PictureBoxMap.Margin = new System.Windows.Forms.Padding(0);
-            this.PictureBoxMap.Name = "PictureBoxMap";
-            this.PictureBoxMap.Size = new System.Drawing.Size(842, 332);
-            this.PictureBoxMap.TabIndex = 0;
-            this.PictureBoxMap.TabStop = false;
-            this.PictureBoxMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ClickCell);
-            // 
-            // buttonSet
-            // 
-            this.buttonSet.Location = new System.Drawing.Point(12, 363);
-            this.buttonSet.Name = "buttonSet";
-            this.buttonSet.Size = new System.Drawing.Size(75, 23);
-            this.buttonSet.TabIndex = 1;
-            this.buttonSet.Text = "Set";
-            this.buttonSet.UseVisualStyleBackColor = true;
-            this.buttonSet.Click += new System.EventHandler(this.DrawClick);
-            // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(93, 363);
+            this.buttonNext.Location = new System.Drawing.Point(393, 358);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(75, 23);
             this.buttonNext.TabIndex = 2;
@@ -73,11 +52,12 @@ namespace LifeGui
             // 
             // buttonStartAuto
             // 
-            this.buttonStartAuto.Location = new System.Drawing.Point(174, 363);
+            this.buttonStartAuto.BackgroundImage = global::LifeGui.Properties.Resources.start;
+            this.buttonStartAuto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonStartAuto.Location = new System.Drawing.Point(156, 351);
             this.buttonStartAuto.Name = "buttonStartAuto";
-            this.buttonStartAuto.Size = new System.Drawing.Size(75, 23);
+            this.buttonStartAuto.Size = new System.Drawing.Size(198, 47);
             this.buttonStartAuto.TabIndex = 3;
-            this.buttonStartAuto.Text = "Start";
             this.buttonStartAuto.UseVisualStyleBackColor = true;
             this.buttonStartAuto.Click += new System.EventHandler(this.AutoRun);
             // 
@@ -93,11 +73,38 @@ namespace LifeGui
             // labelGeneration
             // 
             this.labelGeneration.AutoSize = true;
-            this.labelGeneration.Location = new System.Drawing.Point(256, 368);
+            this.labelGeneration.Location = new System.Drawing.Point(512, 351);
             this.labelGeneration.Name = "labelGeneration";
             this.labelGeneration.Size = new System.Drawing.Size(62, 13);
             this.labelGeneration.TabIndex = 5;
             this.labelGeneration.Text = "Generation:";
+            this.labelGeneration.Click += new System.EventHandler(this.labelGeneration_Click);
+            // 
+            // buttonSet
+            // 
+            this.buttonSet.BackgroundImage = global::LifeGui.Properties.Resources.set;
+            this.buttonSet.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonSet.FlatAppearance.BorderSize = 0;
+            this.buttonSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSet.Location = new System.Drawing.Point(9, 351);
+            this.buttonSet.Name = "buttonSet";
+            this.buttonSet.Size = new System.Drawing.Size(141, 47);
+            this.buttonSet.TabIndex = 1;
+            this.buttonSet.TabStop = false;
+            this.buttonSet.UseVisualStyleBackColor = true;
+            this.buttonSet.Click += new System.EventHandler(this.DrawClick);
+            // 
+            // PictureBoxMap
+            // 
+            this.PictureBoxMap.BackColor = System.Drawing.Color.White;
+            this.PictureBoxMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PictureBoxMap.Location = new System.Drawing.Point(9, 9);
+            this.PictureBoxMap.Margin = new System.Windows.Forms.Padding(0);
+            this.PictureBoxMap.Name = "PictureBoxMap";
+            this.PictureBoxMap.Size = new System.Drawing.Size(842, 332);
+            this.PictureBoxMap.TabIndex = 0;
+            this.PictureBoxMap.TabStop = false;
+            this.PictureBoxMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ClickCell);
             // 
             // DrawForm
             // 

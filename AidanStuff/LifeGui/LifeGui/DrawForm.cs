@@ -35,7 +35,7 @@ namespace LifeGui
             InitializeComponent();
 
             labelGeneration.Text = "Generation: " + Convert.ToString(genCount);
-
+            
             Map = new bool[w, h];
             newMap = new bool[w, h];
             oldMap = new bool[w, h];
@@ -183,24 +183,30 @@ namespace LifeGui
         private void DoNothing(){ }
         private void DrawForm_Load(object sender, EventArgs e)
         {}
+
+        private void labelGeneration_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void button1_MouseLeave(object sender, EventArgs e)
         {
-            this.buttonSet.Image = Properties.Resources._default;
+            this.buttonSet.Image = Properties.Resources.;
         }
 
-        private void button1_MouseEnter(object sender, EventArgs e)
-        {
-            this.buttonSet.Image = Properties.Resources._hover;
-        }
+        //private void button1_MouseEnter(object sender, EventArgs e)
+        //{
+        //    this.buttonSet.Image = Properties.Resources._hover;
+        //}
 
-        private void button1_MouseDown(object sender, MouseEventArgs e)
-        {
-            this.buttonSet.Image = Properties.Resources._clicked;
-        }
+        //private void button1_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    this.buttonSet.Image = Properties.Resources._clicked;
+        //}
 
-        private void button1_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.buttonSet.Image = Properties.Resources._default;
-        }
+        //private void button1_MouseUp(object sender, MouseEventArgs e)
+        //{
+        //    this.buttonSet.Image = Properties.Resources._default;
+        //}
     }
 }
