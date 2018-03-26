@@ -32,34 +32,25 @@ namespace LifeGui
         private void InitializeComponent()
         {
             this.buttonNext = new System.Windows.Forms.Button();
-            this.buttonStartAuto = new System.Windows.Forms.Button();
             this.labelInfo = new System.Windows.Forms.Label();
             this.labelGeneration = new System.Windows.Forms.Label();
-            this.buttonSet = new System.Windows.Forms.Button();
             this.PictureBoxMap = new System.Windows.Forms.PictureBox();
+            this.buttonSet = new System.Windows.Forms.Button();
+            this.buttonStart = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxMap)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(393, 358);
+            this.buttonNext.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonNext.Location = new System.Drawing.Point(174, 363);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(75, 23);
             this.buttonNext.TabIndex = 2;
             this.buttonNext.Text = "Next";
             this.buttonNext.UseVisualStyleBackColor = true;
             this.buttonNext.Click += new System.EventHandler(this.DrawNext);
-            // 
-            // buttonStartAuto
-            // 
-            this.buttonStartAuto.BackgroundImage = global::LifeGui.Properties.Resources.start;
-            this.buttonStartAuto.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonStartAuto.Location = new System.Drawing.Point(156, 351);
-            this.buttonStartAuto.Name = "buttonStartAuto";
-            this.buttonStartAuto.Size = new System.Drawing.Size(198, 47);
-            this.buttonStartAuto.TabIndex = 3;
-            this.buttonStartAuto.UseVisualStyleBackColor = true;
-            this.buttonStartAuto.Click += new System.EventHandler(this.AutoRun);
             // 
             // labelInfo
             // 
@@ -73,26 +64,12 @@ namespace LifeGui
             // labelGeneration
             // 
             this.labelGeneration.AutoSize = true;
-            this.labelGeneration.Location = new System.Drawing.Point(512, 351);
+            this.labelGeneration.Location = new System.Drawing.Point(255, 368);
             this.labelGeneration.Name = "labelGeneration";
             this.labelGeneration.Size = new System.Drawing.Size(62, 13);
             this.labelGeneration.TabIndex = 5;
             this.labelGeneration.Text = "Generation:";
             this.labelGeneration.Click += new System.EventHandler(this.labelGeneration_Click);
-            // 
-            // buttonSet
-            // 
-            this.buttonSet.BackgroundImage = global::LifeGui.Properties.Resources.set;
-            this.buttonSet.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonSet.FlatAppearance.BorderSize = 0;
-            this.buttonSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSet.Location = new System.Drawing.Point(9, 351);
-            this.buttonSet.Name = "buttonSet";
-            this.buttonSet.Size = new System.Drawing.Size(141, 47);
-            this.buttonSet.TabIndex = 1;
-            this.buttonSet.TabStop = false;
-            this.buttonSet.UseVisualStyleBackColor = true;
-            this.buttonSet.Click += new System.EventHandler(this.DrawClick);
             // 
             // PictureBoxMap
             // 
@@ -106,17 +83,41 @@ namespace LifeGui
             this.PictureBoxMap.TabStop = false;
             this.PictureBoxMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ClickCell);
             // 
+            // buttonSet
+            // 
+            this.buttonSet.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.buttonSet.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonSet.Location = new System.Drawing.Point(12, 363);
+            this.buttonSet.Name = "buttonSet";
+            this.buttonSet.Size = new System.Drawing.Size(75, 23);
+            this.buttonSet.TabIndex = 6;
+            this.buttonSet.Text = "Set";
+            this.buttonSet.UseVisualStyleBackColor = true;
+            this.buttonSet.Click += new System.EventHandler(this.DrawClick);
+            // 
+            // buttonStart
+            // 
+            this.buttonStart.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.buttonStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonStart.Location = new System.Drawing.Point(93, 363);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(75, 23);
+            this.buttonStart.TabIndex = 7;
+            this.buttonStart.Text = "Start";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Click += new System.EventHandler(this.AutoRun);
+            // 
             // DrawForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(861, 410);
+            this.Controls.Add(this.buttonStart);
+            this.Controls.Add(this.buttonSet);
             this.Controls.Add(this.labelGeneration);
             this.Controls.Add(this.labelInfo);
-            this.Controls.Add(this.buttonStartAuto);
             this.Controls.Add(this.buttonNext);
-            this.Controls.Add(this.buttonSet);
             this.Controls.Add(this.PictureBoxMap);
             this.Name = "DrawForm";
             this.Text = "Conway\'s Game Of Life";
@@ -130,11 +131,11 @@ namespace LifeGui
         #endregion
 
         private System.Windows.Forms.PictureBox PictureBoxMap;
-        private System.Windows.Forms.Button buttonSet;
         private System.Windows.Forms.Button buttonNext;
-        private System.Windows.Forms.Button buttonStartAuto;
         private System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.Label labelGeneration;
+        private Button buttonSet;
+        private Button buttonStart;
     }
 }
 
