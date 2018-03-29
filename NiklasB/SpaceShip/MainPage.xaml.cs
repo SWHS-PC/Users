@@ -119,6 +119,23 @@ namespace SpaceShip
 
             m_ship.AddGravity(seconds, m_sun.Gravity, m_sun.Center);
             m_ship.Move(seconds);
+
+            // NEW - reset the ship position if it collides with something else
+            if (CheckCollisions())
+            {
+                SetInitialShipPosition();
+            }
+        }
+
+        // NEW - method to check if the ship collides with other objects
+        bool CheckCollisions()
+        {
+            if (m_ship.IntersectsWith(m_sun))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)

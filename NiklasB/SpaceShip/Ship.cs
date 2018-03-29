@@ -53,6 +53,24 @@ namespace SpaceShip
                 drawingSession.DrawGeometry(m_shipGeometry, Colors.SteelBlue, 2);
             }
             m_shipImage = shipCommandList;
+
+            // NEW - Create the thrust image.
+            var thrustPoints = new Vector2[]
+            {
+                new Vector2(-18, 4),
+                new Vector2(-32, 0),
+                new Vector2(-18, -4)
+            };
+
+            var thrustCommandList = new CanvasCommandList(resourceCreator);
+            using (var drawingSession = thrustCommandList.CreateDrawingSession())
+            {
+                using (var thrustGeometry = CanvasGeometry.CreatePolygon(resourceCreator, thrustPoints))
+                {
+                    drawingSession.FillGeometry(thrustGeometry, Colors.LightBlue);
+                }
+            }
+            m_thrustImage = thrustCommandList;
         }
 
         public void Dispose()
@@ -70,6 +88,12 @@ namespace SpaceShip
         public override void Draw(CanvasDrawingSession drawingSession)
         {
             drawingSession.DrawImage(m_shipImage);
+
+            // NEW - draw the thrust image if thrusting
+            if (IsThrusting)
+            {
+                drawingSession.DrawImage(m_thrustImage);
+            }
         }
 
         public new void Move(float seconds)

@@ -14,6 +14,24 @@ namespace SpaceShip
         public abstract CanvasGeometry Geometry { get; }
         public abstract Matrix3x2 WorldTransform { get; }
         public abstract void Draw(CanvasDrawingSession drawingSession);
+
+        // NEW - Determine whether this object intersects with another object.
+        public bool IntersectsWith(SpaceObject other)
+        {
+            // Compute transform from world space to this object's model space.
+            Matrix3x2 modelTransform;
+            Matrix3x2.Invert(WorldTransform, out modelTransform);
+
+            // Compute transform from the other object's model space to this
+            // object's model space.
+            Matrix3x2 transform = other.WorldTransform * modelTransform;
+
+            // Compare the two geometries, applying the transform tNEWo the other
+            // geometry so they're both in the same coordinate space.
+            var comparison = Geometry.CompareWith(other.Geometry, transform, 2.0f);
+
+            return comparison != CanvasGeometryRelation.Disjoint;
+        }
     }
 
     abstract class MovingSpaceObject : SpaceObject
