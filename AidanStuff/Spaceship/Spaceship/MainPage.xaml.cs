@@ -1,36 +1,30 @@
 ﻿using System;
-using System.Numerics;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.UI.Xaml;
-
+using System.Numerics;
+using Windows.UI;
 
 namespace Spaceship
 {
     public sealed partial class MainPage : Page
     {
         Sun sun = new Sun();
+        Ship ship = new Ship();
+        AsteroidShape basicAsteroidShape = new AsteroidShape(AsteroidShape.SmallVertices);
+        List<Asteroids> asteroidsList = new List<Asteroids>();
+        Random random = new Random();
 
-        CanvasGeometry shipGeometry;
-        ICanvasImage shipImage;
-
-        Vector2 shipCenter = new Vector2(200, 200);
-        float shipAngle = 0;
-        Matrix3x2 ShipTransform => Matrix3x2.CreateRotation(shipAngle) * Matrix3x2.CreateTranslation(shipCenter);
+        IList<ISpaceResource> SpaceResources => new ISpaceResource[]
+        {
+            sun,
+            ship,
+            basicAsteroidShape
+        };
 
         Vector2 canvasSize = new Vector2(1, 1);
         Matrix3x2 viewTransform = Matrix3x2.Identity;
@@ -39,15 +33,93 @@ namespace Spaceship
         {
             this.InitializeComponent();
 
-            this.Unloaded += MainPage_Unloaded;
 
-            Canvas.ClearColor = Windows.UI.Colors.Black;
-
+            this.Unloaded += (object sender, RoutedEventArgs e) =>
+            {
+                Canvas.RemoveFromVisualTree();
+            };
+            
+            Canvas.ClearColor = Colors.Black;
             Canvas.SizeChanged += Canvas_SizeChanged;
-
             Canvas.CreateResources += Canvas_CreateResources;
             Canvas.Update += Canvas_Update;
             Canvas.Draw += Canvas_Draw;
+
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
+
+            for(int i = 0; i < 99; i++)
+            {
+                AddAsteroid(300, 400, basicAsteroidShape);
+            }
+
+            SetInitialShipPosition();
+        }
+
+        void AddAsteroid(float minOrbit, float maxOrbit, AsteroidShape shape)
+        {
+            float radius = (float)( minOrbit + random.NextDouble() * (maxOrbit - minOrbit));
+            float angle = (float)(random.NextDouble() * (Math.PI * 2));
+
+            float angularVelocity = Computationals.ComputeOrbitalRadiansPerSecond(sun.Gravity, radius);
+            var asteroid = new Asteroids(shape)
+            {
+                Position = Computationals.ComputeOrbitalPosition(angle, radius),
+                Velocity = Computationals.ComputeOrbitalVelocity(angle, radius, angularVelocity)
+            };
+
+            asteroidsList.Add(asteroid);
+        }
+
+        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Left:
+                    ship.IsRotatingLeft = true;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Right:
+                    ship.IsRotatingRight = true;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Up:
+                    ship.IsThrusting = true;
+                    args.Handled = true;
+                    break;
+            }
+        }
+
+        private void CoreWindow_KeyUp(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Left:
+                    ship.IsRotatingLeft = false;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Right:
+                    ship.IsRotatingRight = false;
+                    args.Handled = true;
+                    break;
+
+                case Windows.System.VirtualKey.Up:
+                    ship.IsThrusting = false;
+                    args.Handled = true;
+                    break;
+            }
+        }
+
+        void SetInitialShipPosition()
+        {
+            float radius = 200;
+            float angularVelocity = Computationals.ComputeOrbitalRadiansPerSecond(sun.Gravity, radius);
+
+            ship.Position = new Vector2(radius, 0);
+            ship.Velocity = Computationals.ComputeOrbitalVelocity(0, radius, angularVelocity);
         }
 
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -56,46 +128,66 @@ namespace Spaceship
             viewTransform = Matrix3x2.CreateTranslation(canvasSize * 0.5f);
         }
 
-        private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
+        private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
-            args.DrawingSession.Transform = viewTransform;
-            sun.Draw(args.DrawingSession);
-
-            args.DrawingSession.Transform = ShipTransform * viewTransform;
-            args.DrawingSession.DrawImage(shipImage);
-            
+            foreach (var item in SpaceResources)
+            {
+                item.Dispose();
+                item.CreateResources(sender);
+            }
         }
 
         private void Canvas_Update(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedUpdateEventArgs args)
         {
-            // TODO
-        }
+            float seconds = (float)args.Timing.ElapsedTime.TotalSeconds;
 
-        private void Canvas_CreateResources(Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
-        {
-            sun.CreateResources(sender);
-
-            var shipPoints = new Vector2[]
+            ship.AddGravity(seconds, sun.Gravity, sun.Center);
+            ship.Move(seconds);
+            foreach(var asteroid in asteroidsList)
             {
-            new Vector2(-15, -10),
-            new Vector2(20, 0),
-            new Vector2(-15,10)
-            };
-            shipGeometry = CanvasGeometry.CreatePolygon(sender, shipPoints);
-
-            // Create the ship image.n
-            var shipCommandList = new CanvasCommandList(sender);
-            using (var drawingSession = shipCommandList.CreateDrawingSession())
-            {
-                drawingSession.FillGeometry(shipGeometry, Colors.DarkSlateGray);
-                drawingSession.DrawGeometry(shipGeometry, Colors.SteelBlue, 2);
+                asteroid.AddGravity(seconds, sun.Gravity, sun.Center);
+                asteroid.Move(seconds);
             }
-            shipImage = shipCommandList;
+
+            if(Collisions())
+            {
+                SetInitialShipPosition();
+            }
+
         }
 
-        private void MainPage_Unloaded(object sender, RoutedEventArgs e)
+        bool Collisions()
         {
-            this.Canvas.RemoveFromVisualTree();
+            if(ship.Intersect(sun))
+            {
+                return true;
+            }
+
+            foreach(var asteroid in asteroidsList)
+            {
+                if(ship.Intersect(asteroid))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        private void Canvas_Draw(Microsoft.Graphics.Canvas.UI.Xaml.ICanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.Xaml.CanvasAnimatedDrawEventArgs args)
+        {
+            foreach (var asteroid in asteroidsList)
+            {
+                args.DrawingSession.Transform = asteroid.WorldTransform * viewTransform;
+                asteroid.Draw(args.DrawingSession);
+            }
+
+            args.DrawingSession.Transform = viewTransform;
+            sun.Draw(args.DrawingSession);
+            args.DrawingSession.Transform = ship.WorldTransform * viewTransform;
+            ship.Draw(args.DrawingSession);
+
+            
+
         }
     }
 }

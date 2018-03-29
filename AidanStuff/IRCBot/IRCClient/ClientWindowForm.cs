@@ -370,6 +370,7 @@ namespace IRCClient
         {
             NewServer LoadNewServer = new NewServer(this);
             LoadNewServer.Show();
+            this.Close();
         }
 
         private void OpenClientWindowPreferences(object sender, EventArgs e)
