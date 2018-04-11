@@ -21,9 +21,7 @@ namespace Spaceship
             Matrix3x2.Invert(WorldTransform, out modelTransform);
 
             Matrix3x2 transform = other.WorldTransform * modelTransform;
-
             var comparison = Geometry.CompareWith(other.Geometry, transform, 2.0f);
-
             return comparison != CanvasGeometryRelation.Disjoint;
         }
     }
