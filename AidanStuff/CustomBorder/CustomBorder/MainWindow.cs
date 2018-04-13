@@ -15,19 +15,15 @@ namespace CustomBorder
 
         private bool mouseDown;
         private Point lastLocation;
-        public int screenx = SystemInformation.VirtualScreen.Width, screeny = SystemInformation.VirtualScreen.Height;
+        public static int screenx = SystemInformation.VirtualScreen.Width, screeny = SystemInformation.VirtualScreen.Height;
+        public int rdscreenx = (screenx / 2) + (screenx / 4), rdscreeny = (screeny / 2) + (screeny / 4);
 
         public MainWindow()
         {
             InitializeComponent();
             FormBorderStyle = FormBorderStyle.None;
-            Size = new Size(screenx, screeny);
             Text = " ";
-            Frame.Size = new Size(screenx, screeny-30);
-            CloseButton.Location = new Point(screenx - 25, 7);
-            MaximizeButton.Location = new Point(screenx - 50, 7);
-            MinimizeButton.Location = new Point(screenx - 75, 7);
-
+            setSizeAndPos(0);
             MaximizeButton.Image = global::CustomBorder.Properties.Resources.Maximize;
 
         }
@@ -46,7 +42,7 @@ namespace CustomBorder
                 {
                     WindowState = FormWindowState.Normal;
                     MaximizeButton.Image = global::CustomBorder.Properties.Resources.Maximize;
-                    Location = new Point(0, 0);
+                    setSizeAndPos(1);
                 }
                 this.Location = new Point(
                     (this.Location.X - lastLocation.X) + e.X, (this.Location.Y - lastLocation.Y) + e.Y);
@@ -70,33 +66,56 @@ namespace CustomBorder
             {
                 WindowState = FormWindowState.Normal;
                 MaximizeButton.Image = global::CustomBorder.Properties.Resources.Maximize;
+                setSizeAndPos(0);
             }
             else if(WindowState == FormWindowState.Normal)
             {
                 WindowState = FormWindowState.Maximized;
                 MaximizeButton.Image = global::CustomBorder.Properties.Resources.RestoreDown;
+                setSizeAndPos(1);
             }
         }
 
         private void MinimizeButton_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
-
         }
 
         private void FrameBorderColor(object sender, PaintEventArgs e)
         {
-            ControlPaint.DrawBorder(e.Graphics, Frame.DisplayRectangle, Color.Black, ButtonBorderStyle.Solid);
+            ControlPaint.DrawBorder(e.Graphics, Frame.DisplayRectangle, Color.Blue, ButtonBorderStyle.Solid);
         }
 
-        private void runwebbrowser()
+        //private void runwebbrowser()
+        //{
+        //    WebBrowser webBrowser1 = new System.Windows.Forms.WebBrowser();
+        //    this.Frame.Controls.Add(webBrowser1);
+        //    webBrowser1.Name = "webBrowser1";
+        //    webBrowser1.Url = new System.Uri("http://www.google.com", System.UriKind.Absolute);
+        //    resources.ApplyResources(webBrowser1, "webBrowser1");
+        //}
+        private void setSizeAndPos(int screentype)
         {
-            WebBrowser webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.Frame.Controls.Add(webBrowser1);
-            webBrowser1.Name = "webBrowser1";
-            webBrowser1.Url = new System.Uri("http://www.google.com", System.UriKind.Absolute);
-            resources.ApplyResources(webBrowser1, "webBrowser1");
+            int x = 0, y = 0;
+            switch (screentype)
+            {
+                case 0:
+                    x = rdscreenx;
+                    y = rdscreeny;
+                    Location = new Point(screenx / 8, screeny / 8);
+                    break;
+                case 1:
+                    x = screenx;
+                    y = screeny;
+                    break;
+            }
+            
+            Size = new Size(x, y);
+            Frame.Size = new Size(x, y - 30);
+            Frame.Invalidate();
+            CloseButton.Location = new Point(x - 25, 7);
+            MaximizeButton.Location = new Point(x - 50, 7);
+            MinimizeButton.Location = new Point(x - 75, 7);
         }
-
     }
 }

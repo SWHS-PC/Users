@@ -86,10 +86,16 @@
     <None Include="Resources\Minimize.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\RestoreDown.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Exit.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\RestoreDown.png" />
+    <None Include="Resources\icon_HWq_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
