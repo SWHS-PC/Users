@@ -26,7 +26,7 @@ namespace SpaceShip
             // object's model space.
             Matrix3x2 transform = other.WorldTransform * modelTransform;
 
-            // Compare the two geometries, applying the transform tNEWo the other
+            // Compare the two geometries, applying the transform to the other
             // geometry so they're both in the same coordinate space.
             var comparison = Geometry.CompareWith(other.Geometry, transform, 2.0f);
 

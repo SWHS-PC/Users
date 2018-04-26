@@ -54,6 +54,14 @@ namespace SpaceShip
             return (float)(Math.Sqrt(gravity / radius) / radius);
         }
 
+        public static Vector2 ComputeOrbitalPosition(float orbitalAngle, float orbitalRadius)
+        {
+            return new Vector2(
+                (float)Math.Cos(orbitalAngle) * orbitalRadius,
+                (float)Math.Sin(orbitalAngle) * orbitalRadius
+                );
+        }
+
         public static Vector2 ComputeOrbitalVelocity(float orbitalAngle, float orbitalRadius, float angularVelocity)
         {
             float angle = orbitalAngle + (PI * 0.5f);

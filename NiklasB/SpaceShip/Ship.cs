@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Brushes;
@@ -19,7 +17,7 @@ namespace SpaceShip
         // Constants.
         const float PI = (float)Math.PI;
         const float RotationSpeed = 0.75f * PI * 2;
-        const float Acceleration = 50;
+        const float Acceleration = 100;
 
         // A ship has an angle in addition to the position and velociy
         // inherited from MovingSpaceObject.
