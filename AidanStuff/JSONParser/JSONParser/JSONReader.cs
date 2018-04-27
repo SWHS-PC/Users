@@ -24,6 +24,7 @@ namespace JSONParser
         public JSONNodeType NodeType;
         public List<JSONNode> Array;
         public List<JSONMember> Object;
+        public object Value;
     }
 
     class JSONReader

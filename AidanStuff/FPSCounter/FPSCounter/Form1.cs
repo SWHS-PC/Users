@@ -21,23 +21,24 @@ namespace FPSCounter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Run();
+            
         }
         private void Run()
         {
-            FPS.Text = Convert.ToString(GetFps());
+            while(true){
+                FPS.Text = Convert.ToString(GetFps());
+
+            }
         }
 
         DateTime _lastCheckTime = DateTime.Now;
         long _frameCount = 0;
 
-        // called whenever a map is updated
         void OnMapUpdated()
         {
             Interlocked.Increment(ref _frameCount);
         }
 
-        // called every once in a while
         double GetFps()
         {
             double secondsElapsed = (DateTime.Now - _lastCheckTime).TotalSeconds;
