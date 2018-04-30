@@ -298,8 +298,10 @@ namespace IRCClient
             
         }
 
-        private int SetServerList(int ServerItemCount)
+        public int SetServerList(int ServerItemCount)
         {
+            Servers = System.IO.File.ReadAllLines(ServerListFile);
+
             foreach (string x in Servers)
             {
                 if (x.Split(' ')[0] == "$")
@@ -370,7 +372,6 @@ namespace IRCClient
         {
             NewServer LoadNewServer = new NewServer(this);
             LoadNewServer.Show();
-            this.Close();
         }
 
         private void OpenClientWindowPreferences(object sender, EventArgs e)
@@ -409,6 +410,11 @@ namespace IRCClient
                     return false;
                 }
             }
+        }
+
+        private void ClientWindow_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

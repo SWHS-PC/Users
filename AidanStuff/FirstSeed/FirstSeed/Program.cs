@@ -14,8 +14,14 @@ namespace FirstSeed
         public static int wx = Console.LargestWindowWidth, 
             wy = Console.LargestWindowHeight;
 
-        static void Main(string[] args)
+        
+        
+        public static void Main(string[] args)
         {
+
+            dbconnect.StartConnection();
+            return;
+
             Console.SetWindowSize(wx * 3/4, wy*3/4);
             Console.SetWindowPosition(0,0);
 

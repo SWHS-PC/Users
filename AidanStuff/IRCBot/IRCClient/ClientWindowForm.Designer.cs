@@ -54,12 +54,11 @@
             this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.textBoxServer1.Location = new System.Drawing.Point(0, 0);
             this.textBoxServer1.MaxLength = 65536;
-            this.textBoxServer1.Multiline = true;
             this.textBoxServer1.Name = "textBoxServer1";
             this.textBoxServer1.ReadOnly = true;
             this.textBoxServer1.Size = new System.Drawing.Size(1060, 628);
             this.textBoxServer1.TabIndex = 1;
-            this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
+            this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \n";
             // 
             // textBoxUsers
             // 
@@ -193,15 +192,13 @@
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
             this.Text = "IRC Client";
+            this.Load += new System.EventHandler(this.ClientWindow_Load);
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPageServer1.ResumeLayout(false);
-            this.tabPageServer1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.textBoxServer1.SelectionStart = 0;
-            this.textBoxServer1.SelectionLength = 0;
 
         }
 
