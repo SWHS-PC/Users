@@ -13,7 +13,7 @@ namespace FirstSeed
         public static MySqlConnection myConnection = new MySqlConnection("User ID=Admin;" +
                                                    "password=SalenHale21;Data Source=www.getrect.xyz;" +
                                                    "Initial Catalog=VS; " +
-                                                   "connection timeout=5;" + "SslMode=none");
+                                                   "connection timeout=5;" + "SslMode=none ");
 
         public static void StartConnection()
         {
