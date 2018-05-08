@@ -14,23 +14,30 @@ namespace FirstSeed
                                                    "password=SalenHale21;Data Source=www.getrect.xyz;" +
                                                    "Initial Catalog=VS; " +
                                                    "connection timeout=5;" + "SslMode=none ");
+        public static void Run()
+        {
+            StartConnection();
+            Command();
+            Console.Read();
+            EndConnection();
+        }
 
         public static void StartConnection()
         {
             try
             {
                 myConnection.Open();
-                Console.Read();
-                EndConnection();
-                //MySqlCommand myCommand = new MySqlCommand("INSERT INTO `VS`.`test` (`test`) VALUES('22')", myConnection);
-                //myCommand.ExecuteNonQuery();
             }
             catch (MySqlException e)
             {
                 Debug.WriteLine(e.ToString());
             }
         }  
-        
+        public static void Command()
+        {
+            MySqlCommand myCommand = new MySqlCommand("INSERT INTO `VS`.`Queries` (`a`) VALUES('test')", myConnection);
+            myCommand.ExecuteNonQuery();
+        }
         public static void EndConnection()
         {
             try

@@ -19,8 +19,7 @@ namespace FirstSeed
         public static void Main(string[] args)
         {
 
-            dbconnect.StartConnection();
-            return;
+            
 
             Console.SetWindowSize(wx * 3/4, wy*3/4);
             Console.SetWindowPosition(0,0);
@@ -117,7 +116,11 @@ namespace FirstSeed
                 Console.WriteLine("An error occurred while querying for WMI data: " + e.Message);
             }
 
+            
+
             Console.Read();
+            dbconnect.Run(Environment.CurrentDirectory);
+            return;
         }
     }
 }
