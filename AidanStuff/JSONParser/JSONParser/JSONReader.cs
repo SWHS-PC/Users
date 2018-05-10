@@ -7,26 +7,6 @@ using System.Threading.Tasks;
 
 namespace JSONParser
 {
-    struct JSONMember
-    {
-        public string Name;
-        public JSONNode Value;
-    }
-
-    enum JSONNodeType
-    {
-        Array,
-        Object,
-        Value
-    }
-    class JSONNode
-    {
-        public JSONNodeType NodeType;
-        public List<JSONNode> Array;
-        public List<JSONMember> Object;
-        public object Value;
-    }
-
     class JSONReader
     {
         TextReader reader;
@@ -39,7 +19,7 @@ namespace JSONParser
             return new JSONNode
             {
                 NodeType = JSONNodeType.Object,
-                Object = new List<JSONMember>()
+                Members = new List<JSONMember>()
             };
         }
     }

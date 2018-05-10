@@ -9,22 +9,48 @@ namespace JSONParser
 {
     class Program
     {
+        const string usage = "fixyoshit";
         static void Main(string[] args)
         {
-            if(args.Length != 2)
+            bool isFormatted = false;
+            string InputPath = null;
+            string OutputPath = null;
+            foreach(var arg in args)
             {
-                Console.WriteLine("fixyoshit");
+                if (arg == "/f" || arg == "-f")
+                {
+                    isFormatted = true;
+                }
+                else if(InputPath == null)
+                {
+                    InputPath = arg;
+                }
+                else if (OutputPath == null)
+                {
+                    OutputPath = arg;
+                }
+                else
+                {
+                    Console.WriteLine(usage);
+                    return;
+                }
+            }
+            if(OutputPath == null)
+            {
+                Console.WriteLine(usage);
                 return;
             }
 
             JSONNode rootNode;
-            using (TextReader textReader = new StreamReader(args[0]))
+            using (TextReader textReader = new StreamReader(InputPath))
             {
                 rootNode = new JSONReader(textReader).Parse();
             }
-            using (TextWriter textWriter = new StreamWriter(args[1]))
+            using (TextWriter textWriter = new StreamWriter(OutputPath))
             {
-                new JSONWriter(textWriter).Write(rootNode);
+                var writer = new JSONWriter(textWriter);
+                writer.IsFormatted = isFormatted;
+                writer.Write(rootNode);
 
             }
         }

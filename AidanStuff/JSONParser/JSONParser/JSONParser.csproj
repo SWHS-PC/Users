@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSONNode.cs" />
     <Compile Include="JSONReader.cs" />
     <Compile Include="JSONWriter.cs" />
     <Compile Include="Program.cs" />
@@ -49,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="out.json" />
     <None Include="test.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
