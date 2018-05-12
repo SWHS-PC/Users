@@ -2,112 +2,115 @@
 #include "Lexer.h"
 #include "Expression.h"
 
-Number FunctionExpression::Evaluate(ExpressionContext const& context) const
-{
-    size_t const argCount = ParamCount();
+namespace num {
 
-    std::vector<Number> args(argCount);
-
-    for (size_t i = 0; i < argCount; ++i)
+    Number FunctionExpression::Evaluate(ExpressionContext const& context) const
     {
-        args[i] = args_[i]->Evaluate(context);
-    }
+        size_t const argCount = ParamCount();
 
-    return functionDef_->expression->Evaluate(ExpressionContext(args));
-}
+        std::vector<Number> args(argCount);
 
-void FunctionExpression::Print() const
-{
-    printf("%s(", functionDef_->name.c_str());
-
-    size_t const argCount = args_.size();
-    for (size_t i = 0; i < argCount; ++i)
-    {
-        if (i > 0)
+        for (size_t i = 0; i < argCount; ++i)
         {
-            fputs(", ", stdout);
+            args[i] = args_[i]->Evaluate(context);
         }
 
-        args_[i]->Print();
+        return functionDef_->expression->Evaluate(ExpressionContext(args));
     }
 
-    fputc(')', stdout);
-}
-
-Number UnaryExpression::Evaluate(ExpressionContext const& context) const
-{
-    Number value = arg_->Evaluate(context);
-
-    if (value.isDouble || op_->intFunc == nullptr)
+    void FunctionExpression::Print() const
     {
-        if (op_->doubleFunc == nullptr)
+        printf("%s(", functionDef_->name.c_str());
+
+        size_t const argCount = args_.size();
+        for (size_t i = 0; i < argCount; ++i)
         {
-            throw EvaluationException(
-                sourceExpression_, 
-                charIndex_, 
-                "Operation not defined for double."
+            if (i > 0)
+            {
+                fputs(", ", stdout);
+            }
+
+            args_[i]->Print();
+        }
+
+        fputc(')', stdout);
+    }
+
+    Number UnaryExpression::Evaluate(ExpressionContext const& context) const
+    {
+        Number value = arg_->Evaluate(context);
+
+        if (value.isDouble || op_->intFunc == nullptr)
+        {
+            if (op_->doubleFunc == nullptr)
+            {
+                throw EvaluationException(
+                    sourceExpression_,
+                    charIndex_,
+                    "Operation not defined for double."
                 );
+            }
+
+            return op_->doubleFunc(value.doubleValue);
         }
-
-        return op_->doubleFunc(value.doubleValue);
-    }
-    else
-    {
-        return op_->intFunc(value.intValue);
-    }
-}
-
-void UnaryExpression::Print() const
-{
-    fputs(op_->str, stdout);
-    arg_->Print();
-}
-
-Number BinaryExpression::Evaluate(ExpressionContext const& context) const
-{
-    Number left = leftArg_->Evaluate(context);
-    Number right = rightArg_->Evaluate(context);
-
-    if (left.isDouble || right.isDouble || op_->intFunc == nullptr)
-    {
-        if (op_->doubleFunc == nullptr)
+        else
         {
-            throw EvaluationException(
-                sourceExpression_,
-                charIndex_,
-                "Operation not defined for double."
-                );
+            return op_->intFunc(value.intValue);
         }
-
-        return op_->doubleFunc(left.doubleValue, right.doubleValue);
     }
-    else
+
+    void UnaryExpression::Print() const
     {
-        return op_->intFunc(left.intValue, right.intValue);
+        fputs(op_->str, stdout);
+        arg_->Print();
     }
-}
 
-void BinaryExpression::Print() const
-{
-    fputc('(', stdout);
-    leftArg_->Print();
-    printf(") %s (", op_->str);
-    rightArg_->Print();
-    fputc(')', stdout);
-}
+    Number BinaryExpression::Evaluate(ExpressionContext const& context) const
+    {
+        Number left = leftArg_->Evaluate(context);
+        Number right = rightArg_->Evaluate(context);
 
-Number TernaryExpression::Evaluate(ExpressionContext const& context) const
-{
-    auto test = test_->Evaluate(context);
-    return test.doubleValue != 0 ? first_->Evaluate(context) : second_->Evaluate(context);
-}
+        if (left.isDouble || right.isDouble || op_->intFunc == nullptr)
+        {
+            if (op_->doubleFunc == nullptr)
+            {
+                throw EvaluationException(
+                    sourceExpression_,
+                    charIndex_,
+                    "Operation not defined for double."
+                );
+            }
 
-void TernaryExpression::Print() const
-{
-    test_->Print();
-    fputs(" ? ", stdout);
-    first_->Print();
-    fputs(" : ", stdout);
-    second_->Print();
-}
+            return op_->doubleFunc(left.doubleValue, right.doubleValue);
+        }
+        else
+        {
+            return op_->intFunc(left.intValue, right.intValue);
+        }
+    }
 
+    void BinaryExpression::Print() const
+    {
+        fputc('(', stdout);
+        leftArg_->Print();
+        printf(") %s (", op_->str);
+        rightArg_->Print();
+        fputc(')', stdout);
+    }
+
+    Number TernaryExpression::Evaluate(ExpressionContext const& context) const
+    {
+        auto test = test_->Evaluate(context);
+        return test.doubleValue != 0 ? first_->Evaluate(context) : second_->Evaluate(context);
+    }
+
+    void TernaryExpression::Print() const
+    {
+        test_->Print();
+        fputs(" ? ", stdout);
+        first_->Print();
+        fputs(" : ", stdout);
+        second_->Print();
+    }
+
+} // end namespace num
