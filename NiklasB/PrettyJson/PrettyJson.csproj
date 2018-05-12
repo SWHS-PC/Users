@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonNode.cs" />
     <Compile Include="JsonReader.cs" />
     <Compile Include="JsonWriter.cs" />
     <Compile Include="Program.cs" />

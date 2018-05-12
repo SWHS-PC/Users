@@ -6,26 +6,58 @@ namespace PrettyJson
 {
     class Program
     {
+        const string Usage = "PrettyJson [/f] <input.json> <output.json>";
+
         static void Main(string[] args)
         {
-            if (args.Length != 2)
+            bool isFormatted = false;
+            string inputPath = null;
+            string outputPath = null;
+
+            foreach (var arg in args)
             {
-                Console.WriteLine("PrettyJson <input.json> <output.json");
+                if (arg == "/f" || arg == "-f")
+                {
+                    isFormatted = true;
+                }
+                else if (inputPath == null)
+                {
+                    inputPath = arg;
+                }
+                else if (outputPath == null)
+                {
+                    outputPath = arg;
+                }
+                else
+                {
+                    // Too many arguments or invalid arg.
+                    Console.WriteLine(Usage);
+                    return;
+                }
+            }
+
+            if (outputPath == null)
+            {
+                // Too few arguments.
+                Console.WriteLine(Usage);
                 return;
             }
 
             JsonNode rootNode;
 
             // Read the input JSON.
-            using (TextReader textReader = new StreamReader(args[0]))
+            using (TextReader textReader = new StreamReader(inputPath))
             {
-                rootNode = new JsonReader(textReader).Parse();
+                var reader = new JsonReader(textReader);
+                rootNode = reader.Parse();
             }
 
             // Write the output JSON.
-            using (TextWriter textWriter = new StreamWriter(args[1]))
+            using (TextWriter textWriter = new StreamWriter(outputPath))
             {
-                new JsonWriter(textWriter).Write(rootNode);
+                var writer = new JsonWriter(textWriter);
+                writer.IsFormatted = isFormatted;
+                writer.Write(rootNode);
             }
         }
     }

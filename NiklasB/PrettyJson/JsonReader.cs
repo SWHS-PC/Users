@@ -4,27 +4,6 @@ using System.Collections.Generic;
 
 namespace PrettyJson
 {
-    enum JsonNodeType
-    {
-        Array,
-        Object,
-        Value
-    }
-
-    class JsonNode
-    {
-        public JsonNodeType NodeType;
-        public List<JsonNode> Array;
-        public List<JsonMember> Object;
-        public object Value;
-    }
-
-    struct JsonMember
-    {
-        public string Name;
-        public JsonNode Value;
-    }
-
     /// <summary>
     /// Parses JSON into a tree of JsonNode according to
     /// the grammer defined at http://json.org.
@@ -39,11 +18,38 @@ namespace PrettyJson
         public JsonNode Parse()
         {
             // TODO
-            return new JsonNode
+            var node = new JsonNode
             {
                 NodeType = JsonNodeType.Object,
-                Object = new List<JsonMember>()
+                Members = new List<JsonMember>()
             };
+
+            node.Members.Add(new JsonMember
+            {
+                Name = "foo",
+                Value = new JsonNode
+                {
+                    NodeType = JsonNodeType.Value,
+                    Value = "Hello"
+                }
+            });
+
+            var elements = new List<JsonNode>();
+            elements.Add(new JsonNode { NodeType = JsonNodeType.Value, Value = 1 });
+            elements.Add(new JsonNode { NodeType = JsonNodeType.Value, Value = 2.00001 });
+            elements.Add(new JsonNode { NodeType = JsonNodeType.Value, Value = "element 3" });
+
+            node.Members.Add(new JsonMember
+            {
+                Name = "fred",
+                Value = new JsonNode
+                {
+                    NodeType = JsonNodeType.Array,
+                    Elements = elements
+                }
+            });
+
+            return node;
         }
 
         TextReader _reader;
