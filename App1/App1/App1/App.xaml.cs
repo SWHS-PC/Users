@@ -13,8 +13,22 @@ namespace App1
 		{
 			InitializeComponent();
 
-			MainPage = new App1.Main();
-		}
+			//MainPage = new App1.Main();
+            MainPage = new ContentPage
+            {
+               
+                //Content = new Label
+                //{
+                //    Text = "Hello, Forms !",
+                //    VerticalOptions = LayoutOptions.CenterAndExpand,
+                //    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                //    BackgroundColor = Color.Black,
+                //    TextColor = Color.White
+                //}
+            };
+
+            
+        }
 
 		protected override void OnStart ()
 		{
