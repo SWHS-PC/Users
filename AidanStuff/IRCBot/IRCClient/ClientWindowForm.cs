@@ -94,17 +94,12 @@ namespace IRCClient
                             break;
                         case "353":
                             ActiveChannels.Add(splitInput[4]);
-                            foreach (string x in ActiveChannels)
-                            {
-                                Console.WriteLine(x);
-                            }
-                            UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
-                            for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
-                            {
-                          
-                                    textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
-                               
-                            }
+                            //foreach (string x in ActiveChannels)
+                            //{
+                            //    Console.WriteLine(x);
+                            //}
+                            ChanSent = splitInput[4];
+                            SetUsersInChan();
                             break;
                         
                     }
@@ -186,6 +181,17 @@ namespace IRCClient
             catch (IndexOutOfRangeException e)
             {
                 Console.WriteLine(e);
+            }
+        }
+        private void SetUsersInChan()
+        {
+            ChanNum = GetTab(1);
+            UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
+            for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
+            {
+
+                textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
+
             }
         }
 
