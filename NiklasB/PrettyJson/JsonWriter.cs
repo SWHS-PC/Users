@@ -137,8 +137,46 @@ namespace PrettyJson
 
         void WriteString(string value)
         {
-            // TODO - escape special characters
-            _writer.Write($"\"{value}\"");
+            _writer.Write('\"');
+
+            foreach (char ch in value)
+            {
+                switch (ch)
+                {
+                    case '\\':
+                        _writer.Write("\\\\");
+                        break;
+
+                    case '\"':
+                        _writer.Write("\\\"");
+                        break;
+
+                    case '\t':
+                        _writer.Write("\\t");
+                        break;
+
+                    case '\n':
+                        _writer.Write("\\n");
+                        break;
+
+                    case '\r':
+                        _writer.Write("\\r");
+                        break;
+
+                    default:
+                        if (ch >= 0x20 && ch <= 0x7f)
+                        {
+                            _writer.Write(ch);
+                        }
+                        else
+                        {
+                            _writer.Write($"\\u{(uint)ch:X4}");
+                        }
+                        break;
+                }
+            }
+
+            _writer.Write('\"');
         }
 
         void EndLine()
