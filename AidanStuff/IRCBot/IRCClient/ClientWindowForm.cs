@@ -28,7 +28,7 @@ namespace IRCClient
         public string ChanDestination;
         public int ChanNum = 0;
         List<string> ActiveChannels = new List<string>();
-        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "PART"};
+        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "PART" };
         string[] IdsToAvoid = { "004", "005", "366", "353", "333", "332" };
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
@@ -40,7 +40,7 @@ namespace IRCClient
         {
             InitializeComponent();
             ActiveControl = textBoxEnter;
-            
+
             tabPageServer1.Text = "";
 
             int ServerItemCount = 0;
@@ -99,9 +99,9 @@ namespace IRCClient
                             //    Console.WriteLine(x);
                             //}
                             ChanSent = splitInput[4];
-                            SetUsersInChan();
+                            //SetUsersInChan();
                             break;
-                        
+
                     }
 
                     if (splitInput[0] == "PING")
@@ -146,7 +146,7 @@ namespace IRCClient
                         {
                             case "PRIVMSG":
                                 FilteredInput = MessageSender + "> " + Regex.Split(input, ChanSent + " :")[1];
-                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput, 2);
                                 break;
                             case "JOIN":
                                 FilteredInput = MessageSender + " Joined " + ChanSent + ".";
@@ -154,11 +154,11 @@ namespace IRCClient
                                 {
                                     AddNewChan(ChanSent);
                                 }
-                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput, 2);
                                 break;
                             case "PART":
                                 FilteredInput = MessageSender + " Left " + splitInput[2] + " " + splitInput[3].Replace(":", "") + ".";
-                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput,2);
+                                SetTextColorAndAppend(Color.Black, Color.Black, FilteredInput, 2);
                                 break;
                             case "USER":
 
@@ -190,7 +190,7 @@ namespace IRCClient
             for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
             {
 
-                textBoxUsers.AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
+                userListServer1Chan[ChanNum].AppendText(UsersInChannel[ChanNum].Split(' ')[i] + "\r\n");
 
             }
         }
@@ -203,7 +203,8 @@ namespace IRCClient
             {
                 textBoxServer1.AppendText(content + "\r\n");
             }
-            else if(x == 2){
+            else if (x == 2)
+            {
                 textBoxServer1Chan[GetTab(1)].AppendText(content + "\r\n");
             }
             else if (x == 3)
@@ -220,7 +221,7 @@ namespace IRCClient
             if (e.KeyChar == (char)Keys.Return)
             {
                 e.Handled = true;
-                
+
                 string TextToSend;
                 string[] TextSplit = textBoxEnter.Text.Split(' ');
                 char[] TextSplitChar = textBoxEnter.Text.Split(' ')[0].ToCharArray();
@@ -237,7 +238,7 @@ namespace IRCClient
                     }
                     if (IsConnected == true)
                     {
-                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1 )
+                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
                         {
                             send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
                         }
@@ -253,7 +254,7 @@ namespace IRCClient
                         send.Flush();
                     }
                     else
-                    {      
+                    {
                         textBoxServer1.AppendText("Connect to a server to send a message." + "\r\n");
                     }
                 }
@@ -263,45 +264,64 @@ namespace IRCClient
 
         public void AddNewChan(string JoinedChan)
         {
-            
-           
-                    textBoxServer1Chan[ChanNum] = new TextBox();
-                    tabPageServer1Chan[ChanNum] = new TabPage();
-                    tabPageServer1Chan[ChanNum].Controls.Add(textBoxServer1Chan[ChanNum]);
-                    tabControl.TabPages.Add(tabPageServer1Chan[ChanNum]);
 
-                    textBoxServer1Chan[ChanNum].AcceptsReturn = true;
-                    textBoxServer1Chan[ChanNum].AcceptsTab = true;
-                    textBoxServer1Chan[ChanNum].Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-                    textBoxServer1Chan[ChanNum].BackColor = SystemColors.Window;
-                    textBoxServer1Chan[ChanNum].CausesValidation = false;
-                    textBoxServer1Chan[ChanNum].HideSelection = false;
-                    textBoxServer1Chan[ChanNum].ImeMode = ImeMode.Off;
-                    textBoxServer1Chan[ChanNum].Location = new System.Drawing.Point(0, 0);
-                    textBoxServer1Chan[ChanNum].MaxLength = 65536;
-                    textBoxServer1Chan[ChanNum].Multiline = true;
-                    textBoxServer1Chan[ChanNum].Name = JoinedChan;
-                    textBoxServer1Chan[ChanNum].ReadOnly = true;
-                    textBoxServer1Chan[ChanNum].ScrollBars = ScrollBars.Vertical;
-                    textBoxServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
-                    textBoxServer1Chan[ChanNum].TabIndex = ChanNum;
-                    textBoxServer1Chan[ChanNum].Text = "";
-                    textBoxServer1Chan[ChanNum].SelectionStart = 0;
-                    textBoxServer1Chan[ChanNum].SelectionLength = 0;
-                    
-                    
-                    tabPageServer1Chan[ChanNum].Location = new System.Drawing.Point(4, 22);
-                    tabPageServer1Chan[ChanNum].Name = JoinedChan + " " + Convert.ToString(ChanNum);
-                    tabPageServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
-                    tabPageServer1Chan[ChanNum].TabIndex = ChanNum;
-                    tabPageServer1Chan[ChanNum].UseVisualStyleBackColor = true;
-                    tabPageServer1Chan[ChanNum].ResumeLayout(false);
-                    tabPageServer1Chan[ChanNum].PerformLayout();
-                    tabPageServer1Chan[ChanNum].Text = JoinedChan;
 
-                    
-                    ChanNum++;
-            
+            textBoxServer1Chan[ChanNum] = new RichTextBox();
+            tabPageServer1Chan[ChanNum] = new TabPage();
+            userListServer1Chan[ChanNum] = new TextBox();
+
+            tabPageServer1Chan[ChanNum].Controls.Add(textBoxServer1Chan[ChanNum]);
+            tabPageServer1Chan[ChanNum].Controls.Add(userListServer1Chan[ChanNum]);
+            tabControl.TabPages.Add(tabPageServer1Chan[ChanNum]);
+
+            textBoxServer1Chan[ChanNum].AcceptsTab = true;
+            textBoxServer1Chan[ChanNum].Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            textBoxServer1Chan[ChanNum].BackColor = SystemColors.Window;
+            textBoxServer1Chan[ChanNum].CausesValidation = false;
+            textBoxServer1Chan[ChanNum].HideSelection = false;
+            textBoxServer1Chan[ChanNum].ImeMode = ImeMode.Off;
+            textBoxServer1Chan[ChanNum].Location = new System.Drawing.Point(0, 0);
+            textBoxServer1Chan[ChanNum].MaxLength = 65536;
+            textBoxServer1Chan[ChanNum].Multiline = true;
+            textBoxServer1Chan[ChanNum].Name = JoinedChan;
+            textBoxServer1Chan[ChanNum].ReadOnly = true;
+            textBoxServer1Chan[ChanNum].ScrollBars = RichTextBoxScrollBars.Vertical;
+            textBoxServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
+            textBoxServer1Chan[ChanNum].TabIndex = ChanNum;
+            textBoxServer1Chan[ChanNum].Text = "";
+            textBoxServer1Chan[ChanNum].SelectionStart = 0;
+            textBoxServer1Chan[ChanNum].SelectionLength = 0;
+
+            userListServer1Chan[ChanNum].AcceptsTab = true;
+            userListServer1Chan[ChanNum].Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            userListServer1Chan[ChanNum].BackColor = System.Drawing.Color.White;
+            userListServer1Chan[ChanNum].BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            userListServer1Chan[ChanNum].CausesValidation = false;
+            userListServer1Chan[ChanNum].HideSelection = false;
+            userListServer1Chan[ChanNum].ImeMode = System.Windows.Forms.ImeMode.Off;
+            userListServer1Chan[ChanNum].Location = new System.Drawing.Point(1060, 0);
+            userListServer1Chan[ChanNum].MaxLength = 65536;
+            userListServer1Chan[ChanNum].Multiline = true;
+            userListServer1Chan[ChanNum].Name = "textBoxUsers";
+            userListServer1Chan[ChanNum].ReadOnly = true;
+            userListServer1Chan[ChanNum].ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            userListServer1Chan[ChanNum].Size = new System.Drawing.Size(260, 625);
+            userListServer1Chan[ChanNum].TabIndex = 2;
+
+
+            tabPageServer1Chan[ChanNum].Location = new System.Drawing.Point(4, 22);
+            tabPageServer1Chan[ChanNum].Name = JoinedChan + " " + Convert.ToString(ChanNum);
+            tabPageServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
+            tabPageServer1Chan[ChanNum].TabIndex = ChanNum;
+            tabPageServer1Chan[ChanNum].UseVisualStyleBackColor = true;
+            tabPageServer1Chan[ChanNum].ResumeLayout(false);
+            tabPageServer1Chan[ChanNum].PerformLayout();
+            tabPageServer1Chan[ChanNum].Text = JoinedChan;
+
+
+            ChanNum++;
+
         }
 
         public int SetServerList(int ServerItemCount)
@@ -338,17 +358,17 @@ namespace IRCClient
             int ChanSelected = 0;
             if (SC == 1)
             {
-                foreach(TabPage x in tabPageServer1Chan)
+                foreach (TabPage x in tabPageServer1Chan)
                 {
-                    if(tabPageServer1Chan[Array.IndexOf(tabPageServer1Chan, x)].Name.Split(' ')[0] == ChanSent)
+                    if (tabPageServer1Chan[Array.IndexOf(tabPageServer1Chan, x)].Name.Split(' ')[0] == ChanSent)
                     {
                         ChanSelected = Array.IndexOf(tabPageServer1Chan, x);
                         return ChanSelected;
                     }
                 }
             }
-            
-            if(SC == 3)
+
+            if (SC == 3)
             {
                 Console.WriteLine(tabControl.SelectedTab.Name);
 
@@ -357,7 +377,7 @@ namespace IRCClient
 
             return ChanSelected;
         }
-        
+
         private void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
             if (IsConnected)
@@ -417,10 +437,6 @@ namespace IRCClient
                 }
             }
         }
-
-        private void ClientWindow_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }
+
