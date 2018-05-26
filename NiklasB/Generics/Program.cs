@@ -29,6 +29,11 @@ namespace Generics
             var queue = new Queue<int>();
             TestQueue(numbers, queue);
 
+            // Test our priority queue implementation.
+            Console.WriteLine("\nPriorityQueue:");
+            var priorityQueue = new PriorityQueue<int>((int a, int b) => a < b);
+            TestQueue(numbers, priorityQueue);
+
             Console.WriteLine("\nPress ENTER to exit.");
             Console.ReadLine();
         }
@@ -56,7 +61,7 @@ namespace Generics
             Console.WriteLine();
         }
 
-        static void TestQueue(int[] numbers, Queue<int> queue)
+        static void TestQueue(int[] numbers, IQueue<int> queue)
         {
             foreach (int n in numbers)
             {

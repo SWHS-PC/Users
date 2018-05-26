@@ -3,9 +3,17 @@ using System.Collections.Generic;
 
 namespace Generics
 {
+    interface IQueue<T>
+    {
+        int Count { get; }
+        T Front { get; }
+        void Push(T item);
+        void Pop();
+    }
+
     // A queue is first-in-first-out (FIFO), so items are added at the end
     // (by Push) and removed from the beginning (by Pop).
-    class Queue<T>
+    class Queue<T> : IQueue<T>
     {
         // We want Pop to be a fast, so when removing the first item from the
         // queue we don't want to have to copy all the other items to fill the
