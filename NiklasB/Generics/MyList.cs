@@ -36,7 +36,10 @@ namespace Generics
             {
                 // We have an array, but it's not big enough. Allocate a new 
                 // array that's double the size of the old one or the specified
-                // minimum, whichever is greater.
+                // minimum, whichever is greater. We double the size of the array
+                // each time instead of increasing the size by a constant amount
+                // in order to ensure that the amortized cost of Add is O(1). See
+                // https://en.wikipedia.org/wiki/Amortized_analysis.
                 int c = Math.Max(_items.Length * 2, minCapacity);
                 var newItems = new T[c];
                 Array.Copy(_items, newItems, _count);
