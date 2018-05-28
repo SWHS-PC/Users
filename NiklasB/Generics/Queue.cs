@@ -11,8 +11,10 @@ namespace Generics
         void Pop();
     }
 
-    // A queue is first-in-first-out (FIFO), so items are added at the end
-    // (by Push) and removed from the beginning (by Pop).
+    // A queue is a collection of items to be accessed in first-in-first-out
+    // order (FIFO). Items are added to the end of the queue by the Push method
+    // and removed from the beginning of the queue by the Pop method. Thus, the
+    // first item added is the first item removed.
     class Queue<T> : IQueue<T>
     {
         // We want Pop to be a fast, so when removing the first item from the
