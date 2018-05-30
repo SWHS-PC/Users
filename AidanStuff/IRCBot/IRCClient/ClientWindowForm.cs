@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace IRCClient
 {
@@ -83,7 +84,7 @@ namespace IRCClient
 
                 while ((input = await recieve.ReadLineAsync()) != null)
                 {
-                    Console.WriteLine(input);
+                    //Debug.WriteLine("Debug: " + input);
                     string[] splitInput = input.Split(' ');
 
                     switch (splitInput[1])
@@ -94,12 +95,8 @@ namespace IRCClient
                             break;
                         case "353":
                             ActiveChannels.Add(splitInput[4]);
-                            //foreach (string x in ActiveChannels)
-                            //{
-                            //    Console.WriteLine(x);
-                            //}
                             ChanSent = splitInput[4];
-                            //SetUsersInChan();
+                            SetUsersInChan();
                             break;
 
                     }
@@ -180,12 +177,13 @@ namespace IRCClient
             }
             catch (IndexOutOfRangeException e)
             {
-                Console.WriteLine(e);
+                //Debug.WriteLine("Debug: " + e);
             }
         }
         private void SetUsersInChan()
         {
             ChanNum = GetTab(1);
+            //Debug.WriteLine("Debug: " + Regex.Split(input.TrimStart(':', ' '), ":")[1].Split(' ').Length);
             UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
             for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
             {
@@ -307,7 +305,7 @@ namespace IRCClient
             userListServer1Chan[ChanNum].ReadOnly = true;
             userListServer1Chan[ChanNum].ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             userListServer1Chan[ChanNum].Size = new System.Drawing.Size(260, 625);
-            userListServer1Chan[ChanNum].TabIndex = 2;
+            userListServer1Chan[ChanNum].TabIndex = ChanNum;
 
 
             tabPageServer1Chan[ChanNum].Location = new System.Drawing.Point(4, 22);
@@ -323,6 +321,7 @@ namespace IRCClient
             ChanNum++;
 
         }
+        
 
         public int SetServerList(int ServerItemCount)
         {
@@ -360,7 +359,8 @@ namespace IRCClient
             {
                 foreach (TabPage x in tabPageServer1Chan)
                 {
-                    if (tabPageServer1Chan[Array.IndexOf(tabPageServer1Chan, x)].Name.Split(' ')[0] == ChanSent)
+                    //Debug.WriteLine("Debug: " + x);
+                    if (x.Name.Split(' ')[0] == ChanSent)
                     {
                         ChanSelected = Array.IndexOf(tabPageServer1Chan, x);
                         return ChanSelected;
@@ -370,7 +370,7 @@ namespace IRCClient
 
             if (SC == 3)
             {
-                Console.WriteLine(tabControl.SelectedTab.Name);
+                //Debug.WriteLine("Debug: " + tabControl.SelectedTab.Name);
 
                 ChanSelected = Convert.ToInt32(Convert.ToString(tabControl.SelectedTab.Name).Split(' ')[1]);
             }
@@ -386,6 +386,19 @@ namespace IRCClient
                 send.Flush();
                 textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
                 //textBoxServer1Chan1.Visible = false;
+                foreach (RichTextBox x in textBoxServer1Chan)
+                {
+                    x.Dispose();
+                }
+                foreach (TextBox x in userListServer1Chan)
+                {
+                    x.Dispose();
+                }
+                foreach (TabPage x in tabPageServer1Chan)
+                {
+                    x.Dispose();
+                }
+                
             }
             else
             {
