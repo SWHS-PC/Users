@@ -29,6 +29,11 @@ namespace Generics
             var queue = new Queue<int>();
             TestQueue(numbers, queue);
 
+            // Test our linked queue implementation.
+            Console.WriteLine("\nLinkedQueue:");
+            var linkedQueue = new LinkedQueue<int>();
+            TestQueue(numbers, linkedQueue);
+
             // Test our priority queue implementation.
             Console.WriteLine("\nPriorityQueue:");
             var priorityQueue = new PriorityQueue<int>((int a, int b) => a < b);
