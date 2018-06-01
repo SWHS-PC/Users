@@ -236,9 +236,12 @@ namespace IRCClient
                     }
                     if (IsConnected == true)
                     {
-                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
+                        if (TextSplitChar.Length > 0)
                         {
-                            send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
+                            if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
+                            {
+                                send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
+                            }
                         }
                         else
                         {
@@ -378,32 +381,40 @@ namespace IRCClient
             return ChanSelected;
         }
 
-        private void DiconnectFromSelectedServer(object sender, EventArgs e)
+        public void DiconnectFromSelectedServer(object sender, EventArgs e)
         {
             if (IsConnected)
             {
                 send.WriteLine("QUIT Bye");
                 send.Flush();
                 textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
-                //textBoxServer1Chan1.Visible = false;
+                textBoxServer1.Name = " ";
                 foreach (RichTextBox x in textBoxServer1Chan)
                 {
-                    x.Dispose();
+                    if(x != null)
+                    {
+                        textBoxServer1Chan[Array.IndexOf(textBoxServer1Chan, x)].Dispose();
+                    }
                 }
                 foreach (TextBox x in userListServer1Chan)
                 {
-                    x.Dispose();
+                    if (x != null)
+                    {
+                        userListServer1Chan[Array.IndexOf(userListServer1Chan, x)].Dispose();
+                    }
                 }
                 foreach (TabPage x in tabPageServer1Chan)
                 {
-                    x.Dispose();
+                    if (x != null)
+                    {
+                        tabPageServer1Chan[Array.IndexOf(tabPageServer1Chan, x)].Dispose();
+                    }
                 }
                 
             }
             else
             {
                 textBoxServer1.Text = "You need to connect to a server before you can Disconnect \r\n";
-                //textBoxServer1Chan1.Text = "You need to connect to a server before you can Disconnect \r\n";
             }
         }
 
