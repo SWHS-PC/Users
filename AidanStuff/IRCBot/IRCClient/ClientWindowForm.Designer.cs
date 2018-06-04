@@ -44,21 +44,22 @@
             // textBoxServer1
             // 
             this.textBoxServer1.AcceptsTab = true;
-            this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxServer1.BackColor = System.Drawing.Color.White;
-            this.textBoxServer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxServer1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxServer1.CausesValidation = false;
             this.textBoxServer1.HideSelection = false;
-            this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.textBoxServer1.Location = new System.Drawing.Point(0, 0);
             this.textBoxServer1.MaxLength = 65536;
             this.textBoxServer1.Name = "textBoxServer1";
             this.textBoxServer1.ReadOnly = true;
-            this.textBoxServer1.Size = new System.Drawing.Size(1050, 625);
+            this.textBoxServer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.textBoxServer1.Size = new System.Drawing.Size(1318, 625);
             this.textBoxServer1.TabIndex = 1;
             this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \n";
-            
             // 
             // textBoxEnter
             // 
@@ -69,13 +70,13 @@
             this.textBoxEnter.ImeMode = System.Windows.Forms.ImeMode.On;
             this.textBoxEnter.Location = new System.Drawing.Point(12, 698);
             this.textBoxEnter.Name = "textBoxEnter";
-            this.textBoxEnter.Size = new System.Drawing.Size(1068, 20);
+            this.textBoxEnter.Size = new System.Drawing.Size(1326, 20);
             this.textBoxEnter.TabIndex = 3;
             this.textBoxEnter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Return);
             // 
             // menuStripTopNav
             // 
-            this.menuStripTopNav.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.menuStripTopNav.BackColor = System.Drawing.SystemColors.Control;
             this.menuStripTopNav.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.serverToolStripMenuItem,
             this.settingsToolStripMenuItem});
@@ -143,6 +144,9 @@
             // 
             // tabControl
             // 
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tabPageServer1);
             this.tabControl.Location = new System.Drawing.Point(12, 41);
             this.tabControl.Name = "tabControl";
@@ -172,12 +176,12 @@
             this.Controls.Add(this.menuStripTopNav);
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
-            this.Text = "IRC Client";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.Text = "Blade IRC";
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPageServer1.ResumeLayout(false);
-            this.tabPageServer1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
