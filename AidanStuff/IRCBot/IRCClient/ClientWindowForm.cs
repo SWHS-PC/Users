@@ -241,18 +241,25 @@ namespace IRCClient
                     }
                     if (IsConnected == true)
                     {
-                        if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
+                        if (Convert.ToString(tabControl.SelectedTab.Name) == "#" + TrimServerToName)
                         {
-                            send.WriteLine(TextSplit[0].TrimStart('/') + " " + TextToSend);
+                            send.WriteLine(textBoxEnter.Text);
                         }
                         else
                         {
                             SC = 3;
                             ChanDestination = Convert.ToString(tabControl.SelectedTab.Name).Split(' ')[0];
                             string textEntered = "PRIVMSG " + ChanDestination + " " + textBoxEnter.Text;
+
+                            if (TextSplitChar.Length > 0)
+                            {
+                                if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
+                                {
+                                    textEntered = TextSplit[0].TrimStart('/') + " " + TextToSend;
+                                }
+                            }
                             send.WriteLine(textEntered);
                             SetTextColorAndAppend(Color.Black, Color.Black, nick + "> " + textBoxEnter.Text, 3);
-
                         }
                         send.Flush();
                     }
@@ -290,7 +297,7 @@ namespace IRCClient
             textBoxServer1Chan[ChanNum].Name = JoinedChan;
             textBoxServer1Chan[ChanNum].ReadOnly = true;
             textBoxServer1Chan[ChanNum].ScrollBars = RichTextBoxScrollBars.Vertical;
-            textBoxServer1Chan[ChanNum].Size = new System.Drawing.Size(1060, 628);
+            textBoxServer1Chan[ChanNum].Size = new System.Drawing.Size(1085, 625);
             textBoxServer1Chan[ChanNum].TabIndex = ChanNum;
             textBoxServer1Chan[ChanNum].Text = "";
             textBoxServer1Chan[ChanNum].SelectionStart = 0;
@@ -304,13 +311,13 @@ namespace IRCClient
             userListServer1Chan[ChanNum].CausesValidation = false;
             userListServer1Chan[ChanNum].HideSelection = false;
             userListServer1Chan[ChanNum].ImeMode = System.Windows.Forms.ImeMode.Off;
-            userListServer1Chan[ChanNum].Location = new System.Drawing.Point(1160, 0);
+            userListServer1Chan[ChanNum].Location = new System.Drawing.Point(1086, 0);
             userListServer1Chan[ChanNum].MaxLength = 65536;
             userListServer1Chan[ChanNum].Multiline = true;
             userListServer1Chan[ChanNum].Name = "textBoxUsers";
             userListServer1Chan[ChanNum].ReadOnly = true;
             userListServer1Chan[ChanNum].ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            userListServer1Chan[ChanNum].Size = new System.Drawing.Size(160, 625);
+            userListServer1Chan[ChanNum].Size = new System.Drawing.Size(232, 625);
             userListServer1Chan[ChanNum].TabIndex = ChanNum;
 
             tabPageServer1Chan[ChanNum].Location = new System.Drawing.Point(4, 22);
