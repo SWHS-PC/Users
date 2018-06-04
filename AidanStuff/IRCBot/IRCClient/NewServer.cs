@@ -22,6 +22,10 @@ namespace IRCClient
         private void CloseNewServerDialogue(Object sender, EventArgs e)
         {
             string content = "$ " + textBoxHostname.Text + " " + textBoxPort.Text + " " + textBoxPrefNick.Text;
+            foreach(string x in textBoxAutoJC.Text.Split(' '))
+            {
+                content = content + " " + x;
+            }
             System.IO.File.AppendAllText(ClientWindow.ServerListFile, content + "\r\n");
             mainForm.SetServerList(0);
             this.Close();
