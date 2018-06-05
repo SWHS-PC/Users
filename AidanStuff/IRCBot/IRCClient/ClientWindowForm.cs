@@ -28,9 +28,10 @@ namespace IRCClient
         public string ChanSent;
         public string ChanDestination;
         public string time;
+        public string NewNick;
         public int ChanNum = 0;
         List<string> ActiveChannels = new List<string>();
-        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "PART" };
+        string[] IRCCommands = { "PRIVMSG", "JOIN", "QUIT", "PART", "NICK" };
         string[] IdsToAvoid = { "004", "005", "366", "353", "333", "332" };
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
@@ -85,7 +86,7 @@ namespace IRCClient
 
                 while ((input = await recieve.ReadLineAsync()) != null)
                 {
-                    //Debug.WriteLine("Debug: " + input);
+                    Debug.WriteLine("Debug: " + input);
                     string[] splitInput = input.Split(' ');
                     //TODO
                     // add ("h:mm:ss tt") to preferences
@@ -168,9 +169,21 @@ namespace IRCClient
                                 FilteredInput = "Mode " + splitInput[3] + " was set on " + splitInput[2];
                                 SetTextColorAndAppend(Color.Green, Color.Black, FilteredInput, 1);
                                 break;
+                            case "NICK":
+                                NewNick = splitInput[2];
+                                FilteredInput = " changed their nick to ";
+                                if (MessageSender == nick)
+                                {
+                                    nick = splitInput[2];
+                                }
+                                ChanSent = ChanDestination;
+                                send.WriteLine("NAMES " + ChanSent);
+                                SetTextColorAndAppend(Color.Green, Color.Black, FilteredInput, 4);
+                                send.Flush();
+                                break;
                         }
                         //FilteredInput = input;
-
+                        
                         if (splitInput[0].Replace(":", "") == TrimServerToName)
                         {
                             //Debug.WriteLine("Debug!: " + FilteredInput);
@@ -190,6 +203,7 @@ namespace IRCClient
             ChanNum = GetTab(1);
             //Debug.WriteLine("Debug: " + Regex.Split(input.TrimStart(':', ' '), ":")[1].Split(' ').Length);
             UsersInChannel[ChanNum] = Regex.Split(input.TrimStart(':', ' '), ":")[1];
+            userListServer1Chan[ChanNum].Text = "";
             for (int i = 0; i < UsersInChannel[ChanNum].Split(' ').Length; i++)
             {
 
@@ -200,11 +214,14 @@ namespace IRCClient
 
         private void SetTextColorAndAppend(Color newColor, Color resetColor, string content, int x)
         {
-            textBoxServer1.Select(textBoxServer1.TextLength, 0);
-            textBoxServer1.SelectionColor = newColor;
+            
             if (x == 1)
             {
+                textBoxServer1.Select(textBoxServer1.TextLength, 0);
+                textBoxServer1.SelectionColor = newColor;
                 textBoxServer1.AppendText(time + ": " + content + "\r\n");
+                textBoxServer1.Select(textBoxServer1.TextLength, 0);
+                textBoxServer1.SelectionColor = resetColor;
             }
             else if (x == 2)
             {
@@ -214,8 +231,23 @@ namespace IRCClient
             {
                 textBoxServer1Chan[GetTab(3)].AppendText(time + ": " + content + "\r\n");
             }
-            textBoxServer1.Select(textBoxServer1.TextLength, 0);
-            textBoxServer1.SelectionColor = resetColor;
+            else if (x == 4)
+            {
+                var ctab = GetTab(1);
+                textBoxServer1Chan[ctab].AppendText(time + ": ");
+                textBoxServer1Chan[ctab].Select(textBoxServer1Chan[ctab].TextLength, 0);
+                textBoxServer1Chan[ctab].SelectionColor = newColor;
+                textBoxServer1Chan[ctab].AppendText(MessageSender);
+                textBoxServer1Chan[ctab].Select(textBoxServer1Chan[ctab].TextLength, 0);
+                textBoxServer1Chan[ctab].SelectionColor = resetColor;
+                textBoxServer1Chan[ctab].AppendText(content);
+                textBoxServer1Chan[ctab].Select(textBoxServer1Chan[ctab].TextLength, 0);
+                textBoxServer1Chan[ctab].SelectionColor = newColor;
+                textBoxServer1Chan[ctab].AppendText(NewNick + "\r\n");
+                textBoxServer1Chan[ctab].Select(textBoxServer1Chan[ctab].TextLength, 0);
+                textBoxServer1Chan[ctab].SelectionColor = resetColor;
+            }
+            
         }
 
         private void Return(object sender, KeyPressEventArgs e)
@@ -241,7 +273,7 @@ namespace IRCClient
                     }
                     if (IsConnected == true)
                     {
-                        if (Convert.ToString(tabControl.SelectedTab.Name) == "#" + TrimServerToName)
+                        if (Convert.ToString(tabControl.SelectedTab.Text) == TrimServerToName)
                         {
                             send.WriteLine(textBoxEnter.Text);
                         }
@@ -256,10 +288,19 @@ namespace IRCClient
                                 if (TextSplitChar[0] == '/' && TextSplitChar.Length > 1)
                                 {
                                     textEntered = TextSplit[0].TrimStart('/') + " " + TextToSend;
+                                    send.WriteLine(textEntered);
+                                }
+                                else
+                                {
+                                    send.WriteLine(textEntered);
+                                    SetTextColorAndAppend(Color.Black, Color.Black, nick + "> " + textBoxEnter.Text, 3);
                                 }
                             }
-                            send.WriteLine(textEntered);
-                            SetTextColorAndAppend(Color.Black, Color.Black, nick + "> " + textBoxEnter.Text, 3);
+                            else
+                            {
+                                send.WriteLine(textEntered);
+                                SetTextColorAndAppend(Color.Black, Color.Black, nick + "> " + textBoxEnter.Text, 3);
+                            }
                         }
                         send.Flush();
                     }
@@ -414,7 +455,6 @@ namespace IRCClient
                     if (x != null)
                         tabPageServer1Chan[Array.IndexOf(tabPageServer1Chan, x)].Dispose();
                 }
-                
             }
             else
             {
