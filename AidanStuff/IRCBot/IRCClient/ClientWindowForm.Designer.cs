@@ -206,6 +206,8 @@
         public System.Windows.Forms.TextBox[] userListServer1Chan = new System.Windows.Forms.TextBox[1000];
         public System.Windows.Forms.RichTextBox[] textBoxServer1Chan = new System.Windows.Forms.RichTextBox[1000];
         public System.Windows.Forms.TabPage[] tabPageServer1Chan = new System.Windows.Forms.TabPage[1000];
+        public System.Windows.Forms.TabPage[] tabPageNewServer = new System.Windows.Forms.TabPage[100];
+        public System.Windows.Forms.RichTextBox[] textBoxNewServer = new System.Windows.Forms.RichTextBox[100];
     }
 }
 
