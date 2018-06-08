@@ -37,8 +37,6 @@ namespace IRCClient
         public static string ServerListFile = "configs/serverlist.txt";
         public static string[] Servers = System.IO.File.ReadAllLines(ServerListFile);
         public static string[] UsersInChannel = new string[1000];
-        //StreamWriter send;
-        //TcpClient irc;
         public static string[] anick = new string[100];
         public static string[] auser = new string[100];
         StreamWriter[] send = new StreamWriter[100];
@@ -338,8 +336,8 @@ namespace IRCClient
             tabPageChan[ChanNum] = new TabPage();
             userListChan[ChanNum] = new TextBox();
 
-            tabPageChan[sid].Controls.Add(textBoxChat[sid]);
-            tabControl.TabPages.Add(tabPageChan[sid]);
+            tabPageChan[ChanNum].Controls.Add(textBoxChat[ChanNum]);
+            tabControl.TabPages.Add(tabPageChan[ChanNum]);
 
             if (type == 0)
             {
@@ -395,32 +393,32 @@ namespace IRCClient
 
             if(type == 1)
             {
-                textBoxChat[sid].AcceptsTab = true;
-                textBoxChat[sid].Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                textBoxChat[ChanNum].AcceptsTab = true;
+                textBoxChat[ChanNum].Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                 | System.Windows.Forms.AnchorStyles.Left)
                 | System.Windows.Forms.AnchorStyles.Right)));
-                textBoxChat[sid].BackColor = System.Drawing.Color.White;
-                textBoxChat[sid].BorderStyle = System.Windows.Forms.BorderStyle.None;
-                textBoxChat[sid].CausesValidation = false;
-                textBoxChat[sid].HideSelection = false;
-                textBoxChat[sid].ImeMode = System.Windows.Forms.ImeMode.NoControl;
-                textBoxChat[sid].Location = new System.Drawing.Point(0, 0);
-                textBoxChat[sid].MaxLength = 65536;
-                textBoxChat[sid].Name = "textBoxServer" + Convert.ToString(sid);
-                textBoxChat[sid].ReadOnly = true;
-                textBoxChat[sid].ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-                textBoxChat[sid].Size = new System.Drawing.Size(1318, 625);
-                textBoxChat[sid].TabIndex = ChanNum;
-                textBoxChat[sid].Text = "";
+                textBoxChat[ChanNum].BackColor = System.Drawing.Color.White;
+                textBoxChat[ChanNum].BorderStyle = System.Windows.Forms.BorderStyle.None;
+                textBoxChat[ChanNum].CausesValidation = false;
+                textBoxChat[ChanNum].HideSelection = false;
+                textBoxChat[ChanNum].ImeMode = System.Windows.Forms.ImeMode.NoControl;
+                textBoxChat[ChanNum].Location = new System.Drawing.Point(0, 0);
+                textBoxChat[ChanNum].MaxLength = 65536;
+                textBoxChat[ChanNum].Name = "textBoxServer" + Convert.ToString(sid);
+                textBoxChat[ChanNum].ReadOnly = true;
+                textBoxChat[ChanNum].ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+                textBoxChat[ChanNum].Size = new System.Drawing.Size(1318, 625);
+                textBoxChat[ChanNum].TabIndex = ChanNum;
+                textBoxChat[ChanNum].Text = "";
 
-                tabPageChan[sid].Location = new System.Drawing.Point(4, 22);
-                tabPageChan[sid].Name = Convert.ToString(JoinedChan) + " " + Convert.ToString(ChanNum) + " " + Convert.ToString(sid);
-                tabPageChan[sid].Size = new System.Drawing.Size(1060, 628);
-                tabPageChan[sid].TabIndex = ChanNum;
-                tabPageChan[sid].UseVisualStyleBackColor = true;
-                tabPageChan[sid].ResumeLayout(false);
-                tabPageChan[sid].PerformLayout();
-                tabPageChan[sid].Text = JoinedChan;
+                tabPageChan[ChanNum].Location = new System.Drawing.Point(4, 22);
+                tabPageChan[ChanNum].Name = Convert.ToString(JoinedChan) + " " + Convert.ToString(ChanNum) + " " + Convert.ToString(sid);
+                tabPageChan[ChanNum].Size = new System.Drawing.Size(1060, 628);
+                tabPageChan[ChanNum].TabIndex = ChanNum;
+                tabPageChan[ChanNum].UseVisualStyleBackColor = true;
+                tabPageChan[ChanNum].ResumeLayout(false);
+                tabPageChan[ChanNum].PerformLayout();
+                tabPageChan[ChanNum].Text = JoinedChan;
             }
 
             ChanNum++;
