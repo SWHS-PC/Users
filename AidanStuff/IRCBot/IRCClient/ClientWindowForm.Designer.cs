@@ -23,7 +23,6 @@
        
         private void InitializeComponent()
         {
-            this.textBoxServer1 = new System.Windows.Forms.RichTextBox();
             this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.menuStripTopNav = new System.Windows.Forms.MenuStrip();
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,31 +34,8 @@
             this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabPageServer1 = new System.Windows.Forms.TabPage();
             this.menuStripTopNav.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.tabPageServer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBoxServer1
-            // 
-            this.textBoxServer1.AcceptsTab = true;
-            this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxServer1.BackColor = System.Drawing.Color.White;
-            this.textBoxServer1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxServer1.CausesValidation = false;
-            this.textBoxServer1.HideSelection = false;
-            this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.textBoxServer1.Location = new System.Drawing.Point(0, 0);
-            this.textBoxServer1.MaxLength = 65536;
-            this.textBoxServer1.Name = "textBoxServer1";
-            this.textBoxServer1.ReadOnly = true;
-            this.textBoxServer1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.textBoxServer1.Size = new System.Drawing.Size(1318, 625);
-            this.textBoxServer1.TabIndex = 1;
-            this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \n";
             // 
             // textBoxEnter
             // 
@@ -147,22 +123,11 @@
             this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl.Controls.Add(this.tabPageServer1);
             this.tabControl.Location = new System.Drawing.Point(12, 41);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1326, 651);
             this.tabControl.TabIndex = 5;
-            // 
-            // tabPageServer1
-            // 
-            this.tabPageServer1.Controls.Add(this.textBoxServer1);
-            this.tabPageServer1.Location = new System.Drawing.Point(4, 22);
-            this.tabPageServer1.Name = "tabPageServer1";
-            this.tabPageServer1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageServer1.Size = new System.Drawing.Size(1318, 625);
-            this.tabPageServer1.TabIndex = 0;
-            this.tabPageServer1.UseVisualStyleBackColor = true;
             // 
             // ClientWindow
             // 
@@ -180,14 +145,10 @@
             this.Text = "Blade IRC";
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
-            this.tabControl.ResumeLayout(false);
-            this.tabPageServer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
-        private System.Windows.Forms.RichTextBox textBoxServer1;
         private System.Windows.Forms.TextBox textBoxEnter;
         private System.Windows.Forms.MenuStrip menuStripTopNav;
         private System.Windows.Forms.ToolStripMenuItem serverToolStripMenuItem;
@@ -199,15 +160,13 @@
         private System.Windows.Forms.ToolStripMenuItem openServerListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabPageServer1;
 
         public System.Windows.Forms.ToolStripMenuItem[] ServerItems = new System.Windows.Forms.ToolStripMenuItem[10];
 
-        public System.Windows.Forms.TextBox[] userListServer1Chan = new System.Windows.Forms.TextBox[1000];
-        public System.Windows.Forms.RichTextBox[] textBoxServer1Chan = new System.Windows.Forms.RichTextBox[1000];
-        public System.Windows.Forms.TabPage[] tabPageServer1Chan = new System.Windows.Forms.TabPage[1000];
-        public System.Windows.Forms.TabPage[] tabPageNewServer = new System.Windows.Forms.TabPage[100];
-        public System.Windows.Forms.RichTextBox[] textBoxNewServer = new System.Windows.Forms.RichTextBox[100];
+        public System.Windows.Forms.TextBox[] userListChan = new System.Windows.Forms.TextBox[1000];
+        public System.Windows.Forms.RichTextBox[] textBoxChat = new System.Windows.Forms.RichTextBox[1000];
+        public System.Windows.Forms.TabPage[] tabPageChan = new System.Windows.Forms.TabPage[1000];
+        
     }
 }
 
