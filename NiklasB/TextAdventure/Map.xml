@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GameMap>
+  <Room ID="entryWay" Name="entry way"/>
+  <Room ID="hallway" Name="hallway"/>
+  <Room ID="kitchen" Name="kitchen"/>
+  <Room ID="livingRoom" Name="living room"/>
+  <Room ID="diningRoom" Name="dining room"/>
+  <Room ID="powderRoom" Name="powder room"/>
+
+  <Link From="entryWay" To="hallway" Direction="North"/>
+  <Link From="entryWay" To="livingRoom" Direction="East"/>
+  <Link From="hallway" To="kitchen" Direction="East"/>
+  <Link From="hallway" To="powderRoom" Direction="West">
+    <Door/>
+  </Link>
+  <Link From="kitchen" To="diningRoom" Direction="East"/>
+  <Link From="livingRoom" To="diningRoom" Direction="North"/>
+</GameMap>

@@ -29,7 +29,7 @@ namespace TextAdventure
 
         public static Direction ParseDirection(string s)
         {
-            switch (s)
+            switch (s.ToLowerInvariant())
             {
                 case "n":
                 case "north":

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Xml;
 
 namespace TextAdventure
 {
@@ -8,8 +8,21 @@ namespace TextAdventure
     {
         static void Main()
         {
-            var game = new Game();
-            game.Play();
+            Room startRoom = null;
+
+            using (var mapStream = typeof(Program).Assembly.GetManifestResourceStream("TextAdventure.Map.xml"))
+            {
+                using (var reader = XmlReader.Create(mapStream))
+                {
+                    startRoom = MapReader.Parse(reader);
+                }
+            }
+
+            if (startRoom != null)
+            {
+                var game = new Game(startRoom);
+                game.Play();
+            }
         }
     }
 }

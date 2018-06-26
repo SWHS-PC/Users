@@ -5,23 +5,9 @@ namespace TextAdventure
 {
     class Game : Helpers
     {
-        public Game()
+        public Game(Room startRoom)
         {
-            var entryWay = new Room("entry way");
-            var hallway = new Room("hallway");
-            var kitchen = new Room("kitchen");
-            var livingRoom = new Room("living room");
-            var diningRoom = new Room("dining room");
-            var powderRoom = new Room("powder room");
-
-            LinkRooms(entryWay, hallway, Direction.North, null);
-            LinkRooms(entryWay, livingRoom, Direction.East, null);
-            LinkRooms(hallway, kitchen, Direction.East, null);
-            LinkRooms(hallway, powderRoom, Direction.West, new Door());
-            LinkRooms(kitchen, diningRoom, Direction.East, null);
-            LinkRooms(livingRoom, diningRoom, Direction.North, null);
-
-            m_currentRoom = entryWay;
+            m_currentRoom = startRoom;
         }
 
         Room m_currentRoom;
