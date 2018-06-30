@@ -1,40 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace TextAdventure
 {
     class MapReader : Helpers
     {
-        public static Room Parse(XmlReader reader)
+        public static Room Parse(Stream stream)
         {
-            try
+            var settings = new XmlReaderSettings
             {
-                var mapReader = new MapReader(reader);
+                IgnoreComments = true,
+                IgnoreWhitespace = true
+            };
 
-                mapReader.Parse();
-
-                return mapReader.m_startRoom;
-            }
-            catch (Exception e)
+            using (var xmlReader = XmlReader.Create(stream, settings))
             {
-                string message = e.Message;
+                var mapReader = new MapReader(xmlReader);
 
-                var lineInfo = e as IXmlLineInfo;
-
-                if (lineInfo == null)
+                try
                 {
-                    lineInfo = reader as IXmlLineInfo;
-                }
+                    mapReader.Parse();
 
-                if (lineInfo != null)
+                    return mapReader.m_startRoom;
+                }
+                catch (Exception e)
                 {
-                    message = $"Line {lineInfo.LineNumber}, Position = {lineInfo.LinePosition}: {message}";
+                    string message = e.Message;
+
+                    var lineInfo = e as IXmlLineInfo;
+
+                    if (lineInfo == null)
+                    {
+                        lineInfo = xmlReader as IXmlLineInfo;
+                    }
+
+                    if (lineInfo != null)
+                    {
+                        message = $"Line {lineInfo.LineNumber}, Position = {lineInfo.LinePosition}: {message}";
+                    }
+
+                    Console.Error.WriteLine("Error: {0}", message);
+
+                    return null;
                 }
-
-                Console.Error.WriteLine("Error: {0}", message);
-
-                return null;
             }
         }
 
@@ -64,6 +74,10 @@ namespace TextAdventure
                 {
                     case "Room":
                         ParseRoom();
+                        break;
+
+                    case "Key":
+                        ParseKey();
                         break;
 
                     case "Link":
@@ -101,7 +115,138 @@ namespace TextAdventure
                 m_startRoom = room;
             }
 
+            if (m_reader.IsEmptyElement)
+            {
+                m_reader.Read();
+            }
+            else
+            {
+                m_reader.Read();
+                ParseDescription(room);
+                ParseItems(room.Items);
+                m_reader.ReadEndElement();
+            }
+        }
+
+        private void ParseKey()
+        {
+            var key = GetItem(GetRequiredAttribute("IDRef"));
+            var unlocks = GetItem(GetRequiredAttribute("Unlocks"));
+
+            var openable = unlocks as IOpenable;
+            if (openable == null)
+            {
+                Fail($"{unlocks.Name} is not a container.");
+            }
+            else
+            {
+                openable.Key = key;
+            }
+
             m_reader.Skip();
+        }
+
+        private void ParseItems(IList<Item> container)
+        {
+            while (m_reader.IsStartElement())
+            {
+                switch (m_reader.LocalName)
+                {
+                    case "Item":
+                        container.Add(ParseItem());
+                        break;
+
+                    case "Container":
+                        container.Add(ParseContainer());
+                        break;
+
+                    default:
+                        return;
+                }
+            }
+        }
+
+        private void ParseItemAttributes(Item item)
+        {
+            string id = GetRequiredAttribute("ID");
+
+            if (m_items.ContainsKey(id))
+            {
+                Fail($"Duplicate item ID: {id}.");
+            }
+
+            item.Name = GetRequiredAttribute("Name");
+            item.IsFixed = GetOptionalBool("IsFixed", false);
+
+            m_items.Add(id, item);
+        }
+
+        private Item ParseItem()
+        {
+            var item = new SimpleItem();
+
+            ParseItemAttributes(item);
+
+            if (m_reader.IsEmptyElement)
+            {
+                m_reader.Read();
+            }
+            else
+            {
+                m_reader.Read();
+                ParseDescription(item);
+                m_reader.ReadEndElement();
+            }
+
+            return item;
+        }
+
+        private Item ParseContainer()
+        {
+            var item = new ContainerItem();
+
+            ParseItemAttributes(item);
+            ParseOpenableAttributes(item);
+
+            if (m_reader.IsEmptyElement)
+            {
+                m_reader.Read();
+            }
+            else
+            {
+                m_reader.Read();
+                ParseDescription(item);
+                ParseItems(item.Items);
+                m_reader.ReadEndElement();
+            }
+
+            return item;
+        }
+
+        private void ParseDescription(IDescribable item)
+        {
+            while (m_reader.IsStartElement("p"))
+            {
+                var condition = Description.Condition.None;
+
+                string s = m_reader["if"];
+                if (!string.IsNullOrEmpty(s))
+                {
+                    if (!Description.ParseCondition(s, out condition))
+                    {
+                        Fail($"Invalid condition: {s}.");
+                    }
+                }
+
+                var text = m_reader.ReadElementContentAsString();
+
+                if (item.Description == null)
+                {
+                    item.Description = new Description();
+                }
+
+                item.Description.Add(condition, text);
+            }
         }
 
         private void ParseLink()
@@ -134,20 +279,64 @@ namespace TextAdventure
             LinkRooms(from, to, dir, door);
         }
 
+        private void ParseOpenableAttributes(IOpenable openable)
+        {
+            openable.IsLocked = GetOptionalBool("IsLocked", false);
+            openable.IsOpen = GetOptionalBool("IsOpen", false);
+        }
+
         private Door ParseDoor()
         {
+            var door = new Door();
+
+            ParseOpenableAttributes(door);
+            door.Key = GetItem(m_reader["Key"]);
+
             m_reader.Skip();
-            return new Door();
+
+            return door;
         }
 
         private Room GetRoom(string id)
         {
+            if (id == null)
+                return null;
+
             Room room;
             if (!m_rooms.TryGetValue(id, out room))
             {
-                Fail($"Room {id} is not defined.");
+                Fail($"The room '{id}' is not defined.");
             }
             return room;
+        }
+
+        private Item GetItem(string id)
+        {
+            if (id == null)
+                return null;
+
+            Item item;
+            if (!m_items.TryGetValue(id, out item))
+            {
+                Fail($"The item '{id}' is not defined.");
+            }
+            return item;
+        }
+
+        private bool GetOptionalBool(string name, bool defaultValue)
+        {
+            string value = m_reader[name];
+            if (string.IsNullOrEmpty(value))
+                return defaultValue;
+
+            switch (value.ToLowerInvariant())
+            {
+                case "true": return true;
+                case "false": return false;
+            }
+
+            Fail($"Expected 'true' or 'false' for {name}.");
+            return false;
         }
 
         private string GetRequiredAttribute(string name)
@@ -162,6 +351,7 @@ namespace TextAdventure
 
         XmlReader m_reader;
         Dictionary<string, Room> m_rooms = new Dictionary<string, Room>();
+        Dictionary<string, Item> m_items = new Dictionary<string, Item>();
         Room m_startRoom;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TextAdventure
 {
-    class Room : Helpers
+    class Room : Helpers, IDescribable
     {
         public Room(string name)
         {
@@ -25,17 +25,18 @@ namespace TextAdventure
         List<Link> m_connections = new List<Link>();
         public List<Link> Links => m_connections;
 
+        public Description Description { get; set; }
+
         public void Describe()
         {
-            Console.WriteLine($"This is the {this.Name}.");
-
-            if (Items.Count != 0)
+            if (Description != null)
             {
-                Console.WriteLine("In this room are the following items:");
-                foreach (var item in this.Items)
-                {
-                    Console.WriteLine(item.Name);
-                }
+                Description.Describe(this);
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine($"This is the {this.Name}.");
             }
 
             foreach (var link in Links)
@@ -52,6 +53,13 @@ namespace TextAdventure
                 {
                     Console.WriteLine($"To the {Str(link.Direction)} is a closed door.");
                 }
+            }
+
+            if (Items.Count != 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("The room contains the following items:");
+                ListItems(Items);
             }
         }
     }

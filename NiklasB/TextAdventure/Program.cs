@@ -10,12 +10,9 @@ namespace TextAdventure
         {
             Room startRoom = null;
 
-            using (var mapStream = typeof(Program).Assembly.GetManifestResourceStream("TextAdventure.Map.xml"))
+            using (var stream = typeof(Program).Assembly.GetManifestResourceStream("TextAdventure.Map.xml"))
             {
-                using (var reader = XmlReader.Create(mapStream))
-                {
-                    startRoom = MapReader.Parse(reader);
-                }
+                startRoom = MapReader.Parse(stream);
             }
 
             if (startRoom != null)

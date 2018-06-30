@@ -71,5 +71,49 @@ namespace TextAdventure
             }
             return string.Empty;
         }
+
+        public static void ListItems(IList<Item> items)
+        {
+            foreach (var item in items)
+            {
+                Console.WriteLine($" *  {item.Name}");
+            }
+        }
+
+        public static void WritePara(string text)
+        {
+            const int colWidth = 76;
+
+            if (text.Length <= colWidth)
+            {
+                Console.WriteLine(text);
+                return;
+            }
+
+            int index = 0;
+            while (text.Length - index > colWidth)
+            {
+                int endIndex = index + colWidth;
+
+                for (int i = endIndex; i > index; i--)
+                {
+                    if (text[i] == ' ')
+                    {
+                        endIndex = i;
+                        break;
+                    }
+                }
+
+                Console.WriteLine(text.Substring(index, endIndex - index));
+
+                index = endIndex;
+                while (index < text.Length && text[index] == ' ')
+                {
+                    index++;
+                }
+            }
+
+            Console.WriteLine(text.Substring(index));
+        }
     }
 }

@@ -1,17 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <GameMap>
-  <Room ID="entryWay" Name="entry way"/>
+  <Room ID="entryWay" Name="entry way">
+    <p>This is the entry way. The walls are covered in decorative wallpaper, the floor is marble tile, and the high ceiling is ornately sculpted plaster. A massive crystal chandelier illumnates the room.</p>
+  </Room>
   <Room ID="hallway" Name="hallway"/>
   <Room ID="kitchen" Name="kitchen"/>
-  <Room ID="livingRoom" Name="living room"/>
-  <Room ID="diningRoom" Name="dining room"/>
+  <Room ID="livingRoom" Name="living room">
+    <Item ID="brassKey" Name="brass key"/>
+  </Room>
+  <Room ID="diningRoom" Name="dining room">
+    <Container ID="woodChest" Name="wooden chest" IsLocked="true" IsFixed="true">
+      <Item ID="note" Name="note">
+        <p>The note says, “To whom it may concern, I, Peabody Carbuncle, being of sound mind and body, do hereby” -- at which point the note ends abruptly, with the last word trailing off in a scrawl.</p>
+      </Item>
+      <Item ID="silverKey" Name="silver key"/>
+    </Container>
+  </Room>
   <Room ID="powderRoom" Name="powder room"/>
+  
+  <Key IDRef="brassKey" Unlocks="woodChest"/>
 
   <Link From="entryWay" To="hallway" Direction="North"/>
   <Link From="entryWay" To="livingRoom" Direction="East"/>
   <Link From="hallway" To="kitchen" Direction="East"/>
   <Link From="hallway" To="powderRoom" Direction="West">
-    <Door/>
+    <Door IsLocked="true" Key="silverKey"/>
   </Link>
   <Link From="kitchen" To="diningRoom" Direction="East"/>
   <Link From="livingRoom" To="diningRoom" Direction="North"/>
