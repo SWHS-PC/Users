@@ -8,6 +8,10 @@ namespace TextAdventure
     {
         static void Main()
         {
+#if DEBUG
+            CommandParserTest.Run();
+#endif
+
             Room startRoom = null;
 
             using (var stream = typeof(Program).Assembly.GetManifestResourceStream("TextAdventure.Map.xml"))

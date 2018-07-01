@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandParser.cs" />
+    <Compile Include="CommandParserTest.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Helpers.cs" />
