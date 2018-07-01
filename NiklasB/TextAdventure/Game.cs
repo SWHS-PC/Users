@@ -165,8 +165,7 @@ namespace TextAdventure
             // Find the matching item.
             Item item;
             IList<Item> collection;
-            if (FindItem(m_inventory, name, out item, out collection) ||
-                FindItem(m_currentRoom.Items, name, out item, out collection))
+            if (FindItem(name, out item, out collection))
             {
                 // We found the item.
                 arg.Name = item.Name;
@@ -261,31 +260,93 @@ namespace TextAdventure
             return Keyword.None;
         }
 
-        static bool FindItem(
-            IList<Item> collection, 
-            string name, 
-            out Item matchingItem, 
-            out IList<Item> matchingCollection
-            )
+        static bool IsFuzzyMatch(string name, string itemName)
         {
-            foreach (var item in collection)
-            {
-                if (item.Name == name)
-                {
-                    matchingItem = item;
-                    matchingCollection = collection;
-                    return true;
-                }
+            int nameLength = name.Length;
+            int index = itemName.Length - nameLength;
 
-                var container = item as IContainer;
-                if (container != null && container.IsOpen)
+            return index > 0 &&
+                itemName[index - 1] == ' ' &&
+                string.Compare(name, 0, itemName, index, nameLength) == 0;
+        }
+
+        bool FindItem(string name, out Item matchingItem, out IList<Item> matchingList)
+        {
+            var itemLists = new List<IList<Item>>();
+            itemLists.Add(m_inventory);
+            itemLists.Add(m_currentRoom.Items);
+
+            List<Item> fuzzyMatches = null;
+            List<IList<Item>> fuzzyLists = null;
+
+            for (int listIndex = 0; listIndex < itemLists.Count; listIndex++)
+            {
+                var itemList = itemLists[listIndex];
+
+                foreach (var item in itemList)
                 {
-                    if (FindItem(container.Items, name, out matchingItem, out matchingCollection))
+                    if (item.Name == name)
+                    {
+                        matchingItem = item;
+                        matchingList = itemList;
                         return true;
+                    }
+
+                    if (IsFuzzyMatch(name, item.Name))
+                    {
+                        if (fuzzyMatches == null)
+                        {
+                            fuzzyMatches = new List<Item>();
+                            fuzzyLists = new List<IList<Item>>();
+                        }
+                        fuzzyMatches.Add(item);
+                        fuzzyLists.Add(itemList);
+                    }
+
+                    var container = item as IContainer;
+                    if (container != null && container.IsOpen)
+                    {
+                        itemLists.Add(container.Items);
+                    }
                 }
             }
+
+            if (fuzzyMatches != null)
+            {
+                if (fuzzyMatches.Count == 1)
+                {
+                    matchingItem = fuzzyMatches[0];
+                    matchingList = fuzzyLists[0];
+                    return true;
+                }
+                else if (fuzzyMatches.Count < 10)
+                {
+                    Console.WriteLine($"Which {name}?");
+                    for (int i = 0; i < fuzzyMatches.Count; i++)
+                    {
+                        Console.WriteLine($"  {i + 1}. {fuzzyMatches[i].Name}");
+                    }
+                    Console.WriteLine();
+                    Console.Write("> ");
+
+                    char response = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+
+                    if (response >= '1' && response <= '9')
+                    {
+                        int index = (int)response - (int)'1';
+                        if (index < fuzzyMatches.Count)
+                        {
+                            matchingItem = fuzzyMatches[index];
+                            matchingList = fuzzyLists[index];
+                            return true;
+                        }
+                    }
+                }
+            }
+
             matchingItem = null;
-            matchingCollection = null;
+            matchingList = null;
             return false;
         }
 
@@ -440,7 +501,7 @@ namespace TextAdventure
             else
             {
                 item.IsLocked = false;
-                Console.WriteLine($"You unlock the {itemName}.");
+                Console.WriteLine($"You unlock the {itemName} with the {keyName}.");
             }
         }
 
