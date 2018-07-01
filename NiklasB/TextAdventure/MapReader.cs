@@ -98,17 +98,16 @@ namespace TextAdventure
 
         private void ParseRoom()
         {
-            string id = GetRequiredAttribute("ID");
             string name = GetRequiredAttribute("Name");
 
-            if (m_rooms.ContainsKey(id))
+            if (m_rooms.ContainsKey(name))
             {
-                Fail($"Duplicate room ID: {id}.");
+                Fail($"Duplicate room name: {name}.");
             }
 
             var room = new Room(name);
 
-            m_rooms.Add(id, room);
+            m_rooms.Add(name, room);
 
             if (m_startRoom == null)
             {
@@ -130,7 +129,7 @@ namespace TextAdventure
 
         private void ParseKey()
         {
-            var key = GetItem(GetRequiredAttribute("IDRef"));
+            var key = GetItem(GetRequiredAttribute("ItemRef"));
             var unlocks = GetItem(GetRequiredAttribute("Unlocks"));
 
             var openable = unlocks as IOpenable;
@@ -168,17 +167,17 @@ namespace TextAdventure
 
         private void ParseItemAttributes(Item item)
         {
-            string id = GetRequiredAttribute("ID");
+            string name = GetRequiredAttribute("Name");
 
-            if (m_items.ContainsKey(id))
+            if (m_items.ContainsKey(name))
             {
-                Fail($"Duplicate item ID: {id}.");
+                Fail($"Duplicate item name: {name}.");
             }
 
-            item.Name = GetRequiredAttribute("Name");
+            item.Name = name;
             item.IsFixed = GetOptionalBool("IsFixed", false);
 
-            m_items.Add(id, item);
+            m_items.Add(name, item);
         }
 
         private Item ParseItem()
