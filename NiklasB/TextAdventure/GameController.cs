@@ -182,27 +182,29 @@ namespace TextAdventure
 
         static void Open(Game game, IList<string> args)
         {
-            var openable = GetOpenable(game, args[0], "open");
+            string name = args[0];
+            var openable = GetOpenable(game, ref name, "open");
 
             if (openable != null)
             {
-                game.TryOpen(openable, args[0]);
+                game.TryOpen(openable, name);
             }
         }
 
         static void Close(Game game, IList<string> args)
         {
-            var openable = GetOpenable(game, args[0], "close");
+            string name = args[0];
+            var openable = GetOpenable(game, ref name, "close");
 
             if (openable != null)
             {
-                game.TryClose(openable, args[0]);
+                game.TryClose(openable, name);
             }
         }
 
         static void TryKey(Game game, string openableName, string keyName, bool isLocking)
         {
-            var openable = GetOpenable(game, openableName, "lock");
+            var openable = GetOpenable(game, ref openableName, "lock");
 
             if (openable != null)
             {
@@ -221,23 +223,25 @@ namespace TextAdventure
             }
         }
 
-        static IOpenable GetOpenable(Game game, string arg, string verb)
+        static IOpenable GetOpenable(Game game, ref string name, string verb)
         {
             Direction dir;
             DoorFlags flags;
-            if (TryParseDoorName(arg, out dir, out flags))
+            if (TryParseDoorName(name, out dir, out flags))
             {
-                return game.FindDoor(dir, flags, arg);
+                return game.FindDoor(dir, flags, name);
             }
             else
             {
-                Item item = game.FindItem(ItemSource.Inventory | ItemSource.Room, arg);
+                Item item = game.FindItem(ItemSource.Inventory | ItemSource.Room, name);
                 if (item != null)
                 {
+                    name = item.Name;
+
                     var openable = item as IOpenable;
                     if (openable == null)
                     {
-                        Console.WriteLine($"You can't {verb} the {arg}, silly!");
+                        Console.WriteLine($"You can't {verb} the {name}, silly!");
                     }
 
                     return openable;
