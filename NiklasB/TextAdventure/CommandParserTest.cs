@@ -51,6 +51,11 @@ namespace TextAdventure
                 },
                 new TestCase
                 {
+                    Input = "take the golden key",
+                    ExpectedResult = "1,True,golden key"
+                },
+                new TestCase
+                {
                     Input = "unlock silver box",
                     ExpectedResult = "2,False"
                 },

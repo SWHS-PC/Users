@@ -46,6 +46,7 @@
     <Compile Include="CommandParserTest.cs" />
     <Compile Include="Description.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameController.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Door.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
+    <Compile Include="StringToken.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

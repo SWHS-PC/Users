@@ -22,7 +22,10 @@ namespace TextAdventure
             if (startRoom != null)
             {
                 var game = new Game(startRoom);
-                game.Play();
+
+                var controller = new GameController(game);
+
+                controller.Run();
             }
         }
     }
