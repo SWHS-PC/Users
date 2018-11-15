@@ -403,7 +403,7 @@ namespace num {
         if (*p == '0' && p[1] == 'x' && IsHexDigit(p[2], &digit))
         {
             int64_t value = digit;
-            p += 2;
+            p += 3;
             while (IsHexDigit(*p, &digit))
             {
                 value = (value << 4) + digit;
