@@ -23,8 +23,6 @@
        
         private void InitializeComponent()
         {
-            this.textBoxServer1 = new System.Windows.Forms.RichTextBox();
-            this.textBoxUsers = new System.Windows.Forms.TextBox();
             this.textBoxEnter = new System.Windows.Forms.TextBox();
             this.menuStripTopNav = new System.Windows.Forms.MenuStrip();
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,49 +34,8 @@
             this.ServerListSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.openServerListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabPageServer1 = new System.Windows.Forms.TabPage();
             this.menuStripTopNav.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.tabPageServer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBoxServer1
-            // 
-            this.textBoxServer1.AcceptsTab = true;
-            this.textBoxServer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxServer1.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxServer1.CausesValidation = false;
-            this.textBoxServer1.HideSelection = false;
-            this.textBoxServer1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.textBoxServer1.Location = new System.Drawing.Point(0, 0);
-            this.textBoxServer1.MaxLength = 65536;
-            this.textBoxServer1.Multiline = true;
-            this.textBoxServer1.Name = "textBoxServer1";
-            this.textBoxServer1.ReadOnly = true;
-            this.textBoxServer1.Size = new System.Drawing.Size(1060, 628);
-            this.textBoxServer1.TabIndex = 1;
-            this.textBoxServer1.Text = "Select a Server or type /server <ipaddress> <port> \r\n";
-            // 
-            // textBoxUsers
-            // 
-            this.textBoxUsers.AcceptsReturn = true;
-            this.textBoxUsers.AcceptsTab = true;
-            this.textBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxUsers.BackColor = System.Drawing.SystemColors.Window;
-            this.textBoxUsers.CausesValidation = false;
-            this.textBoxUsers.HideSelection = false;
-            this.textBoxUsers.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.textBoxUsers.Location = new System.Drawing.Point(1086, 38);
-            this.textBoxUsers.MaxLength = 65536;
-            this.textBoxUsers.Multiline = true;
-            this.textBoxUsers.Name = "textBoxUsers";
-            this.textBoxUsers.ReadOnly = true;
-            this.textBoxUsers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxUsers.Size = new System.Drawing.Size(252, 680);
-            this.textBoxUsers.TabIndex = 2;
             // 
             // textBoxEnter
             // 
@@ -89,13 +46,13 @@
             this.textBoxEnter.ImeMode = System.Windows.Forms.ImeMode.On;
             this.textBoxEnter.Location = new System.Drawing.Point(12, 698);
             this.textBoxEnter.Name = "textBoxEnter";
-            this.textBoxEnter.Size = new System.Drawing.Size(1068, 20);
+            this.textBoxEnter.Size = new System.Drawing.Size(1326, 20);
             this.textBoxEnter.TabIndex = 3;
             this.textBoxEnter.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Return);
             // 
             // menuStripTopNav
             // 
-            this.menuStripTopNav.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.menuStripTopNav.BackColor = System.Drawing.SystemColors.Control;
             this.menuStripTopNav.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.serverToolStripMenuItem,
             this.settingsToolStripMenuItem});
@@ -163,50 +120,35 @@
             // 
             // tabControl
             // 
-            this.tabControl.Controls.Add(this.tabPageServer1);
-            this.tabControl.Location = new System.Drawing.Point(12, 38);
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl.Location = new System.Drawing.Point(12, 41);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1068, 654);
+            this.tabControl.Size = new System.Drawing.Size(1326, 651);
             this.tabControl.TabIndex = 5;
-            // 
-            // tabPageServer1
-            // 
-            this.tabPageServer1.Controls.Add(this.textBoxServer1);
-            this.tabPageServer1.Location = new System.Drawing.Point(4, 22);
-            this.tabPageServer1.Name = "tabPageServer1";
-            this.tabPageServer1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageServer1.Size = new System.Drawing.Size(1060, 628);
-            this.tabPageServer1.TabIndex = 0;
-            this.tabPageServer1.UseVisualStyleBackColor = true;
             // 
             // ClientWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1350, 730);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.textBoxEnter);
-            this.Controls.Add(this.textBoxUsers);
             this.Controls.Add(this.menuStripTopNav);
             this.MainMenuStrip = this.menuStripTopNav;
             this.Name = "ClientWindow";
-            this.Text = "IRC Client";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.Text = "Blade IRC";
             this.menuStripTopNav.ResumeLayout(false);
             this.menuStripTopNav.PerformLayout();
-            this.tabControl.ResumeLayout(false);
-            this.tabPageServer1.ResumeLayout(false);
-            this.tabPageServer1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.textBoxServer1.SelectionStart = 0;
-            this.textBoxServer1.SelectionLength = 0;
 
         }
-
-        private System.Windows.Forms.RichTextBox textBoxServer1;
-        private System.Windows.Forms.TextBox textBoxUsers;
         private System.Windows.Forms.TextBox textBoxEnter;
         private System.Windows.Forms.MenuStrip menuStripTopNav;
         private System.Windows.Forms.ToolStripMenuItem serverToolStripMenuItem;
@@ -218,14 +160,13 @@
         private System.Windows.Forms.ToolStripMenuItem openServerListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disconnectToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabPageServer1;
 
         public System.Windows.Forms.ToolStripMenuItem[] ServerItems = new System.Windows.Forms.ToolStripMenuItem[10];
 
-        public System.Windows.Forms.TextBox[] textBoxServer1Chan = new System.Windows.Forms.TextBox[1000];
-        public System.Windows.Forms.TabPage[] tabPageServer1Chan = new System.Windows.Forms.TabPage[1000];
-
-
+        public System.Windows.Forms.TextBox[] userListChan = new System.Windows.Forms.TextBox[1000];
+        public System.Windows.Forms.RichTextBox[] textBoxChat = new System.Windows.Forms.RichTextBox[1000];
+        public System.Windows.Forms.TabPage[] tabPageChan = new System.Windows.Forms.TabPage[1000];
+        
     }
 }
 

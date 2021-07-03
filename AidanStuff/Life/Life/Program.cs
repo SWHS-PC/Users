@@ -51,7 +51,7 @@ namespace Life
             {
                 link.Draw();
                 link.NextGen();
-                Console.ReadLine();
+                //Console.ReadLine();
                 Console.Clear();
 
             }
@@ -69,7 +69,7 @@ namespace Life
             {
                 for (int x = 0; x < w; x++)
                 {
-                    Console.Write(Map[x, y] ? Convert.ToString(cell) : " ");
+                    Console.Write(Map[x, y] ? "@" : " ");
                 }
             }  
         }
